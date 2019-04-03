@@ -1,4 +1,4 @@
-package com.dotcode.duoline.axdlockers;
+package com.dotcode.duoline.axdlockers.Activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,10 +8,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
-import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dotcode.duoline.axdlockers.R;
 import com.google.android.gms.vision.barcode.Barcode;
 
 import java.util.List;
