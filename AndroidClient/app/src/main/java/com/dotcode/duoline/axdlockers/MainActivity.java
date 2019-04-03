@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
         barcodeReader = (BarcodeReader) getSupportFragmentManager().findFragmentById(R.id.barcode_fragment);
     }
 
+
     @Override
     public void onScanned(final Barcode barcode) {
         Log.e(TAG, "onScanned: " + barcode.displayValue);
