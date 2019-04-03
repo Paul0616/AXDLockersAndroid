@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
     public void onScanned(final Barcode barcode) {
         Log.e(TAG, "onScanned: " + barcode.displayValue);
         barcodeReader.playBeep();
-
+///gschgdcghca cahg cdaauvd
 //        runOnUiThread(new Runnable() {
 //            @Override
 //            public void run() {
