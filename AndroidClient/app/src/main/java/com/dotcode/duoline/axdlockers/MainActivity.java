@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +24,13 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try
+        {
+            this.getSupportActionBar().hide();
+        }
+        catch (NullPointerException e){}
         setContentView(R.layout.activity_main);
+
         // getting barcode instance
         textView = (TextView) findViewById(R.id.textView);
         barcodeReader = (BarcodeReader) getSupportFragmentManager().findFragmentById(R.id.barcode_fragment);

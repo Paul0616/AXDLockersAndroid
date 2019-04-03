@@ -9,8 +9,8 @@
     <fragment
         android:id="@+id/barcode_fragment"
         android:name="info.androidhive.barcode.BarcodeReader"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:auto_focus="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -18,11 +18,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:use_flash="false" />
 
-    <!-- Scanner overlay animation -->
+    <!-- Scanner overlay animation
     <info.androidhive.barcode.ScannerOverlay
         android:id="@+id/scannerOverlay"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="#44000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,19 +32,21 @@
         app:line_speed="6"
         app:line_width="4"
         app:square_height="200"
-        app:square_width="200" />
+        app:square_width="200" /> -->
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_height="40dp"
+        android:background="@color/common_google_signin_btn_text_light_default"
+        android:gravity="center_vertical"
         android:lines="5"
         android:text="Please focus on QRCode"
         android:textAlignment="center"
+        android:textColor="@color/lightOrange"
         android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scannerOverlay" />
+        app:layout_constraintRight_toRightOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
