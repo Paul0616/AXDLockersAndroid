@@ -61,13 +61,22 @@ public class SaveSharedPreferences {
         editor.commit();
     }
 
-    public static boolean getTokenExpireAt(Context ctx) {
+    public static long getTokenExpireAt(Context ctx) {
         return getSharedPreference(ctx).getLong("TOKEN_EXPIRE_AT", 0);
     }
 
     public static void setTokenExpireAt(Context ctx, long tokenExpireAt) {
         SharedPreferences.Editor editor = getSharedPreference(ctx).edit();
         editor.putLong("TOKEN_EXPIRE_AT", tokenExpireAt);
+        editor.commit();
+    }
+
+    public static void logOutUser(Context ctx) {
+        SharedPreferences.Editor editor = getSharedPreference(ctx).edit();
+        editor.remove("ID");
+        editor.remove("TOKEN_EXPIRE_AT");
+        editor.remove("IS_ADMIN");
+        editor.remove("ACCES_TOKEN");
         editor.commit();
     }
 }

@@ -43,7 +43,7 @@
         android:lines="5"
         android:text="Please focus on QRCode"
         android:textAlignment="center"
-        android:textColor="@color/lightOrange"
+        android:textColor="@color/colorLightOrange"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

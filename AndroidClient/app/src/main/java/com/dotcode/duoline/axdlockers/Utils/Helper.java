@@ -10,6 +10,8 @@ import java.util.List;
 public class Helper {
     public static final String KEY_EMAIL= "email";
     public static final String KEY_PASSWORD = "password";
+    //----------------------
+    public static final int REQUEST_CHECK_USER = 1;
 
     /**
      * @return true if user is logged in application (user's credentials are saved in SharedPreferences)
