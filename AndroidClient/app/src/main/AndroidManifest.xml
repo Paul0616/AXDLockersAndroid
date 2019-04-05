@@ -16,11 +16,22 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".Activities.LoginActivity"></activity>
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".Activities.ChooseAddressActivity"
+            android:parentActivityName=".Activities.AddLockerActivity"
+            android:theme="@style/TitleTheme" />
         <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login" />
+            android:name=".Activities.AddLockerActivity"
+            android:parentActivityName=".Activities.MainActivity"
+            android:theme="@style/TitleTheme" />
+        <activity
+            android:name=".Activities.AddResidentActivity"
+            android:parentActivityName=".Activities.MainActivity"
+            android:theme="@style/TitleTheme" />
+        <activity android:name=".Activities.LoginActivity" /> <!-- <activity -->
+        <!-- android:name=".LoginActivity" -->
+        <!-- android:label="@string/title_activity_login" /> -->
         <activity
             android:name=".Activities.MainActivity"
             android:label="@string/app_name"

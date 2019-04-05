@@ -19,4 +19,5 @@
     <string name="user_email">User/Email</string>
     <string name="log_in">Log In</string>
     <string name="todo">TODO</string>
+    <string name="text_info">The locker that you associate with the last scanned QR code:</string>
 </resources>

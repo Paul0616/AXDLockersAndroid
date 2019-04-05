@@ -1,53 +1,78 @@
 package com.dotcode.duoline.axdlockers.Activities;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dotcode.duoline.axdlockers.Models.RetroLocker;
+import com.dotcode.duoline.axdlockers.Network.SetRequests;
 import com.dotcode.duoline.axdlockers.R;
+import com.dotcode.duoline.axdlockers.Utils.Helper;
+import com.dotcode.duoline.axdlockers.Utils.SaveSharedPreferences;
 import com.google.android.gms.vision.barcode.Barcode;
 
 import java.util.List;
 
 import info.androidhive.barcode.BarcodeReader;
 
-public class MainActivity extends AppCompatActivity implements BarcodeReader.BarcodeReaderListener {
+public class MainActivity extends AppCompatActivity implements BarcodeReader.BarcodeReaderListener, SetRequests.GetDataResponse {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private BarcodeReader barcodeReader;
     private TextView textView;
     private boolean codeWasDetected = false;
+    private ImageView bLogOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        try
-//        {
-//            this.getSupportActionBar().hide();
-//        }
-//        catch (NullPointerException e){}
         setContentView(R.layout.activity_main);
 
         // getting barcode instance
         textView = (TextView) findViewById(R.id.textView);
         barcodeReader = (BarcodeReader) getSupportFragmentManager().findFragmentById(R.id.barcode_fragment);
+        bLogOut = (ImageView) findViewById(R.id.logOutImageView);
 
-        textView.setOnClickListener(new View.OnClickListener() {
+        bLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              //  showAlert(MainActivity.this, "Test", "Mesaj de test");
+                SaveSharedPreferences.logOutUser(getApplicationContext());
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
             }
         });
+
     }
 
+
+    @Override
+    public void onResponse(int currentRequestId, Object result) {
+        if (currentRequestId == Helper.REQUEST_LOCKERS){
+            if(result != null && result instanceof RetroLocker) {
+                int id = ((RetroLocker) result).getUserId();
+                //locker found
+                startActivity(new Intent(MainActivity.this, AddResidentActivity.class));
+            } else {
+                startActivity(new Intent(MainActivity.this, AddLockerActivity.class));
+            }
+        }
+    }
+
+    @Override
+    public void onFailed(int currentRequestId, boolean mustLogOut) {
+
+    }
 
     private void showAlert(Context ctx, String title, String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
@@ -85,10 +110,12 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    showAlert(MainActivity.this, "Test", qrCode);
+                    //showAlert(MainActivity.this, "Test", qrCode);
+                    ContentValues param = new ContentValues();
+                    param.put("qrCode", qrCode);
+                    new SetRequests(getApplicationContext(), MainActivity.this, Helper.REQUEST_LOCKERS, param);
                 }
             });
-           // textView.setText(qrCode);
         }
 
     }

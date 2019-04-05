@@ -9,7 +9,13 @@ public class RetroTokenList {
     private List<RetroToken> tokens;
 
     public RetroToken getToken() {
-        return tokens.get(0);
+        if (tokens.size() > 0) {
+            return tokens.get(0);
+        } else
+            return null;
     }
 
+    public List<RetroToken> getTokens() {
+        return tokens;
+    }
 }

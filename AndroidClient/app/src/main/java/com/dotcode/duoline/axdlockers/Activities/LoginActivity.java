@@ -2,10 +2,13 @@ package com.dotcode.duoline.axdlockers.Activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -61,8 +64,8 @@ public class LoginActivity extends AppCompatActivity {
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
         mPasswordreset = findViewById(R.id.tvResetPassword);
-     //   showProgress(true);
         mUserEmail.setText(SaveSharedPreferences.getEmail(getApplicationContext()));
+        mLoginFormView.setVerticalScrollBarEnabled(false);
 
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -113,7 +116,11 @@ public class LoginActivity extends AppCompatActivity {
                         if (response.errorBody() != null) {
                             responseBody= response.errorBody().string();
                         }
-                        Toast.makeText(LoginActivity.this, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
+                        if (response.code() == 404) {
+                            showAlert(LoginActivity.this, "Login error", "RetroUser does not exist or RetroUser email/password is not correct");
+                        } else{
+                            Toast.makeText(LoginActivity.this, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -217,5 +224,21 @@ public class LoginActivity extends AppCompatActivity {
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
+    }
+
+    private void showAlert(Context ctx, String title, String msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+        builder.setTitle(title);
+        builder.setMessage(msg);
+        builder.setCancelable(false);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+
+            }
+        });
+        builder.show();
     }
 }

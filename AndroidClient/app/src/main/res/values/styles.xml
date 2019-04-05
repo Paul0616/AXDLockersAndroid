@@ -15,6 +15,11 @@
         <item name="android:windowBackground">@drawable/splash</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <!-- Screen with Title theme. -->
+    <style name="TitleTheme" parent="Theme.AppCompat">
+        <item name="windowNoTitle">false</item>
+    </style>
     <!--<style name="FullscreenTheme" parent="AppTheme">-->
         <!--<item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>-->
         <!--<item name="android:windowActionBarOverlay">true</item>-->
