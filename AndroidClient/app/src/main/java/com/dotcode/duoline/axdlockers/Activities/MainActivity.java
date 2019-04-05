@@ -1,6 +1,6 @@
 package com.dotcode.duoline.axdlockers.Activities;
 
-import android.content.ContentValues;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,7 +21,9 @@ import com.dotcode.duoline.axdlockers.Utils.Helper;
 import com.dotcode.duoline.axdlockers.Utils.SaveSharedPreferences;
 import com.google.android.gms.vision.barcode.Barcode;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import info.androidhive.barcode.BarcodeReader;
 
@@ -111,8 +113,8 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
                 @Override
                 public void run() {
                     //showAlert(MainActivity.this, "Test", qrCode);
-                    ContentValues param = new ContentValues();
-                    param.put("qrCode", qrCode);
+                    Map<String, String> param = new HashMap<String, String>();
+                    param.put("filter[qrCode]", qrCode);
                     new SetRequests(getApplicationContext(), MainActivity.this, Helper.REQUEST_LOCKERS, param);
                 }
             });

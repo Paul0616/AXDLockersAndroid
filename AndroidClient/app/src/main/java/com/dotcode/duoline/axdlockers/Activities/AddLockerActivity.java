@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.dotcode.duoline.axdlockers.Models.RetroAddress;
 import com.dotcode.duoline.axdlockers.R;
+import com.dotcode.duoline.axdlockers.Utils.SaveSharedPreferences;
 
 public class AddLockerActivity extends AppCompatActivity {
 
@@ -81,7 +82,7 @@ public class AddLockerActivity extends AppCompatActivity {
 
             }
         });
-
+        SaveSharedPreferences.setAddressNull(getApplicationContext());
 //        lockerSize.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 //            @Override
 //            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -97,6 +98,13 @@ public class AddLockerActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        address = SaveSharedPreferences.getAddress(getApplicationContext());
+        if (address != null) {
+            street.setText(address.getStreetName());
+            zipCode.setText(address.getZipCode());
+            city.setText(address.getCity().getName() +", " + address.getCity().getState().getName());
+        }
+
     }
 
     private void setupMenu(){

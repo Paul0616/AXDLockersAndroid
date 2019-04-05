@@ -18,7 +18,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activities.ChooseAddressActivity"
+        <activity android:name=".Activities.AddAddressActivity"
+            android:parentActivityName=".Activities.ChooseAddressActivity"
+            android:theme="@style/TitleTheme" />
+        <activity
+            android:name=".Activities.ChooseAddressActivity"
             android:parentActivityName=".Activities.AddLockerActivity"
             android:theme="@style/TitleTheme" />
         <activity

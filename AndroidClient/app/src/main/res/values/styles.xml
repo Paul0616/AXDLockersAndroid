@@ -17,7 +17,7 @@
     </style>
 
     <!-- Screen with Title theme. -->
-    <style name="TitleTheme" parent="Theme.AppCompat">
+    <style name="TitleTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowNoTitle">false</item>
     </style>
     <!--<style name="FullscreenTheme" parent="AppTheme">-->

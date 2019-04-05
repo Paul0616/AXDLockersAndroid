@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.dotcode.duoline.axdlockers.Models.RetroAddress;
+import com.google.gson.Gson;
+
 public class SaveSharedPreferences {
     static SharedPreferences getSharedPreference(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -77,6 +80,27 @@ public class SaveSharedPreferences {
         editor.remove("TOKEN_EXPIRE_AT");
         editor.remove("IS_ADMIN");
         editor.remove("ACCES_TOKEN");
+        editor.commit();
+    }
+
+    public static void setAddress(Context ctx, RetroAddress address){
+        SharedPreferences.Editor editor = getSharedPreference(ctx).edit();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(address);
+        editor.putString("ADDRESS", json);
+        editor.commit();
+    }
+
+    public static RetroAddress getAddress(Context ctx) {
+        Gson gson = new Gson();
+        String json = getSharedPreference(ctx).getString("ADDRESS", "");
+        return gson.fromJson(json, RetroAddress.class);
+    }
+
+    public static void setAddressNull(Context ctx) {
+        SharedPreferences.Editor editor = getSharedPreference(ctx).edit();
+        editor.remove("ADDRESS");
         editor.commit();
     }
 }

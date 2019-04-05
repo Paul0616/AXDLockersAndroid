@@ -20,4 +20,12 @@
     <string name="log_in">Log In</string>
     <string name="todo">TODO</string>
     <string name="text_info">The locker that you associate with the last scanned QR code:</string>
+    <string name="locker_number">#locker number</string>
+    <string name="locker_address">locker address</string>
+    <string name="empty_string">-</string>
+    <string name="street">Street:</string>
+    <string name="locker_size">locker size</string>
+    <string name="zip_code">Zip Code:</string>
+    <string name="city">City:</string>
+    <string name="choose_an_address">Choose an address</string>
 </resources>

@@ -20,6 +20,10 @@ public class RetroAddressList {
             return null;
     }
 
+    public List<RetroAddress> getAddresses() {
+        return addresses;
+    }
+
     public int getCurrentPage() {
         return meta.currentPage;
     }

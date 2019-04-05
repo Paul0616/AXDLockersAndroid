@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cardview_light_background"
     android:orientation="vertical"
     tools:context=".Activities.AddLockerActivity">
 
@@ -30,7 +29,6 @@
                 android:layout_marginRight="32dp"
                 android:layout_weight="1"
                 android:text="@string/text_info"
-                android:textColor="@color/cardview_dark_background"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -48,10 +46,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_weight="1"
-                android:text="#locker number"
+                android:text="@string/locker_number"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="12sp"
-                android:textStyle="italic" />
+                android:textStyle="italic"
+                android:layout_marginStart="8dp" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/textinputLayoutLockerNumber"
@@ -82,17 +81,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
-                android:text="locker address"
+                android:text="@string/locker_address"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="12sp"
-                android:textStyle="italic" />
+                android:textStyle="italic"
+                android:layout_marginStart="8dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="horizontal"
-                android:padding="8dp">
+                android:padding="8dp"
+                android:baselineAligned="false">
 
                 <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
@@ -105,8 +106,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="top"
-                        android:text="Street:"
-                        android:textColor="@color/cardview_dark_background"
+                        android:text="@string/street"
                         android:textSize="12sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/streetTextView" />
@@ -119,8 +119,7 @@
                         android:layout_marginLeft="70dp"
                         android:layout_weight="1"
                         android:gravity="top"
-                        android:text="-"
-                        android:textColor="@color/cardview_dark_background"
+                        android:text="@string/empty_string"
                         android:textSize="12sp"
                         app:layout_constraintBottom_toTopOf="@+id/zipCodeTextView"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -132,8 +131,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Zip Code:"
-                        android:textColor="@color/cardview_dark_background"
+                        android:text="@string/zip_code"
                         android:textSize="12sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/zipCodeTextView" />
@@ -143,8 +141,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="10"
-                        android:text="-"
-                        android:textColor="@color/cardview_dark_background"
+                        android:text="@string/empty_string"
                         android:textSize="12sp"
                         app:layout_constraintBottom_toTopOf="@+id/cityTextView"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -156,8 +153,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="City:"
-                        android:textColor="@color/cardview_dark_background"
+                        android:text="@string/city"
                         android:textSize="12sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/cityTextView" />
@@ -167,8 +163,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="10"
-                        android:text="-"
-                        android:textColor="@color/cardview_dark_background"
+                        android:text="@string/empty_string"
                         android:textSize="12sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -188,6 +183,7 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:background="@drawable/round_corner_circle"
+                        android:contentDescription="@string/choose_an_address"
                         app:srcCompat="@drawable/add_address_icon" />
                 </LinearLayout>
 
@@ -199,10 +195,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_weight="1"
-                android:text="locker size"
+                android:text="@string/locker_size"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="12sp"
-                android:textStyle="italic" />
+                android:textStyle="italic"
+                android:layout_marginStart="8dp" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/textInputLayoutPassword"

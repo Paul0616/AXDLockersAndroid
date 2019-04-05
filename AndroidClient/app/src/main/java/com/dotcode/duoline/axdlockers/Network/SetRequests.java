@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,14 +32,14 @@ public class SetRequests {
     final private GetDataResponse mHandler;
     private Context context;
     GetDataService service;
-    ContentValues parameters;
+    Map<String,String> parameters;
 
     public interface GetDataResponse {
         void onResponse(int currentRequestId, Object result);
         void onFailed(int currentRequestId, boolean mustLogOut);
     }
     //constructor
-    public SetRequests(Context context, GetDataResponse handler, int currentRequestId, ContentValues cv){
+    public SetRequests(Context context, GetDataResponse handler, int currentRequestId, Map<String, String> cv){
         requestId = currentRequestId;
         mHandler = handler;
         this.context = context;
@@ -70,7 +71,9 @@ public class SetRequests {
             case Helper.REQUEST_LOCKERS:
                 getLockers(parameters);
                 break;
-
+            case Helper.REQUEST_ADDRESSES:
+                getAddressers(parameters);
+                break;
         }
     }
     private void tokenRequest() {
@@ -157,10 +160,10 @@ public class SetRequests {
         });
     }
 
-    private void getLockers(ContentValues parameters) {
-        if (parameters.containsKey("qrCode")) {
-            String qrCode = parameters.get("qrCode").toString();
-            Call<RetroLockerList> call = service.getLockers(qrCode, SaveSharedPreferences.getAccesToken(context));
+    private void getLockers(Map<String, String> parameters) {
+        //if (parameters.containsKey("qrCode")) {
+        //    String qrCode = parameters.get("qrCode").toString();
+            Call<RetroLockerList> call = service.getLockers(parameters, SaveSharedPreferences.getAccesToken(context));
             call.enqueue(new Callback<RetroLockerList>() {
                 @Override
                 public void onResponse(Call<RetroLockerList> call, Response<RetroLockerList> response) {
@@ -197,27 +200,32 @@ public class SetRequests {
                     Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
                 }
             });
-        }
+       // }
     }
 
-    private void getAddressers(ContentValues parameters) {
-        int perPage = 20;
-        int page = 1;
-        String expand = "";
-        String sort = "";
-        if (parameters.containsKey("per-page")) {
-            perPage = (int) parameters.get("per-page");
-        }
-        if (parameters.containsKey("page")) {
-            page = (int) parameters.get("page");
-        }
-        if (parameters.containsKey("sort")) {
-            sort = parameters.get("sort").toString();
-        }
-        if (parameters.containsKey("expand")) {
-            expand = parameters.get("expand").toString();
-        }
-            Call<RetroAddressList> call = service.getAddresses(sort, expand, perPage, page, SaveSharedPreferences.getAccesToken(context));
+    private void getAddressers(Map<String, String> parameters) {
+//        int perPage = 20;
+//        int page = 1;
+//        String expand = "";
+//        String sort = "";
+//        String likeStreetName = "";
+//        if (parameters.containsKey("per-page")) {
+//            perPage = (int) parameters.get("per-page");
+//        }
+//        if (parameters.containsKey("page")) {
+//            page = (int) parameters.get("page");
+//        }
+//        if (parameters.containsKey("sort")) {
+//            sort = parameters.get("sort").toString();
+//        }
+//        if (parameters.containsKey("expand")) {
+//            expand = parameters.get("expand").toString();
+//        }
+//        if (parameters.containsKey("likeStreetName")) {
+//            likeStreetName = parameters.get("likeStreetName").toString();
+//        }
+
+            Call<RetroAddressList> call = service.getAddresses(parameters, SaveSharedPreferences.getAccesToken(context));
             call.enqueue(new Callback<RetroAddressList>() {
                 @Override
                 public void onResponse(Call<RetroAddressList> call, Response<RetroAddressList> response) {
