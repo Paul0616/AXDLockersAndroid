@@ -14,6 +14,7 @@ public class Helper {
     public static final int REQUEST_CHECK_USER = 1;
     public static final int REQUEST_LOCKERS = 2;
     public static final int REQUEST_ADDRESSES = 3;
+    public static final int REQUEST_CITIES = 4;
 
     /**
      * @return true if user is logged in application (user's credentials are saved in SharedPreferences)

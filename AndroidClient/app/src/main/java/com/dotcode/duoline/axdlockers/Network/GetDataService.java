@@ -3,6 +3,8 @@ package com.dotcode.duoline.axdlockers.Network;
 
 import com.dotcode.duoline.axdlockers.Models.RetroAddress;
 import com.dotcode.duoline.axdlockers.Models.RetroAddressList;
+import com.dotcode.duoline.axdlockers.Models.RetroCity;
+import com.dotcode.duoline.axdlockers.Models.RetroCityList;
 import com.dotcode.duoline.axdlockers.Models.RetroLocker;
 import com.dotcode.duoline.axdlockers.Models.RetroLockerList;
 import com.dotcode.duoline.axdlockers.Models.RetroTokenList;
@@ -31,4 +33,7 @@ public interface GetDataService {
 
     @GET("addresses")
     Call<RetroAddressList> getAddresses(@QueryMap Map<String, String> options, @Query("access-token") String token);
+
+    @GET("cities")
+    Call<RetroCityList> getCities(@QueryMap Map<String, String> options, @Query("access-token") String token);
 }

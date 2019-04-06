@@ -20,7 +20,8 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".Activities.AddAddressActivity"
             android:parentActivityName=".Activities.ChooseAddressActivity"
-            android:theme="@style/TitleTheme" />
+            android:theme="@style/TitleTheme"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".Activities.ChooseAddressActivity"
             android:parentActivityName=".Activities.AddLockerActivity"
@@ -28,7 +29,8 @@
         <activity
             android:name=".Activities.AddLockerActivity"
             android:parentActivityName=".Activities.MainActivity"
-            android:theme="@style/TitleTheme" />
+            android:theme="@style/TitleTheme"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".Activities.AddResidentActivity"
             android:parentActivityName=".Activities.MainActivity"

@@ -165,6 +165,7 @@ public class ChooseAddressActivity extends AppCompatActivity implements SetReque
                 addressList = new ArrayList<RetroAddress>();
                 adapter.setList(addressList);
                 makeAddressRequest();
+                searchView.clearFocus();
                 return true;
             }
 

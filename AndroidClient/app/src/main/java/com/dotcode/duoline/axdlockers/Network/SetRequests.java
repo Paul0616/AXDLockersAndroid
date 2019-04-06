@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.dotcode.duoline.axdlockers.Models.RetroAddress;
 import com.dotcode.duoline.axdlockers.Models.RetroAddressList;
+import com.dotcode.duoline.axdlockers.Models.RetroCityList;
 import com.dotcode.duoline.axdlockers.Models.RetroLocker;
 import com.dotcode.duoline.axdlockers.Models.RetroLockerList;
 import com.dotcode.duoline.axdlockers.Models.RetroToken;
@@ -73,6 +74,9 @@ public class SetRequests {
                 break;
             case Helper.REQUEST_ADDRESSES:
                 getAddressers(parameters);
+                break;
+            case Helper.REQUEST_CITIES:
+                getCities(parameters);
                 break;
         }
     }
@@ -204,27 +208,6 @@ public class SetRequests {
     }
 
     private void getAddressers(Map<String, String> parameters) {
-//        int perPage = 20;
-//        int page = 1;
-//        String expand = "";
-//        String sort = "";
-//        String likeStreetName = "";
-//        if (parameters.containsKey("per-page")) {
-//            perPage = (int) parameters.get("per-page");
-//        }
-//        if (parameters.containsKey("page")) {
-//            page = (int) parameters.get("page");
-//        }
-//        if (parameters.containsKey("sort")) {
-//            sort = parameters.get("sort").toString();
-//        }
-//        if (parameters.containsKey("expand")) {
-//            expand = parameters.get("expand").toString();
-//        }
-//        if (parameters.containsKey("likeStreetName")) {
-//            likeStreetName = parameters.get("likeStreetName").toString();
-//        }
-
             Call<RetroAddressList> call = service.getAddresses(parameters, SaveSharedPreferences.getAccesToken(context));
             call.enqueue(new Callback<RetroAddressList>() {
                 @Override
@@ -259,6 +242,43 @@ public class SetRequests {
                     Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
                 }
             });
+
+    }
+
+    private void getCities(Map<String, String> parameters) {
+        Call<RetroCityList> call = service.getCities(parameters, SaveSharedPreferences.getAccesToken(context));
+        call.enqueue(new Callback<RetroCityList>() {
+            @Override
+            public void onResponse(Call<RetroCityList> call, Response<RetroCityList> response) {
+                if (response.isSuccessful()) {
+                    RetroCityList cities = response.body();
+                    Object citiesObj = cities;
+
+                    mHandler.onResponse(requestId, cities);
+
+                } else {
+                    try {
+                        SaveSharedPreferences.logOutUser(context);
+                        String url = response.raw().request().url().toString();
+
+                        String responseBody = "";
+                        if (response.errorBody() != null) {
+                            responseBody = response.errorBody().string();
+                        }
+                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
+                        mHandler.onFailed(requestId, true);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RetroCityList> call, Throwable t) {
+                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 }
