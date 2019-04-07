@@ -1,26 +1,30 @@
 package com.dotcode.duoline.axdlockers.Network;
 
 
-import android.content.ContentValues;
 import android.content.Context;
 
 import android.widget.Toast;
 
 import com.dotcode.duoline.axdlockers.Models.RetroAddress;
 import com.dotcode.duoline.axdlockers.Models.RetroAddressList;
+import com.dotcode.duoline.axdlockers.Models.RetroBuildingList;
 import com.dotcode.duoline.axdlockers.Models.RetroCityList;
+import com.dotcode.duoline.axdlockers.Models.RetroFilteredResidentsList;
 import com.dotcode.duoline.axdlockers.Models.RetroLocker;
+import com.dotcode.duoline.axdlockers.Models.RetroLockerBuildingResident;
+import com.dotcode.duoline.axdlockers.Models.RetroLockerBuildingResidentID;
+import com.dotcode.duoline.axdlockers.Models.RetroLockerBuildingResidentsList;
+import com.dotcode.duoline.axdlockers.Models.RetroLockerHistory;
+import com.dotcode.duoline.axdlockers.Models.RetroLockerHistoryList;
 import com.dotcode.duoline.axdlockers.Models.RetroLockerList;
-import com.dotcode.duoline.axdlockers.Models.RetroToken;
+import com.dotcode.duoline.axdlockers.Models.RetroNotification;
 import com.dotcode.duoline.axdlockers.Models.RetroTokenList;
 import com.dotcode.duoline.axdlockers.Models.RetroUser;
 import com.dotcode.duoline.axdlockers.Utils.Helper;
 import com.dotcode.duoline.axdlockers.Utils.SaveSharedPreferences;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -34,17 +38,19 @@ public class SetRequests {
     private Context context;
     GetDataService service;
     Map<String,String> parameters;
+    Object body;
 
     public interface GetDataResponse {
         void onResponse(int currentRequestId, Object result);
         void onFailed(int currentRequestId, boolean mustLogOut);
     }
     //constructor
-    public SetRequests(Context context, GetDataResponse handler, int currentRequestId, Map<String, String> cv){
+    public SetRequests(Context context, GetDataResponse handler, int currentRequestId, Map<String, String> cv, Object body){
         requestId = currentRequestId;
         mHandler = handler;
         this.context = context;
         parameters = cv;
+        this.body = body;
         service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
         attemptGetNewToken();
     }
@@ -77,6 +83,39 @@ public class SetRequests {
                 break;
             case Helper.REQUEST_CITIES:
                 getCities(parameters);
+                break;
+            case Helper.REQUEST_INSERT_ADDRESS:
+                setAddress(body);
+                break;
+            case Helper.REQUEST_INSERT_LOCKER:
+                setLocker(body);
+                break;
+            case Helper.REQUEST_LOCKER_HISTORIES:
+                getLockerHistories(parameters);
+                break;
+            case Helper.REQUEST_FILTERED_RESIDENTS:
+                getFilteredResidents(parameters);
+                break;
+            case Helper.REQUEST_CHECK_BUILDING:
+                getBuildings(parameters);
+                break;
+            case Helper.REQUEST_DELETE_LOCKER_BUILDING_RESIDENT:
+                deleteLBR(parameters);
+                break;
+            case Helper.REQUEST_DELETE_LOCKER_HISTORY:
+                deleteLH(parameters);
+                break;
+            case Helper.REQUEST_LOCKER_BUILDING_RESIDENT:
+                getLBRs(parameters);
+                break;
+            case Helper.REQUEST_INSERT_LOCKER_BUILDING_RESIDENT:
+                createLBRs(body);
+                break;
+            case Helper.REQUEST_INSERT_LOCKER_HISTORY:
+                createLHs(body);
+                break;
+            case Helper.REQUEST_INSER_NOTIFICATION:
+                createNotification(body);
                 break;
         }
     }
@@ -207,6 +246,45 @@ public class SetRequests {
        // }
     }
 
+    private void setLocker(Object locker) {
+
+        Call<RetroLocker> call = service.createLocker(((RetroLocker)locker), SaveSharedPreferences.getAccesToken(context));
+        call.enqueue(new Callback<RetroLocker>() {
+            @Override
+            public void onResponse(Call<RetroLocker> call, Response<RetroLocker> response) {
+                if (response.isSuccessful()) {
+                    RetroLocker locker = response.body();
+                    Object addresObj = locker;
+//                        List<Object> addressesObj = new ArrayList<Object>();
+//                        lockers.add(locker);
+                    mHandler.onResponse(requestId, addresObj);
+
+                } else {
+                    try {
+                        SaveSharedPreferences.logOutUser(context);
+                        String url = response.raw().request().url().toString();
+
+                        String responseBody = "";
+                        if (response.errorBody() != null) {
+                            responseBody = response.errorBody().string();
+                        }
+                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
+                        mHandler.onFailed(requestId, true);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RetroLocker> call, Throwable t) {
+                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
     private void getAddressers(Map<String, String> parameters) {
             Call<RetroAddressList> call = service.getAddresses(parameters, SaveSharedPreferences.getAccesToken(context));
             call.enqueue(new Callback<RetroAddressList>() {
@@ -245,6 +323,45 @@ public class SetRequests {
 
     }
 
+    private void setAddress(Object address) {
+
+        Call<RetroAddress> call = service.createAddress(((RetroAddress)address), SaveSharedPreferences.getAccesToken(context));
+        call.enqueue(new Callback<RetroAddress>() {
+            @Override
+            public void onResponse(Call<RetroAddress> call, Response<RetroAddress> response) {
+                if (response.isSuccessful()) {
+                    RetroAddress address = response.body();
+                    Object addresObj = address;
+//                        List<Object> addressesObj = new ArrayList<Object>();
+//                        lockers.add(locker);
+                    mHandler.onResponse(requestId, addresObj);
+
+                } else {
+                    try {
+                        SaveSharedPreferences.logOutUser(context);
+                        String url = response.raw().request().url().toString();
+
+                        String responseBody = "";
+                        if (response.errorBody() != null) {
+                            responseBody = response.errorBody().string();
+                        }
+                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
+                        mHandler.onFailed(requestId, true);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RetroAddress> call, Throwable t) {
+                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
     private void getCities(Map<String, String> parameters) {
         Call<RetroCityList> call = service.getCities(parameters, SaveSharedPreferences.getAccesToken(context));
         call.enqueue(new Callback<RetroCityList>() {
@@ -276,6 +393,341 @@ public class SetRequests {
 
             @Override
             public void onFailure(Call<RetroCityList> call, Throwable t) {
+                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void getLockerHistories(Map<String, String> parameters) {
+        Call<RetroLockerHistoryList> call = service.getHistories(parameters, SaveSharedPreferences.getAccesToken(context));
+        call.enqueue(new Callback<RetroLockerHistoryList>() {
+            @Override
+            public void onResponse(Call<RetroLockerHistoryList> call, Response<RetroLockerHistoryList> response) {
+                if (response.isSuccessful()) {
+                    RetroLockerHistoryList lockerHistories = response.body();
+                    Object lockerHistoriesObj = lockerHistories;
+
+                    mHandler.onResponse(requestId, lockerHistories);
+
+                } else {
+                    try {
+                        SaveSharedPreferences.logOutUser(context);
+                        String url = response.raw().request().url().toString();
+
+                        String responseBody = "";
+                        if (response.errorBody() != null) {
+                            responseBody = response.errorBody().string();
+                        }
+                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
+                        mHandler.onFailed(requestId, true);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RetroLockerHistoryList> call, Throwable t) {
+                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void getFilteredResidents(Map<String, String> parameters) {
+        Call<RetroFilteredResidentsList> call = service.getFilteredResidents(parameters, SaveSharedPreferences.getAccesToken(context));
+        call.enqueue(new Callback<RetroFilteredResidentsList>() {
+            @Override
+            public void onResponse(Call<RetroFilteredResidentsList> call, Response<RetroFilteredResidentsList> response) {
+                if (response.isSuccessful()) {
+                    RetroFilteredResidentsList filteredResidents = response.body();
+                    Object filteredResidentsObj = filteredResidents;
+
+                    mHandler.onResponse(requestId, filteredResidentsObj);
+
+                } else {
+                    try {
+                        SaveSharedPreferences.logOutUser(context);
+                        String url = response.raw().request().url().toString();
+
+                        String responseBody = "";
+                        if (response.errorBody() != null) {
+                            responseBody = response.errorBody().string();
+                        }
+                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
+                        mHandler.onFailed(requestId, true);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RetroFilteredResidentsList> call, Throwable t) {
+                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void getBuildings(Map<String, String> parameters) {
+        Call<RetroBuildingList> call = service.getBuildings(parameters, SaveSharedPreferences.getAccesToken(context));
+        call.enqueue(new Callback<RetroBuildingList>() {
+            @Override
+            public void onResponse(Call<RetroBuildingList> call, Response<RetroBuildingList> response) {
+                if (response.isSuccessful()) {
+                    RetroBuildingList buildingList = response.body();
+                    Object buildingListObj = buildingList;
+
+                    mHandler.onResponse(requestId, buildingListObj);
+
+                } else {
+                    try {
+                        SaveSharedPreferences.logOutUser(context);
+                        String url = response.raw().request().url().toString();
+
+                        String responseBody = "";
+                        if (response.errorBody() != null) {
+                            responseBody = response.errorBody().string();
+                        }
+                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
+                        mHandler.onFailed(requestId, true);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RetroBuildingList> call, Throwable t) {
+                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void deleteLBR(Map<String, String> parameters) {
+        int id = Integer.valueOf(parameters.get("ID"));
+        Call<Void> call = service.deleteLBR(id, SaveSharedPreferences.getAccesToken(context));
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+
+                    mHandler.onResponse(requestId, null);
+
+                } else {
+                    try {
+                        SaveSharedPreferences.logOutUser(context);
+                        String url = response.raw().request().url().toString();
+
+                        String responseBody = "";
+                        if (response.errorBody() != null) {
+                            responseBody = response.errorBody().string();
+                        }
+                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
+                        mHandler.onFailed(requestId, true);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void deleteLH(Map<String, String> parameters) {
+        int id = Integer.valueOf(parameters.get("ID"));
+        Call<Void> call = service.deleteLH(id, SaveSharedPreferences.getAccesToken(context));
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+
+                    mHandler.onResponse(requestId, null);
+
+                } else {
+                    try {
+                        SaveSharedPreferences.logOutUser(context);
+                        String url = response.raw().request().url().toString();
+
+                        String responseBody = "";
+                        if (response.errorBody() != null) {
+                            responseBody = response.errorBody().string();
+                        }
+                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
+                        mHandler.onFailed(requestId, true);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void getLBRs(Map<String, String> parameters) {
+        Call<RetroLockerBuildingResidentsList> call = service.getLBRs(parameters, SaveSharedPreferences.getAccesToken(context));
+        call.enqueue(new Callback<RetroLockerBuildingResidentsList>() {
+            @Override
+            public void onResponse(Call<RetroLockerBuildingResidentsList> call, Response<RetroLockerBuildingResidentsList> response) {
+                if (response.isSuccessful()) {
+                    RetroLockerBuildingResidentsList lbrs = response.body();
+                    Object lbrsObj = lbrs;
+
+                    mHandler.onResponse(requestId, lbrsObj);
+
+                } else {
+                    try {
+                        SaveSharedPreferences.logOutUser(context);
+                        String url = response.raw().request().url().toString();
+
+                        String responseBody = "";
+                        if (response.errorBody() != null) {
+                            responseBody = response.errorBody().string();
+                        }
+                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
+                        mHandler.onFailed(requestId, true);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RetroLockerBuildingResidentsList> call, Throwable t) {
+                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void createLBRs(Object lbr) {
+
+        Call<RetroLockerBuildingResident> call = service.createLBRs(((RetroLockerBuildingResident)lbr), SaveSharedPreferences.getAccesToken(context));
+        call.enqueue(new Callback<RetroLockerBuildingResident>() {
+            @Override
+            public void onResponse(Call<RetroLockerBuildingResident> call, Response<RetroLockerBuildingResident> response) {
+                if (response.isSuccessful()) {
+                    RetroLockerBuildingResident lbr = response.body();
+                    Object lbrObj = lbr;
+//                        List<Object> addressesObj = new ArrayList<Object>();
+//                        lockers.add(locker);
+                    mHandler.onResponse(requestId, lbrObj);
+
+                } else {
+                    try {
+                        SaveSharedPreferences.logOutUser(context);
+                        String url = response.raw().request().url().toString();
+
+                        String responseBody = "";
+                        if (response.errorBody() != null) {
+                            responseBody = response.errorBody().string();
+                        }
+                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
+                        mHandler.onFailed(requestId, true);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RetroLockerBuildingResident> call, Throwable t) {
+                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void createLHs(Object lh) {
+
+        Call<RetroLockerHistory> call = service.createLHs(((RetroLockerHistory)lh), SaveSharedPreferences.getAccesToken(context));
+        call.enqueue(new Callback<RetroLockerHistory>() {
+            @Override
+            public void onResponse(Call<RetroLockerHistory> call, Response<RetroLockerHistory> response) {
+                if (response.isSuccessful()) {
+                    RetroLockerHistory lh = response.body();
+                    Object lhObj = lh;
+
+                    mHandler.onResponse(requestId, lhObj);
+
+                } else {
+                    try {
+                        SaveSharedPreferences.logOutUser(context);
+                        String url = response.raw().request().url().toString();
+
+                        String responseBody = "";
+                        if (response.errorBody() != null) {
+                            responseBody = response.errorBody().string();
+                        }
+                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
+                        mHandler.onFailed(requestId, true);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RetroLockerHistory> call, Throwable t) {
+                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void createNotification(Object lh) {
+
+        Call<RetroNotification> call = service.createNotification(((RetroLockerBuildingResidentID)lh), SaveSharedPreferences.getAccesToken(context));
+        call.enqueue(new Callback<RetroNotification>() {
+            @Override
+            public void onResponse(Call<RetroNotification> call, Response<RetroNotification> response) {
+                if (response.isSuccessful()) {
+                    RetroNotification lh = response.body();
+                    Object lhObj = lh;
+
+                    mHandler.onResponse(requestId, lhObj);
+
+                } else {
+                    try {
+                        SaveSharedPreferences.logOutUser(context);
+                        String url = response.raw().request().url().toString();
+
+                        String responseBody = "";
+                        if (response.errorBody() != null) {
+                            responseBody = response.errorBody().string();
+                        }
+                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
+                        mHandler.onFailed(requestId, true);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RetroNotification> call, Throwable t) {
                 Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
             }
         });

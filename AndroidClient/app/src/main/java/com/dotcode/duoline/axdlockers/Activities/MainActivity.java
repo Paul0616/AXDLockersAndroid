@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
     private TextView textView;
     private boolean codeWasDetected = false;
     private ImageView bLogOut;
+    private String detectedqrCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,11 +63,15 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
     public void onResponse(int currentRequestId, Object result) {
         if (currentRequestId == Helper.REQUEST_LOCKERS){
             if(result != null && result instanceof RetroLocker) {
-                int id = ((RetroLocker) result).getUserId();
+                int id = ((RetroLocker) result).getId();
                 //locker found
-                startActivity(new Intent(MainActivity.this, AddResidentActivity.class));
+                Intent i = new Intent(MainActivity.this, AddResidentActivity.class);
+                i.putExtra("qrCode", detectedqrCode);
+                startActivity(i);
             } else {
-                startActivity(new Intent(MainActivity.this, AddLockerActivity.class));
+                Intent i = new Intent(MainActivity.this, AddLockerActivity.class);
+                i.putExtra("qrCode", detectedqrCode);
+                startActivity(i);
             }
         }
     }
@@ -113,9 +118,10 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
                 @Override
                 public void run() {
                     //showAlert(MainActivity.this, "Test", qrCode);
+                    detectedqrCode = qrCode;
                     Map<String, String> param = new HashMap<String, String>();
                     param.put("filter[qrCode]", qrCode);
-                    new SetRequests(getApplicationContext(), MainActivity.this, Helper.REQUEST_LOCKERS, param);
+                    new SetRequests(getApplicationContext(), MainActivity.this, Helper.REQUEST_LOCKERS, param, null);
                 }
             });
         }

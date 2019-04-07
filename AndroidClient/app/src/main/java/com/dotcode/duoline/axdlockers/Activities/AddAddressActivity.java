@@ -1,5 +1,8 @@
 package com.dotcode.duoline.axdlockers.Activities;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +20,7 @@ import android.widget.ProgressBar;
 import android.support.v7.widget.SearchView;
 import android.widget.TextView;
 
+import com.dotcode.duoline.axdlockers.Models.RetroAddress;
 import com.dotcode.duoline.axdlockers.Models.RetroCity;
 import com.dotcode.duoline.axdlockers.Models.RetroCityList;
 import com.dotcode.duoline.axdlockers.Network.SetRequests;
@@ -189,16 +193,22 @@ public class AddAddressActivity extends AppCompatActivity implements SetRequests
 
     @Override
     public void onResponse(int currentRequestId, Object result) {
+
         isLoading = false;
         progressBar.setVisibility(View.INVISIBLE);
-        if(result instanceof RetroCityList){
-            citiesList = ((RetroCityList) result).getCities();
-            isLastPage = ((RetroCityList) result).isPastPage();
-            loadedPages = ((RetroCityList) result).getCurrentPage() + 1;
-            if (loadedPages == 1) adapter.setList(citiesList);
-            else adapter.addToList(citiesList);
+        if(currentRequestId == Helper.REQUEST_CITIES) {
+            if (result instanceof RetroCityList) {
+                citiesList = ((RetroCityList) result).getCities();
+                isLastPage = ((RetroCityList) result).isPastPage();
+                loadedPages = ((RetroCityList) result).getCurrentPage() + 1;
+                if (loadedPages == 1) adapter.setList(citiesList);
+                else adapter.addToList(citiesList);
+            }
+            searchString = "";
         }
-        searchString = "";
+        if(currentRequestId == Helper.REQUEST_INSERT_ADDRESS) {
+            showAlert(AddAddressActivity.this, "Address added", "Address was succsesfully added.");
+        }
     }
 
     @Override
@@ -218,7 +228,7 @@ public class AddAddressActivity extends AppCompatActivity implements SetRequests
         if (search) {
             param.put("filter[name][like]", searchString);
         }
-        new SetRequests(getApplicationContext(), AddAddressActivity.this, Helper.REQUEST_CITIES, param);
+        new SetRequests(getApplicationContext(), AddAddressActivity.this, Helper.REQUEST_CITIES, param, null);
     }
 
     @Override
@@ -244,12 +254,30 @@ public class AddAddressActivity extends AppCompatActivity implements SetRequests
             onBackPressed();
             return true;
         }
-        if (id == R.id.action_add) {
-            //showAlert(ChooseAddressActivity.this, "Add Address", "Would you want to add new ADDRESS?", ADD_ADDRESS);
+        if (id == R.id.action_save) {
+            RetroAddress address = new RetroAddress(0, streetEditText.getText().toString() ,
+                    zipCodeEdiText.getText().toString(), currentCity.getId(), currentCity);
+            isLoading = true;
+            new SetRequests(getApplicationContext(), AddAddressActivity.this, Helper.REQUEST_INSERT_ADDRESS, null, address);
+
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showAlert(Context ctx, String title, String msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+        builder.setTitle(title);
+        builder.setMessage(msg);
+        builder.setCancelable(false);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        builder.show();
     }
 
     class ItemsAdapter extends RecyclerView.Adapter<AddAddressActivity.ItemsAdapter.ItemViewHolder>{

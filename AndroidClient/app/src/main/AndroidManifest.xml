@@ -18,10 +18,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activities.AddAddressActivity"
+        <activity android:name=".Activities.FinalPostActivity"></activity>
+        <activity
+            android:name=".Activities.SecurityCodeActivity"
+            android:parentActivityName=".Activities.AddResidentActivity"
+            android:theme="@style/TitleTheme" />
+        <activity
+            android:name=".Activities.ChooseBuildingActivity"
+            android:parentActivityName=".Activities.AddResidentActivity"
+            android:theme="@style/TitleTheme" />
+        <activity
+            android:name=".Activities.AddAddressActivity"
             android:parentActivityName=".Activities.ChooseAddressActivity"
             android:theme="@style/TitleTheme"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Activities.ChooseAddressActivity"
             android:parentActivityName=".Activities.AddLockerActivity"
@@ -30,7 +40,7 @@
             android:name=".Activities.AddLockerActivity"
             android:parentActivityName=".Activities.MainActivity"
             android:theme="@style/TitleTheme"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Activities.AddResidentActivity"
             android:parentActivityName=".Activities.MainActivity"

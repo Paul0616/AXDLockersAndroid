@@ -28,4 +28,9 @@
     <string name="zip_code">Zip Code:</string>
     <string name="city">City:</string>
     <string name="choose_an_address">Choose an address</string>
+    <string name="locker">LOCKER</string>
+    <string name="residents_from_condo_building">Residents from Condo Building:</string>
+    <string name="number">number:</string>
+    <string name="size">size:</string>
+    <string name="address">address:</string>
 </resources>

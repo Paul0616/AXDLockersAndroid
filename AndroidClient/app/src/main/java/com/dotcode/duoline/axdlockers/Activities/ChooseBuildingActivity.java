@@ -1,6 +1,5 @@
 package com.dotcode.duoline.axdlockers.Activities;
 
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,8 +17,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.dotcode.duoline.axdlockers.Models.RetroAddress;
-import com.dotcode.duoline.axdlockers.Models.RetroAddressList;
+import com.dotcode.duoline.axdlockers.Models.RetroBuilding;
+import com.dotcode.duoline.axdlockers.Models.RetroBuildingList;
 import com.dotcode.duoline.axdlockers.Network.SetRequests;
 import com.dotcode.duoline.axdlockers.R;
 import com.dotcode.duoline.axdlockers.Utils.Helper;
@@ -30,29 +29,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ChooseAddressActivity extends AppCompatActivity implements SetRequests.GetDataResponse {
+public class ChooseBuildingActivity extends AppCompatActivity implements SetRequests.GetDataResponse{
 
     private RecyclerView recyclerView;
     private static final int PAGE_SIZE = 20;
     private boolean isLoading = false;
     private boolean isLastPage = true;
     private int loadedPages = 1;
-    private List<RetroAddress> addressList = new ArrayList<RetroAddress>();
-    private ChooseAddressActivity.ItemsAdapter adapter;
+    private List<RetroBuilding> buildingsList = new ArrayList<RetroBuilding>();
+    private ChooseBuildingActivity.ItemsAdapter adapter;
     private ProgressBar progressBar;
     private boolean search;
     private String searchString = "";
     private TextView emptyArrayMessage;
-    private static final int ADD_ADDRESS = 1;
-    private static final int CHOOSE_ADDRESS = 2;
-    private RetroAddress currentAddress;
+    private RetroBuilding currentBuilding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_choose_address);
-        setTitle("Choose Address");
-        recyclerView = (RecyclerView) findViewById(R.id.rvAddresses);
-        progressBar = (ProgressBar) findViewById(R.id.progressBarAddress);
+        setContentView(R.layout.activity_choose_building);
+        setTitle("Choose Building");
+        recyclerView = (RecyclerView) findViewById(R.id.rvBuildings);
+        progressBar = (ProgressBar) findViewById(R.id.progressBarBuilding);
         emptyArrayMessage = (TextView) findViewById(R.id.emptyMessage);
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,
@@ -78,29 +75,30 @@ public class ChooseAddressActivity extends AppCompatActivity implements SetReque
                             && firstVisibleItemPosition >= 0
                             && totalItemCount >= PAGE_SIZE) {
                         isLoading = true;
-                       makeAddressRequest();
+                        makeBuildingRequest();
                     }
                 }
             }
         });
 
 
-        adapter = new ItemsAdapter(addressList);
+        adapter = new ItemsAdapter(buildingsList);
         recyclerView.setAdapter(adapter);
     }
 
-    private void makeAddressRequest(){
+    private void makeBuildingRequest(){
         progressBar.setVisibility(View.VISIBLE);
         emptyArrayMessage.setVisibility(View.INVISIBLE);
         Map<String, String> param = new HashMap<String, String>();
-        param.put("expand", "city.state");
-        param.put("sort", "streetName");
+        param.put("expand", "address.city.state");
+        param.put("sort", "buildingUniqueNumber");
         param.put("per-page", String.valueOf(PAGE_SIZE));
         param.put("page", String.valueOf(loadedPages));
         if (search) {
-            param.put("filter[streetName][like]", searchString);
+            param.put("filter[or][][buildingUniqueNumber][like]", searchString);
+            param.put("filter[or][][name][like]", searchString);
         }
-        new SetRequests(getApplicationContext(), ChooseAddressActivity.this, Helper.REQUEST_ADDRESSES, param, null);
+        new SetRequests(getApplicationContext(), ChooseBuildingActivity.this, Helper.REQUEST_CHECK_BUILDING, param, null);
     }
 
     @Override
@@ -110,30 +108,30 @@ public class ChooseAddressActivity extends AppCompatActivity implements SetReque
 
         isLoading = true;
 
-       makeAddressRequest();
+        makeBuildingRequest();
     }
 
     @Override
     public void onResponse(int currentRequestId, Object result) {
         isLoading = false;
         progressBar.setVisibility(View.INVISIBLE);
-        if(result instanceof RetroAddressList){
-            addressList = ((RetroAddressList) result).getAddresses();
-            isLastPage = ((RetroAddressList) result).isPastPage();
-            loadedPages = ((RetroAddressList) result).getCurrentPage() + 1;
-            if (loadedPages == 1) adapter.setList(addressList);
-            else adapter.addToList(addressList);
+        if(result instanceof RetroBuildingList){
+            buildingsList = ((RetroBuildingList) result).getBuildings();
+            isLastPage = ((RetroBuildingList) result).isPastPage();
+            loadedPages = ((RetroBuildingList) result).getCurrentPage() + 1;
+            if (loadedPages == 1) adapter.setList(buildingsList);
+            else adapter.addToList(buildingsList);
         }
     }
 
     @Override
     public void onFailed(int currentRequestId, boolean mustLogOut) {
-
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_search_with_add, menu);
+        getMenuInflater().inflate(R.menu.menu_search, menu);
 
 
         final SearchView searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
@@ -147,9 +145,9 @@ public class ChooseAddressActivity extends AppCompatActivity implements SetReque
                     loadedPages = 1;
                 }
                 searchView.setIconified(true);
-                addressList = new ArrayList<RetroAddress>();
-                adapter.setList(addressList);
-                makeAddressRequest();
+                buildingsList = new ArrayList<RetroBuilding>();
+                adapter.setList(buildingsList);
+                makeBuildingRequest();
             }
         });
 
@@ -162,9 +160,9 @@ public class ChooseAddressActivity extends AppCompatActivity implements SetReque
                 search = true;
                 searchString = s;
                 loadedPages = 1;
-                addressList = new ArrayList<RetroAddress>();
-                adapter.setList(addressList);
-                makeAddressRequest();
+                buildingsList = new ArrayList<RetroBuilding>();
+                adapter.setList(buildingsList);
+                makeBuildingRequest();
                 searchView.clearFocus();
                 return true;
             }
@@ -186,20 +184,14 @@ public class ChooseAddressActivity extends AppCompatActivity implements SetReque
             onBackPressed();
             return true;
         }
-        if (id == R.id.action_add) {
-            showAlert(ChooseAddressActivity.this, "Add Address", "Would you want to add new ADDRESS?", ADD_ADDRESS);
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
 
-
-    private void showAlert(Context ctx, String title, String msg, final int code) {
+    private void showAlert(Context ctx, String title, String msg) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
         builder.setTitle(title);
         builder.setMessage(msg);
-//        builder.setIcon(R.drawable.ic_error_outline_yellow_24dp);
         builder.setCancelable(false);
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
@@ -211,36 +203,27 @@ public class ChooseAddressActivity extends AppCompatActivity implements SetReque
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (code) {
-                    case ADD_ADDRESS:
-                        startActivity(new Intent(ChooseAddressActivity.this, AddAddressActivity.class));
-                        break;
-                    case CHOOSE_ADDRESS:
-                        SaveSharedPreferences.setAddress(getApplicationContext(), currentAddress);
-                        finish();
-                        break;
-                }
-
-
+                SaveSharedPreferences.setBuilding(getApplicationContext(), currentBuilding);
+                finish();
             }
         });
         builder.show();
     }
 
-    class ItemsAdapter extends RecyclerView.Adapter<ChooseAddressActivity.ItemsAdapter.ItemViewHolder>{
+    class ItemsAdapter extends RecyclerView.Adapter<ChooseBuildingActivity.ItemsAdapter.ItemViewHolder>{
 
-        private List<RetroAddress> list;
-        public ItemsAdapter(List<RetroAddress> list){
+        private List<RetroBuilding> list;
+        public ItemsAdapter(List<RetroBuilding> list){
             this.list = list;
         }
 
-        public void setList(List<RetroAddress> list){
+        public void setList(List<RetroBuilding> list){
             this.list = list;
             if (list.size() == 0)
                 emptyArrayMessage.setVisibility(View.VISIBLE);
             notifyDataSetChanged();
         }
-        public void addToList(List<RetroAddress> list) {
+        public void addToList(List<RetroBuilding> list) {
             for (int i = 0; i < list.size(); i++) {
                 this.list.add(list.get(i));
             }
@@ -251,17 +234,17 @@ public class ChooseAddressActivity extends AppCompatActivity implements SetReque
 
 
         @Override
-        public ChooseAddressActivity.ItemsAdapter.ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ChooseBuildingActivity.ItemsAdapter.ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-            View view = layoutInflater.inflate(R.layout.cell_address, parent, false);
-            return new ChooseAddressActivity.ItemsAdapter.ItemViewHolder(view);
+            View view = layoutInflater.inflate(R.layout.cell_building, parent, false);
+            return new ChooseBuildingActivity.ItemsAdapter.ItemViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(ChooseAddressActivity.ItemsAdapter.ItemViewHolder holder, int position) {
-            holder.tvStreet.setText(list.get(position).getStreetName());
-            holder.tvCity.setText(list.get(position).getCity().getName() + ", " + list.get(position).getCity().getState().getName());
-            holder.tvZipCode.setText(list.get(position).getZipCode());
+        public void onBindViewHolder(ChooseBuildingActivity.ItemsAdapter.ItemViewHolder holder, int position) {
+            holder.buildingUniqueNumber.setText(list.get(position).getBuildingUniqueNumber());
+            holder.buldingAddress.setText(list.get(position).getName()+", "+list.get(position).getAddress().getStreetName()+ ", " +
+                    list.get(position).getAddress().getCity().getName() + ", " + list.get(position).getAddress().getCity().getState().getName());
         }
 
         @Override
@@ -270,18 +253,17 @@ public class ChooseAddressActivity extends AppCompatActivity implements SetReque
         }
 
         class ItemViewHolder extends RecyclerView.ViewHolder{
-            TextView tvStreet, tvCity, tvZipCode;
+            TextView buildingUniqueNumber, buldingAddress;
 
             public ItemViewHolder(View view){
                 super(view);
-                tvStreet = view.findViewById(R.id.tvStreet);
-                tvCity = view.findViewById(R.id.tvCity);
-                tvZipCode = view.findViewById(R.id.tvZipCode);
+                buildingUniqueNumber = view.findViewById(R.id.buildingUniqueNumber);
+                buldingAddress = view.findViewById(R.id.buildingAddress);
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        currentAddress = list.get(getAdapterPosition());
-                        showAlert(ChooseAddressActivity.this, "Address tapped", "Would you want to take over this address?", CHOOSE_ADDRESS);
+                        currentBuilding = list.get(getAdapterPosition());
+                        showAlert(ChooseBuildingActivity.this, "Building tapped", "Would you want to take over this building?");
                     }
                 });
 

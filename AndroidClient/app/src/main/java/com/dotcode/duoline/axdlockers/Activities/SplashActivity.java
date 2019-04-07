@@ -27,7 +27,7 @@ public class SplashActivity extends AppCompatActivity implements SetRequests.Get
             @Override
             public void run() {
                 if(Helper.isUserLogged(getApplicationContext())){
-                    new SetRequests(getApplicationContext(), SplashActivity.this, Helper.REQUEST_CHECK_USER, null);
+                    new SetRequests(getApplicationContext(), SplashActivity.this, Helper.REQUEST_CHECK_USER, null, null);
                 } else {
                     startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                     finish();

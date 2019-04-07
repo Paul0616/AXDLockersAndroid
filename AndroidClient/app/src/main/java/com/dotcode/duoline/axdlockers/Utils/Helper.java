@@ -15,6 +15,17 @@ public class Helper {
     public static final int REQUEST_LOCKERS = 2;
     public static final int REQUEST_ADDRESSES = 3;
     public static final int REQUEST_CITIES = 4;
+    public static final int REQUEST_INSERT_ADDRESS = 5;
+    public static final int REQUEST_INSERT_LOCKER = 6;
+    public static final int REQUEST_LOCKER_HISTORIES = 7;
+    public static final int REQUEST_FILTERED_RESIDENTS = 8;
+    public static final int REQUEST_CHECK_BUILDING = 9;
+    public static final int REQUEST_DELETE_LOCKER_BUILDING_RESIDENT = 10;
+    public static final int REQUEST_DELETE_LOCKER_HISTORY = 11;
+    public static final int REQUEST_LOCKER_BUILDING_RESIDENT = 12;
+    public static final int REQUEST_INSERT_LOCKER_BUILDING_RESIDENT = 13;
+    public static final int REQUEST_INSERT_LOCKER_HISTORY = 14;
+    public static final int REQUEST_INSER_NOTIFICATION = 15;
 
     /**
      * @return true if user is logged in application (user's credentials are saved in SharedPreferences)
