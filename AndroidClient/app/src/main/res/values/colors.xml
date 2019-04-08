@@ -5,6 +5,9 @@
     <color name="colorAccent">#011993</color>
     <color name="colorLightOrange">#FFD479</color>
     <color name="colorBleu">#B3C2FF</color>
+    <color name="green">#57AA57</color>
+    <color name="red">#A73227</color>
+    <color name="white">#FFFFFF</color>
 
     <color name="black_overlay">#66000000</color>
 </resources>

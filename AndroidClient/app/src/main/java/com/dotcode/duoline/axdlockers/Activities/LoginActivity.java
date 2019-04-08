@@ -20,13 +20,16 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dotcode.duoline.axdlockers.Models.RetroEmail;
 import com.dotcode.duoline.axdlockers.Models.RetroToken;
 import com.dotcode.duoline.axdlockers.Models.RetroTokenList;
 import com.dotcode.duoline.axdlockers.Network.GetDataService;
 import com.dotcode.duoline.axdlockers.Network.RetrofitClientInstance;
+import com.dotcode.duoline.axdlockers.Network.SetRequests;
 import com.dotcode.duoline.axdlockers.R;
 import com.dotcode.duoline.axdlockers.Utils.Helper;
 import com.dotcode.duoline.axdlockers.Utils.SaveSharedPreferences;
@@ -46,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
     private CardView bLogIn;
     private TextView mPasswordreset;
     GetDataService service;
-   // private String resetEmail;
+    private String resetEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,12 +89,89 @@ public class LoginActivity extends AppCompatActivity {
         mPasswordreset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                LayoutInflater li = LayoutInflater.from(getApplicationContext());
-//                View promptView = li.inflate(R.layout.view_email_input, null);
-//                alertDialogInputEmail(LoginActivity.this, "Resetare Parola", getString(R.string.message_reset_password), promptView);
+                LayoutInflater li = LayoutInflater.from(getApplicationContext());
+                View promptView = li.inflate(R.layout.view_email_input, null);
+                alertDialogInputEmail(LoginActivity.this, "Change password", "Input email where you will get change password link", promptView);
             }
         });
     }
+
+
+    private void alertDialogInputEmail(Context ctx, String title, String msg, View v){
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+        builder.setView(v);
+        final TextView mResetPasswordMessage = (TextView) v.findViewById(R.id.tvPaswordResetMsg);
+        final EditText email = (EditText) v.findViewById(R.id.etEmail);
+        mResetPasswordMessage.setText(msg);
+        builder.setTitle(title);
+        builder.setCancelable(false);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        final AlertDialog dialog = builder.show();
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetEmail = email.getText().toString();
+                if (!TextUtils.isEmpty(resetEmail)){// && Patterns.EMAIL_ADDRESS.matcher(resetEmail).matches()
+                    showProgress(true);
+                    RetroEmail retroEmail = new RetroEmail(resetEmail);
+                    attemptResetPassword(retroEmail);
+                    dialog.dismiss();
+                } else {
+                    email.setError(getString(R.string.error_invalid_email));
+                }
+            }
+        });
+    }
+
+    public void attemptResetPassword(RetroEmail email){
+        Call<Void> call = service.resetPassword(email);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                showProgress(false);
+                if (response.isSuccessful()) {
+                    showAlert(LoginActivity.this, "Change password", "Check your email to get instructions link.");
+                } else {
+                    try {
+                        String url = response.raw().request().url().toString();
+
+                        String responseBody = "";
+                        if (response.errorBody() != null) {
+                            responseBody = response.errorBody().string();
+                        }
+                        if (response.code() != 404) {
+                            Toast.makeText(LoginActivity.this, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
+                        } else {
+                            showAlert(LoginActivity.this, "Error", "This email does not exist");
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                showProgress(false);
+                Toast.makeText(LoginActivity.this, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 
     private void tokenRequest() {
         Call<RetroTokenList> call = service.getToken(SaveSharedPreferences.getEmail(getApplicationContext()), SaveSharedPreferences.getEncryptedPassword(getApplicationContext()));

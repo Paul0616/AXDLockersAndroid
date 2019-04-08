@@ -27,6 +27,7 @@ public class Helper {
     public static final int REQUEST_INSERT_LOCKER_HISTORY = 14;
     public static final int REQUEST_INSER_NOTIFICATION = 15;
 
+
     /**
      * @return true if user is logged in application (user's credentials are saved in SharedPreferences)
      */

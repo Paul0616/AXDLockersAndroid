@@ -45,7 +45,7 @@
             android:name=".Activities.AddResidentActivity"
             android:parentActivityName=".Activities.MainActivity"
             android:theme="@style/TitleTheme" />
-        <activity android:name=".Activities.LoginActivity" /> <!-- <activity -->
+        <activity android:name=".Activities.LoginActivity" android:windowSoftInputMode="adjustPan"/> <!-- <activity -->
         <!-- android:name=".LoginActivity" -->
         <!-- android:label="@string/title_activity_login" /> -->
         <activity

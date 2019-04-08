@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
 
     }
 
-    private void showAlert(Context ctx, String title, String msg) {
+    private void ert(Context ctx, String title, String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
         builder.setTitle(title);
         builder.setMessage(msg);

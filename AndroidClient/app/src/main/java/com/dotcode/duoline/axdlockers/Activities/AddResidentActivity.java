@@ -227,7 +227,7 @@ public class AddResidentActivity extends AppCompatActivity implements SetRequest
         param.put("per-page", ""+PAGE_SIZE);
         param.put("page", ""+loadedPages);
         param.put("sort", "suiteNumber");
-        param.put("expand", "resident,building");
+        param.put("expand", "resident,building.address.city.state");
         if (search) {
             param.put("filter[residentName]", searchString);
             param.put("filter[suiteNumber]", searchString);
@@ -333,7 +333,7 @@ public class AddResidentActivity extends AppCompatActivity implements SetRequest
                     param.put("per-page", ""+PAGE_SIZE);
                     param.put("page", ""+loadedPages);
                     param.put("sort", "suiteNumber");
-                    param.put("expand", "resident,building");
+                    param.put("expand", "resident,building.address.city.state");
                     new SetRequests(getApplicationContext(), AddResidentActivity.this,
                             Helper.REQUEST_FILTERED_RESIDENTS, param, null);
                 } else {

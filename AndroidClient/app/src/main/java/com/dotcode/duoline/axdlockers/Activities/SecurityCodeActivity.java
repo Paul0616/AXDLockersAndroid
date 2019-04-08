@@ -49,6 +49,12 @@ public class SecurityCodeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(SecurityCodeActivity.this, FinalPostActivity.class);
+                Gson gson = new Gson();
+                String json = gson.toJson(currentLocker);
+                i.putExtra("JSON_LOCKER", json);
+                gson = new Gson();
+                json = gson.toJson(currentResident);
+                i.putExtra("JSON_RESIDENT", json);
                 startActivity(i);
             }
         });

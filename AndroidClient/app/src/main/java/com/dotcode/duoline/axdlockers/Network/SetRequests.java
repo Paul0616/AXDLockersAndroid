@@ -9,6 +9,7 @@ import com.dotcode.duoline.axdlockers.Models.RetroAddress;
 import com.dotcode.duoline.axdlockers.Models.RetroAddressList;
 import com.dotcode.duoline.axdlockers.Models.RetroBuildingList;
 import com.dotcode.duoline.axdlockers.Models.RetroCityList;
+import com.dotcode.duoline.axdlockers.Models.RetroEmail;
 import com.dotcode.duoline.axdlockers.Models.RetroFilteredResidentsList;
 import com.dotcode.duoline.axdlockers.Models.RetroLocker;
 import com.dotcode.duoline.axdlockers.Models.RetroLockerBuildingResident;
@@ -733,4 +734,6 @@ public class SetRequests {
         });
 
     }
+
+
 }

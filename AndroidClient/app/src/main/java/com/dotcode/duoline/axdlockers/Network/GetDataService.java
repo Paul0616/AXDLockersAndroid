@@ -7,6 +7,7 @@ import com.dotcode.duoline.axdlockers.Models.RetroBuilding;
 import com.dotcode.duoline.axdlockers.Models.RetroBuildingList;
 import com.dotcode.duoline.axdlockers.Models.RetroCity;
 import com.dotcode.duoline.axdlockers.Models.RetroCityList;
+import com.dotcode.duoline.axdlockers.Models.RetroEmail;
 import com.dotcode.duoline.axdlockers.Models.RetroFilteredResident;
 import com.dotcode.duoline.axdlockers.Models.RetroFilteredResidentsList;
 import com.dotcode.duoline.axdlockers.Models.RetroLocker;
@@ -28,6 +29,7 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
@@ -83,5 +85,7 @@ public interface GetDataService {
     @POST("notifications/send-notification-to-resident")
     Call<RetroNotification> createNotification(@Body RetroLockerBuildingResidentID lbr, @Query("access-token") String token);
 
+    @PUT("users/reset-password")
+    Call<Void> resetPassword(@Body RetroEmail email);
 
 }
