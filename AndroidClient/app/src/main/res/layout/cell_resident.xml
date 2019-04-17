@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:text="Suite number:"
+        android:text="@string/suite_number"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tvSuiteNumber" />
@@ -36,7 +36,7 @@
         android:id="@+id/tvPhoneLabel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Phone:"
+        android:text="@string/phone"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/tvSuiteNumberLabel"
         app:layout_constraintTop_toTopOf="@+id/tvPhone" />
@@ -45,7 +45,7 @@
         android:id="@+id/tvEmailLabel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Email:"
+        android:text="@string/email"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/tvPhoneLabel"
         app:layout_constraintTop_toTopOf="@+id/tvEmail" />

@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
         if(!codeWasDetected) {
             barcodeReader.pauseScanning();
             final String qrCode = barcode.displayValue;
+
             Log.e(TAG, "onScanned: " + qrCode);
             barcodeReader.playBeep();
             codeWasDetected = true;
@@ -118,10 +119,12 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
                 @Override
                 public void run() {
                     //showAlert(MainActivity.this, "Test", qrCode);
-                    detectedqrCode = qrCode;
-                    Map<String, String> param = new HashMap<String, String>();
-                    param.put("filter[qrCode]", qrCode);
-                    new SetRequests(getApplicationContext(), MainActivity.this, Helper.REQUEST_LOCKERS, param, null);
+                    if (barcode.format == Barcode.QR_CODE){
+                        detectedqrCode = qrCode;
+                        Map<String, String> param = new HashMap<String, String>();
+                        param.put("filter[qrCode]", qrCode);
+                        new SetRequests(getApplicationContext(), MainActivity.this, Helper.REQUEST_LOCKERS, param, null);
+                    }
                 }
             });
         }
@@ -158,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
 
     @Override
     public void onCameraPermissionDenied() {
-        Toast.makeText(getApplicationContext(), "Camera permission denied!", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), getString(R.string.camera_permission_denied), Toast.LENGTH_LONG).show();
         finish();
     }
 }

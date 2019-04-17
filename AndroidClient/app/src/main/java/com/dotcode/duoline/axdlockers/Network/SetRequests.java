@@ -9,7 +9,6 @@ import com.dotcode.duoline.axdlockers.Models.RetroAddress;
 import com.dotcode.duoline.axdlockers.Models.RetroAddressList;
 import com.dotcode.duoline.axdlockers.Models.RetroBuildingList;
 import com.dotcode.duoline.axdlockers.Models.RetroCityList;
-import com.dotcode.duoline.axdlockers.Models.RetroEmail;
 import com.dotcode.duoline.axdlockers.Models.RetroFilteredResidentsList;
 import com.dotcode.duoline.axdlockers.Models.RetroLocker;
 import com.dotcode.duoline.axdlockers.Models.RetroLockerBuildingResident;
@@ -21,6 +20,7 @@ import com.dotcode.duoline.axdlockers.Models.RetroLockerList;
 import com.dotcode.duoline.axdlockers.Models.RetroNotification;
 import com.dotcode.duoline.axdlockers.Models.RetroTokenList;
 import com.dotcode.duoline.axdlockers.Models.RetroUser;
+import com.dotcode.duoline.axdlockers.R;
 import com.dotcode.duoline.axdlockers.Utils.Helper;
 import com.dotcode.duoline.axdlockers.Utils.SaveSharedPreferences;
 
@@ -115,7 +115,7 @@ public class SetRequests {
             case Helper.REQUEST_INSERT_LOCKER_HISTORY:
                 createLHs(body);
                 break;
-            case Helper.REQUEST_INSER_NOTIFICATION:
+            case Helper.REQUEST_INSERT_NOTIFICATION:
                 createNotification(body);
                 break;
         }
@@ -154,7 +154,7 @@ public class SetRequests {
             @Override
             public void onFailure(Call<RetroTokenList> call, Throwable t) {
 
-                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -199,7 +199,7 @@ public class SetRequests {
             public void onFailure(Call<RetroUser> call, Throwable t) {
                 //     showProgress(false);
 
-                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -241,7 +241,7 @@ public class SetRequests {
 
                 @Override
                 public void onFailure(Call<RetroLockerList> call, Throwable t) {
-                    Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
                 }
             });
        // }
@@ -280,7 +280,7 @@ public class SetRequests {
 
             @Override
             public void onFailure(Call<RetroLocker> call, Throwable t) {
-                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -318,7 +318,7 @@ public class SetRequests {
 
                 @Override
                 public void onFailure(Call<RetroAddressList> call, Throwable t) {
-                    Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -357,7 +357,7 @@ public class SetRequests {
 
             @Override
             public void onFailure(Call<RetroAddress> call, Throwable t) {
-                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -394,7 +394,7 @@ public class SetRequests {
 
             @Override
             public void onFailure(Call<RetroCityList> call, Throwable t) {
-                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -431,7 +431,7 @@ public class SetRequests {
 
             @Override
             public void onFailure(Call<RetroLockerHistoryList> call, Throwable t) {
-                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -468,7 +468,7 @@ public class SetRequests {
 
             @Override
             public void onFailure(Call<RetroFilteredResidentsList> call, Throwable t) {
-                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -505,7 +505,7 @@ public class SetRequests {
 
             @Override
             public void onFailure(Call<RetroBuildingList> call, Throwable t) {
-                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -541,7 +541,7 @@ public class SetRequests {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -577,7 +577,7 @@ public class SetRequests {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -614,7 +614,7 @@ public class SetRequests {
 
             @Override
             public void onFailure(Call<RetroLockerBuildingResidentsList> call, Throwable t) {
-                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -653,7 +653,7 @@ public class SetRequests {
 
             @Override
             public void onFailure(Call<RetroLockerBuildingResident> call, Throwable t) {
-                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -691,7 +691,7 @@ public class SetRequests {
 
             @Override
             public void onFailure(Call<RetroLockerHistory> call, Throwable t) {
-                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -729,7 +729,7 @@ public class SetRequests {
 
             @Override
             public void onFailure(Call<RetroNotification> call, Throwable t) {
-                Toast.makeText(context, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
             }
         });
 

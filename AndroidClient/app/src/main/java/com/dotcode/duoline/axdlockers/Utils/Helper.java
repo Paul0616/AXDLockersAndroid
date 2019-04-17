@@ -8,8 +8,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 public class Helper {
-    public static final String KEY_EMAIL= "email";
-    public static final String KEY_PASSWORD = "password";
     //----------------------
     public static final int REQUEST_CHECK_USER = 1;
     public static final int REQUEST_LOCKERS = 2;
@@ -25,7 +23,7 @@ public class Helper {
     public static final int REQUEST_LOCKER_BUILDING_RESIDENT = 12;
     public static final int REQUEST_INSERT_LOCKER_BUILDING_RESIDENT = 13;
     public static final int REQUEST_INSERT_LOCKER_HISTORY = 14;
-    public static final int REQUEST_INSER_NOTIFICATION = 15;
+    public static final int REQUEST_INSERT_NOTIFICATION = 15;
 
 
     /**

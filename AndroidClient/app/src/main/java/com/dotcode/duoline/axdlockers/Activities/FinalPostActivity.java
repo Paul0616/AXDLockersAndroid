@@ -122,7 +122,7 @@ public class FinalPostActivity extends AppCompatActivity implements SetRequests.
 
     private void insertNotification(){
         RetroLockerBuildingResidentID lbr = new RetroLockerBuildingResidentID(SaveSharedPreferences.getlastInsertedLBRID(getApplicationContext()));
-        new SetRequests(getApplicationContext(), FinalPostActivity.this, Helper.REQUEST_INSER_NOTIFICATION, null, lbr);
+        new SetRequests(getApplicationContext(), FinalPostActivity.this, Helper.REQUEST_INSERT_NOTIFICATION, null, lbr);
     }
 
     @Override
@@ -147,10 +147,10 @@ public class FinalPostActivity extends AppCompatActivity implements SetRequests.
                 if (((RetroLockerBuildingResidentsList) result).getLBRs().size() > 0) {
                     int lastInsertedLockerBuildingResidentID = ((RetroLockerBuildingResidentsList) result).getLBRs().get(0).getId();
                     SaveSharedPreferences.setlastInsertedLBRID(getApplicationContext(), lastInsertedLockerBuildingResidentID);
-                    infoMessage.setText("Creating locker history...");
+                    infoMessage.setText(getString(R.string.creating_locker_history));
                     insertLockerHistory();
                 } else {
-                    infoMessage.setText("Creating locker - bulding - resident association...");
+                    infoMessage.setText(getString(R.string.creating_locker_building_resident_association));
                     insertLockerBuildingResident();
                 }
             }
@@ -160,7 +160,7 @@ public class FinalPostActivity extends AppCompatActivity implements SetRequests.
             if(result != null && result instanceof RetroLockerBuildingResident) {
                 int lastInsertedLockerBuildingResidentID = ((RetroLockerBuildingResident) result).getId();
                 SaveSharedPreferences.setlastInsertedLBRID(getApplicationContext(), lastInsertedLockerBuildingResidentID);
-                infoMessage.setText("Creating locker history...");
+                infoMessage.setText(getText(R.string.creating_locker_history));
                 insertLockerHistory();
             }
         }
@@ -168,14 +168,14 @@ public class FinalPostActivity extends AppCompatActivity implements SetRequests.
             if(result != null && result instanceof RetroLockerHistory) {
                 int lastInsertedLockerHistoryID = ((RetroLockerHistory) result).getId();
                 SaveSharedPreferences.setlastInsertedLHID(getApplicationContext(),lastInsertedLockerHistoryID);
-                infoMessage.setText("Sending notification to resident...");
+                infoMessage.setText(R.string.sending_notification_to_resident);
                 insertNotification();
             }
         }
-        if(currentRequestId == Helper.REQUEST_INSER_NOTIFICATION) {
+        if(currentRequestId == Helper.REQUEST_INSERT_NOTIFICATION) {
             //
             progressBar.setVisibility(View.INVISIBLE);
-            mainMessage.setText("A notification about package was sent to resident.");
+            mainMessage.setText(getString(R.string.notification_was_sent));
             mainMessage.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
             infoMessage.setText("");
             backButton.setVisibility(View.VISIBLE);
@@ -190,7 +190,7 @@ public class FinalPostActivity extends AppCompatActivity implements SetRequests.
         progressBar.setVisibility(View.INVISIBLE);
         closeButton.setEnabled(true);
         infoMessage.setText("");
-        mainMessage.setText("Sending notification to resident failed.");
+        mainMessage.setText(getString(R.string.sending_notification_failed));
         mainMessage.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
         popupWindow.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.red));
     }

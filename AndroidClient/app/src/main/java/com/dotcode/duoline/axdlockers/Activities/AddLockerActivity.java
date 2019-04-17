@@ -40,7 +40,7 @@ public class AddLockerActivity extends AppCompatActivity implements SetRequests.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_locker);
-        setTitle("Add locker");
+        setTitle(getString(R.string.add_locker));
         lockerNumber = (AutoCompleteTextView) findViewById(R.id.lockerNumber);
         lockerSize = (TextInputEditText) findViewById(R.id.lockerSize);
         street = (TextView) findViewById(R.id.streetTextView);
@@ -91,16 +91,7 @@ public class AddLockerActivity extends AppCompatActivity implements SetRequests.
             }
         });
         SaveSharedPreferences.setAddressNull(getApplicationContext());
-//        lockerSize.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-//                if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-//                    setupMenu();
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
+
     }
 
     @Override
@@ -119,8 +110,8 @@ public class AddLockerActivity extends AppCompatActivity implements SetRequests.
     @Override
     public void onResponse(int currentRequestId, Object result) {
         if (currentRequestId == Helper.REQUEST_INSERT_LOCKER){
-            showAlert(AddLockerActivity.this, "Locker added", "Locker #" +lockerNumber.getText().toString()+
-                    " was succsesfully added. You want to continue with resident assignment for this locker?");
+            showAlert(AddLockerActivity.this, getString(R.string.locker_added), getString(R.string.locker_number) + lockerNumber.getText().toString()+
+                    getString(R.string.locker_added_message));
         }
     }
 

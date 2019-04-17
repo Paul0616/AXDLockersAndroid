@@ -57,7 +57,7 @@ public class AddAddressActivity extends AppCompatActivity implements SetRequests
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_address);
-        setTitle("Add Address");
+        setTitle(getString(R.string.add_address));
         searchView=(SearchView) findViewById(R.id.searchView);
         searchView.setQueryHint("Search cities");
         recyclerView = (RecyclerView) findViewById(R.id.rvCities);
@@ -207,7 +207,7 @@ public class AddAddressActivity extends AppCompatActivity implements SetRequests
             searchString = "";
         }
         if(currentRequestId == Helper.REQUEST_INSERT_ADDRESS) {
-            showAlert(AddAddressActivity.this, "Address added", "Address was succsesfully added.");
+            showAlert(AddAddressActivity.this, getString(R.string.address_added), getString(R.string.address_was_successfully_added));
         }
     }
 

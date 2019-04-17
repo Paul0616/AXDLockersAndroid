@@ -61,7 +61,7 @@ public class AddResidentActivity extends AppCompatActivity implements SetRequest
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_resident);
-        setTitle("Add resident");
+        setTitle(getString(R.string.add_resident));
 
         lockerNumber = (TextView) findViewById(R.id.lockerNumber);
         lockerSize = (TextView) findViewById(R.id.lockerSize);

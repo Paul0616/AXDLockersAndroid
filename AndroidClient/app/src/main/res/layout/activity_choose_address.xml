@@ -42,7 +42,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:gravity="center"
-        android:text="No available addresses"
+        android:text="@string/address_empty_list_message"
         android:textColor="@android:color/darker_gray"
         android:textSize="12sp"
         android:visibility="invisible"

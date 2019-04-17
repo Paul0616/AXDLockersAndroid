@@ -91,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 LayoutInflater li = LayoutInflater.from(getApplicationContext());
                 View promptView = li.inflate(R.layout.view_email_input, null);
-                alertDialogInputEmail(LoginActivity.this, "Change password", "Input email where you will get change password link", promptView);
+                alertDialogInputEmail(LoginActivity.this, getString(R.string.change_password), getString(R.string.input_email), promptView);
             }
         });
     }
@@ -142,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 showProgress(false);
                 if (response.isSuccessful()) {
-                    showAlert(LoginActivity.this, "Change password", "Check your email to get instructions link.");
+                    showAlert(LoginActivity.this, getString(R.string.change_password), getString(R.string.check_email));
                 } else {
                     try {
                         String url = response.raw().request().url().toString();
@@ -154,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (response.code() != 404) {
                             Toast.makeText(LoginActivity.this, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
                         } else {
-                            showAlert(LoginActivity.this, "Error", "This email does not exist");
+                            showAlert(LoginActivity.this, getString(R.string.error), getString(R.string.this_email_does_not_exist));
                         }
 
                     } catch (IOException e) {
@@ -166,7 +166,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 showProgress(false);
-                Toast.makeText(LoginActivity.this, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -197,7 +197,7 @@ public class LoginActivity extends AppCompatActivity {
                             responseBody= response.errorBody().string();
                         }
                         if (response.code() == 404) {
-                            showAlert(LoginActivity.this, "Login error", "RetroUser does not exist or RetroUser email/password is not correct");
+                            showAlert(LoginActivity.this, getString(R.string.login_error_title), getString(R.string.user_not_exist));
                         } else{
                             Toast.makeText(LoginActivity.this, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
                         }
@@ -211,7 +211,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onFailure(Call<RetroTokenList> call, Throwable t) {
               showProgress(false);
 
-                Toast.makeText(LoginActivity.this, "Something went wrong...Internet appear to be offline!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
             }
         });
     }

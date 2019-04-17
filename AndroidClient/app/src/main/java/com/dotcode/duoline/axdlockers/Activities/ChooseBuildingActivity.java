@@ -47,7 +47,7 @@ public class ChooseBuildingActivity extends AppCompatActivity implements SetRequ
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_building);
-        setTitle("Choose Building");
+        setTitle(getString(R.string.choose_building));
         recyclerView = (RecyclerView) findViewById(R.id.rvBuildings);
         progressBar = (ProgressBar) findViewById(R.id.progressBarBuilding);
         emptyArrayMessage = (TextView) findViewById(R.id.emptyMessage);
@@ -263,7 +263,7 @@ public class ChooseBuildingActivity extends AppCompatActivity implements SetRequ
                     @Override
                     public void onClick(View view) {
                         currentBuilding = list.get(getAdapterPosition());
-                        showAlert(ChooseBuildingActivity.this, "Building tapped", "Would you want to take over this building?");
+                        showAlert(ChooseBuildingActivity.this, getString(R.string.building_tapped), getString(R.string.building_tapped_question));
                     }
                 });
 

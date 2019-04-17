@@ -50,7 +50,7 @@ public class ChooseAddressActivity extends AppCompatActivity implements SetReque
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_address);
-        setTitle("Choose Address");
+        setTitle(getString(R.string.choose_an_address));
         recyclerView = (RecyclerView) findViewById(R.id.rvAddresses);
         progressBar = (ProgressBar) findViewById(R.id.progressBarAddress);
         emptyArrayMessage = (TextView) findViewById(R.id.emptyMessage);
@@ -187,7 +187,7 @@ public class ChooseAddressActivity extends AppCompatActivity implements SetReque
             return true;
         }
         if (id == R.id.action_add) {
-            showAlert(ChooseAddressActivity.this, "Add Address", "Would you want to add new ADDRESS?", ADD_ADDRESS);
+            showAlert(ChooseAddressActivity.this, getString(R.string.add_address), getString(R.string.add_address_question), ADD_ADDRESS);
             return true;
         }
 
@@ -281,7 +281,7 @@ public class ChooseAddressActivity extends AppCompatActivity implements SetReque
                     @Override
                     public void onClick(View view) {
                         currentAddress = list.get(getAdapterPosition());
-                        showAlert(ChooseAddressActivity.this, "Address tapped", "Would you want to take over this address?", CHOOSE_ADDRESS);
+                        showAlert(ChooseAddressActivity.this, getString(R.string.address_tapped), getString(R.string.address_tapped_question), CHOOSE_ADDRESS);
                     }
                 });
 

@@ -187,7 +187,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:text="Building unique number:"
+            android:text="@string/building_unique_number"
             android:textSize="10sp"
             app:layout_constraintStart_toEndOf="@+id/imageView5"
             app:layout_constraintTop_toTopOf="parent" />
@@ -209,7 +209,7 @@
             android:id="@+id/textView8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Building address:"
+            android:text="@string/building_address"
             android:textSize="10sp"
             app:layout_constraintStart_toStartOf="@+id/textView6"
             app:layout_constraintTop_toBottomOf="@+id/buildingUniqueNumber" />
@@ -310,7 +310,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:gravity="center_horizontal"
-        android:text="No available residents in current building and with that name or suite number"
+        android:text="@string/no_available_residents_in_current_building_and_with_that_name_or_suite_number"
         android:textSize="12sp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@id/rvResidents"
