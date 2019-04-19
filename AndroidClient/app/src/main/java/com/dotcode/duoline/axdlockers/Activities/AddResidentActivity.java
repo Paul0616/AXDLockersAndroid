@@ -1,7 +1,6 @@
 package com.dotcode.duoline.axdlockers.Activities;
 
 import android.content.Intent;
-import android.net.http.X509TrustManagerExtensions;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,7 +22,6 @@ import com.dotcode.duoline.axdlockers.Models.RetroFilteredResidentsList;
 import com.dotcode.duoline.axdlockers.Models.RetroLocker;
 import com.dotcode.duoline.axdlockers.Models.RetroLockerHistory;
 import com.dotcode.duoline.axdlockers.Models.RetroLockerHistoryList;
-import com.dotcode.duoline.axdlockers.Models.RetroResident;
 import com.dotcode.duoline.axdlockers.Network.SetRequests;
 import com.dotcode.duoline.axdlockers.R;
 import com.dotcode.duoline.axdlockers.Utils.Helper;
@@ -37,13 +35,14 @@ import java.util.Map;
 
 public class AddResidentActivity extends AppCompatActivity implements SetRequests.GetDataResponse {
 
-    private TextView lockerNumber, lockerSize, lockerAddress, buildingUniqueNumber, buildingAddress, currentResidentTextView, emptyResidentsMessage;
+    private TextView lockerNumber, lockerSize, lockerAddress, buildingUniqueNumber, buildingAddress, currentResidentTextView, emptyResidentsTextView;
     private RecyclerView recyclerView;
     private ConstraintLayout lockerContainer, pickBuilding;
     private ProgressBar progressBar;
     private SearchView searchView;
     private boolean search;
     private String searchString = "";
+    private String emptyResidentMessage = "No available residents";
     private Menu menu;
     private static final int PAGE_SIZE = 20;
     private boolean isLoading = false;
@@ -82,7 +81,8 @@ public class AddResidentActivity extends AppCompatActivity implements SetRequest
                 startActivity(new Intent(AddResidentActivity.this,ChooseBuildingActivity.class));
             }
         });
-        emptyResidentsMessage = (TextView) findViewById(R.id.emptyResidentsListMessage);
+        emptyResidentsTextView = (TextView) findViewById(R.id.emptyResidentsListMessage);
+        emptyResidentsTextView.setText(emptyResidentMessage);
         qrCode = getIntent().getStringExtra("qrCode");
         searchView=(SearchView) findViewById(R.id.searchView);
         searchView.setQueryHint("Search cities");
@@ -189,11 +189,13 @@ public class AddResidentActivity extends AppCompatActivity implements SetRequest
             buildingAddress.setText("-");
             loadedPages = 1;
             adapter.setList(new ArrayList<RetroFilteredResident>());
-            emptyResidentsMessage.setVisibility(View.INVISIBLE);
+            emptyResidentsTextView.setVisibility(View.INVISIBLE);
+
             setupMenu();
             progressBar.setVisibility(View.VISIBLE);
             new SetRequests(getApplicationContext(), AddResidentActivity.this, Helper.REQUEST_LOCKERS, param, null);
         } else {
+            emptyResidentMessage = "No available residents";
             buildingUniqueNumber.setText(currentBuilding.getBuildingUniqueNumber());
             buildingAddress.setText(currentBuilding.getAddress().getStreetName() + ", " + currentBuilding.getAddress().getCity().getName() + ", " +
                     currentBuilding.getAddress().getCity().getState().getName() +", " +currentBuilding.getAddress().getZipCode());
@@ -216,7 +218,7 @@ public class AddResidentActivity extends AppCompatActivity implements SetRequest
     private void makeResidentRequest(){
         isLoading = true;
         progressBar.setVisibility(View.VISIBLE);
-        emptyResidentsMessage.setVisibility(View.INVISIBLE);
+        emptyResidentsTextView.setVisibility(View.INVISIBLE);
         currentResident = null;
         setupMenu();
         currentResidentTextView.setText("-");
@@ -303,19 +305,17 @@ public class AddResidentActivity extends AppCompatActivity implements SetRequest
                         new SetRequests(getApplicationContext(), AddResidentActivity.this,
                                 Helper.REQUEST_CHECK_BUILDING, param, null);
                     } else {
-//                        Map<String, String> param = new HashMap<String, String>();
-//                        param.put("per-page", ""+PAGE_SIZE);
-//                        param.put("page", ""+loadedPages);
-//                        param.put("sort", "suiteNumber");
-//                        param.put("expand", "resident");
-//                        new SetRequests(getApplicationContext(), AddResidentActivity.this,
-//                                Helper.REQUEST_FILTERED_RESIDENTS, param, null);
-                        makeResidentRequest();
+
+                       // makeResidentRequest();
+                        emptyResidentMessage = "You have to choose building\nto see its residents";
+                        adapter.setList(residents);
                     }
 
 
                 } else {
-                    makeResidentRequest();
+                    emptyResidentMessage = "You have to choose building\nto see its residents";
+                    adapter.setList(residents);
+//                    makeResidentRequest();
                 }
 
             }
@@ -374,16 +374,20 @@ public class AddResidentActivity extends AppCompatActivity implements SetRequest
 
         public void setList(List<RetroFilteredResident> list){
             this.list = list;
-            if (list.size() == 0)
-                emptyResidentsMessage.setVisibility(View.VISIBLE);
+            if (list.size() == 0) {
+                emptyResidentsTextView.setText(emptyResidentMessage);
+                emptyResidentsTextView.setVisibility(View.VISIBLE);
+            }
             notifyDataSetChanged();
         }
         public void addToList(List<RetroFilteredResident> list) {
             for (int i = 0; i < list.size(); i++) {
                 this.list.add(list.get(i));
             }
-            if (list.size() == 0)
-                emptyResidentsMessage.setVisibility(View.VISIBLE);
+            if (list.size() == 0) {
+                emptyResidentsTextView.setText(emptyResidentMessage);
+                emptyResidentsTextView.setVisibility(View.VISIBLE);
+            }
             notifyDataSetChanged();
         }
 

@@ -121,7 +121,7 @@ public class FinalPostActivity extends AppCompatActivity implements SetRequests.
     }
 
     private void insertNotification(){
-        RetroLockerBuildingResidentID lbr = new RetroLockerBuildingResidentID(SaveSharedPreferences.getlastInsertedLBRID(getApplicationContext()));
+        RetroLockerBuildingResidentID lbr = new RetroLockerBuildingResidentID(SaveSharedPreferences.getlastInsertedLBRID(getApplicationContext()), Helper.STATUS_NOT_CONFIRMED);
         new SetRequests(getApplicationContext(), FinalPostActivity.this, Helper.REQUEST_INSERT_NOTIFICATION, null, lbr);
     }
 
