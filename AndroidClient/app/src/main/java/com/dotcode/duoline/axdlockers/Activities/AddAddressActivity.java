@@ -59,7 +59,7 @@ public class AddAddressActivity extends AppCompatActivity implements SetRequests
         setContentView(R.layout.activity_add_address);
         setTitle(getString(R.string.add_address));
         searchView=(SearchView) findViewById(R.id.searchView);
-        searchView.setQueryHint("Search cities");
+        searchView.setQueryHint(getString(R.string.search_cities));
         recyclerView = (RecyclerView) findViewById(R.id.rvCities);
         progressBar = (ProgressBar) findViewById(R.id.progressBarCities);
         emptyArrayMessage = (TextView) findViewById(R.id.emptyCitiesListMessage);

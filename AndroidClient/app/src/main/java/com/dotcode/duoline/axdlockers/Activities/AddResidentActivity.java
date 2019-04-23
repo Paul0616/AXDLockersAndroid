@@ -85,7 +85,7 @@ public class AddResidentActivity extends AppCompatActivity implements SetRequest
         emptyResidentsTextView.setText(emptyResidentMessage);
         qrCode = getIntent().getStringExtra("qrCode");
         searchView=(SearchView) findViewById(R.id.searchView);
-        searchView.setQueryHint("Search cities");
+        searchView.setQueryHint(getString(R.string.search_resident));
         recyclerView = (RecyclerView)findViewById(R.id.rvResidents);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false);

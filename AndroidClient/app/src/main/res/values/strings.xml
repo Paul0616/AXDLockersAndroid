@@ -84,4 +84,7 @@
     <string name="login_error_title">Login error</string>
     <string name="user_not_exist">User does not exist or RetroUser email/password is not correct</string>
     <string name="camera_permission_denied">Camera permission denied!</string>
+    <string name="search_resident">Search resident</string>
+    <string name="search_by_street">Search by street</string>
+    <string name="search_cities">Search cities</string>
 </resources>
