@@ -69,9 +69,8 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
                 i.putExtra("qrCode", detectedqrCode);
                 startActivity(i);
             } else {
-                Intent i = new Intent(MainActivity.this, AddLockerActivity.class);
-                i.putExtra("qrCode", detectedqrCode);
-                startActivity(i);
+                showAlert(MainActivity.this, getString(R.string.locker_not_found), getString(R.string.locker_not_found_message));
+
             }
         }
     }
@@ -81,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
 
     }
 
-    private void ert(Context ctx, String title, String msg) {
+    private void showAlert(Context ctx, String title, String msg) {
         AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
         builder.setTitle(title);
         builder.setMessage(msg);
@@ -90,6 +89,8 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                codeWasDetected = false;
+                barcodeReader.resumeScanning();
                 dialog.dismiss();
 
             }
@@ -97,9 +98,10 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                codeWasDetected = false;
-                barcodeReader.resumeScanning();
 
+                Intent i = new Intent(MainActivity.this, AddLockerActivity.class);
+                i.putExtra("qrCode", detectedqrCode);
+                startActivity(i);
             }
         });
         builder.show();

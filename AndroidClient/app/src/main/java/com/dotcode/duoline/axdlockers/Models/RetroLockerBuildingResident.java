@@ -12,11 +12,15 @@ public class RetroLockerBuildingResident {
     @SerializedName("buildingResidentId")
     private int buildingResidentId;
 
+    @SerializedName("status")
+    private int status;
 
-    public RetroLockerBuildingResident(int id, int lockerId, int buildingResidentId) {
+
+    public RetroLockerBuildingResident(int id, int lockerId, int buildingResidentId, int status) {
         this.id = id;
         this.buildingResidentId = buildingResidentId;
         this.lockerId = lockerId;
+        this.status = status;
     }
 
     public int getId() {

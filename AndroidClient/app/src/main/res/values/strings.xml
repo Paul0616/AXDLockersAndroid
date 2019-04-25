@@ -87,4 +87,6 @@
     <string name="search_resident">Search resident</string>
     <string name="search_by_street">Search by street</string>
     <string name="search_cities">Search cities</string>
+    <string name="locker_not_found">Locker not found</string>
+    <string name="locker_not_found_message">This locker was not found in database.\nWould you like to add it?</string>
 </resources>
