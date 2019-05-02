@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.TextView;
 
+import com.dotcode.duoline.axdlockers.BuildConfig;
 import com.dotcode.duoline.axdlockers.Models.RetroUser;
 
 import com.dotcode.duoline.axdlockers.Network.GetDataService;
@@ -17,11 +19,14 @@ import java.util.List;
 
 public class SplashActivity extends AppCompatActivity implements SetRequests.GetDataResponse {
     GetDataService service;
+    private TextView versionTextview;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+        versionTextview = (TextView) findViewById(R.id.version);
+        versionTextview.setText("v" +  BuildConfig.VERSION_NAME);
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
