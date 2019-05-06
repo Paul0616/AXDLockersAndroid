@@ -26,7 +26,7 @@ public class SplashActivity extends AppCompatActivity implements SetRequests.Get
         setContentView(R.layout.activity_splash);
         service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
         versionTextview = (TextView) findViewById(R.id.version);
-        versionTextview.setText("v" +  BuildConfig.VERSION_NAME);
+        versionTextview.setText("Version " +  BuildConfig.VERSION_NAME);
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
