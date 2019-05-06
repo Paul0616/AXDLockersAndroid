@@ -19,6 +19,9 @@ import android.widget.TextView;
 
 import com.dotcode.duoline.axdlockers.Models.RetroBuilding;
 import com.dotcode.duoline.axdlockers.Models.RetroBuildingList;
+import com.dotcode.duoline.axdlockers.Models.RetroBuildingXUser;
+import com.dotcode.duoline.axdlockers.Models.RetroRole;
+import com.dotcode.duoline.axdlockers.Models.RetroUser;
 import com.dotcode.duoline.axdlockers.Network.SetRequests;
 import com.dotcode.duoline.axdlockers.R;
 import com.dotcode.duoline.axdlockers.Utils.Helper;
@@ -43,6 +46,7 @@ public class ChooseBuildingActivity extends AppCompatActivity implements SetRequ
     private String searchString = "";
     private TextView emptyArrayMessage;
     private RetroBuilding currentBuilding;
+    private List<String> ownedBuildingsUniqueNumbers = new ArrayList<String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,7 +102,7 @@ public class ChooseBuildingActivity extends AppCompatActivity implements SetRequ
             param.put("filter[or][][buildingUniqueNumber][like]", searchString);
             param.put("filter[or][][name][like]", searchString);
         }
-        new SetRequests(getApplicationContext(), ChooseBuildingActivity.this, Helper.REQUEST_CHECK_BUILDING, param, null);
+        new SetRequests(getApplicationContext(), ChooseBuildingActivity.this, Helper.REQUEST_CHECK_BUILDING, param, null, ownedBuildingsUniqueNumbers);
     }
 
     @Override
@@ -107,14 +111,34 @@ public class ChooseBuildingActivity extends AppCompatActivity implements SetRequ
 
 
         isLoading = true;
-
-        makeBuildingRequest();
+        new SetRequests(getApplicationContext(), ChooseBuildingActivity.this, Helper.REQUEST_CHECK_USER, null, null);
+       // makeBuildingRequest();
     }
 
     @Override
     public void onResponse(int currentRequestId, Object result) {
         isLoading = false;
         progressBar.setVisibility(View.INVISIBLE);
+        if (currentRequestId == Helper.REQUEST_CHECK_USER && result instanceof RetroUser) {
+            RetroRole role = ((RetroUser) result).getRole();
+            if(role.getHasRelatedBuildings()){
+                List<RetroBuildingXUser> buildingXUsers = ((RetroUser) result).getBuildingXUsers();
+                if(buildingXUsers.size() == 0){
+                    showAlert(ChooseBuildingActivity.this, getString(R.string.no_user_building_title), getString(R.string.no_user_building_message) + getString(R.string.login_redirected_message));
+                } else {
+                    //ownedBuildingsIds.clear();
+                    ownedBuildingsUniqueNumbers.clear();
+                    for(RetroBuildingXUser building: buildingXUsers){
+                        ownedBuildingsUniqueNumbers.add(building.getBuilding().getBuildingUniqueNumber());
+                       // ownedBuildingsIds.add(building.getBuildingId());
+                    }
+                    makeBuildingRequest();
+                }
+            } else {
+                makeBuildingRequest();
+            }
+        }
+
         if(result instanceof RetroBuildingList){
             buildingsList = ((RetroBuildingList) result).getBuildings();
             isLastPage = ((RetroBuildingList) result).isPastPage();
@@ -243,6 +267,7 @@ public class ChooseBuildingActivity extends AppCompatActivity implements SetRequ
         @Override
         public void onBindViewHolder(ChooseBuildingActivity.ItemsAdapter.ItemViewHolder holder, int position) {
             holder.buildingUniqueNumber.setText(list.get(position).getBuildingUniqueNumber());
+            holder.buldingName.setText(list.get(position).getName());
             holder.buldingAddress.setText(list.get(position).getName()+", "+list.get(position).getAddress().getStreetName()+ ", " +
                     list.get(position).getAddress().getCity().getName() + ", " + list.get(position).getAddress().getCity().getState().getName());
         }
@@ -253,12 +278,13 @@ public class ChooseBuildingActivity extends AppCompatActivity implements SetRequ
         }
 
         class ItemViewHolder extends RecyclerView.ViewHolder{
-            TextView buildingUniqueNumber, buldingAddress;
+            TextView buildingUniqueNumber, buldingAddress, buldingName;
 
             public ItemViewHolder(View view){
                 super(view);
                 buildingUniqueNumber = view.findViewById(R.id.buildingUniqueNumber);
                 buldingAddress = view.findViewById(R.id.buildingAddress);
+                buldingName = view.findViewById(R.id.buildingName);
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

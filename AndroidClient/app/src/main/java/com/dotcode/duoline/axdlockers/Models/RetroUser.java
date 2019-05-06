@@ -7,12 +7,20 @@ import java.util.List;
 public class RetroUser {
     @SerializedName("id")
     private int userId;
+    @SerializedName("role")
+    private RetroRole role;
+    @SerializedName("buildingXUsers")
+    private List<RetroBuildingXUser> buildingXUsers;
 
     public int getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public RetroRole getRole() {
+        return role;
+    }
+
+    public List<RetroBuildingXUser> getBuildingXUsers() {
+        return buildingXUsers;
     }
 }

@@ -22,6 +22,7 @@ import com.dotcode.duoline.axdlockers.Models.RetroTokenList;
 import com.dotcode.duoline.axdlockers.Models.RetroUser;
 
 
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -41,7 +42,7 @@ public interface GetDataService {
             @Query("filter[email]") String email, @Query("filter[password]") String encryptedPassword);
 
     @GET("users/{id}")
-    Call<RetroUser> checkUser(@Path("id") int userId, @Query("access-token") String token);
+    Call<RetroUser> checkUser(@Path("id") int userId, @Query("access-token") String token, @Query("expand") String roleString);
 
     @GET("lockers")
     Call<RetroLockerList> getLockers(@QueryMap Map<String, String> options, @Query("access-token") String token);
@@ -59,13 +60,13 @@ public interface GetDataService {
     Call<RetroLocker> createLocker(@Body RetroLocker locker, @Query("access-token") String token);
 
     @GET("locker-histories")
-    Call<RetroLockerHistoryList> getHistories(@QueryMap Map<String, String> options, @Query("access-token") String token);
+    Call<RetroLockerHistoryList> getHistories(@QueryMap Map<String, String> options, @Query("access-token") String token, @Query("filter[buildingUniqueNumber][in][]") List<String> buildingUniqueNumberList);
 
     @GET("building-residents/get-filtered-residents")
     Call<RetroFilteredResidentsList> getFilteredResidents(@QueryMap Map<String, String> options, @Query("access-token") String token);
 
     @GET("buildings")
-    Call<RetroBuildingList> getBuildings(@QueryMap Map<String, String> options, @Query("access-token") String token);
+    Call<RetroBuildingList> getBuildings(@QueryMap Map<String, String> options, @Query("access-token") String token, @Query("filter[buildingUniqueNumber][in][]") List<String> buildingUniqueNumberList);
 
     @DELETE("locker-building-residents/{id}")
     Call<Void> deleteLBR(@Path("id") int id, @Query("access-token") String token);

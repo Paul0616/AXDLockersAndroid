@@ -35,13 +35,16 @@ public class RetroLockerHistory {
     private String residentAddress;
     @SerializedName("createdByEmail")
     private String createdByEmail;
+    @SerializedName("packageStatus")
+    private String psckageStatus;
 
 
     public RetroLockerHistory(int id, String qrCode, String number, String size,
                               String lockerAddress, String firstName, String lastName,
                               String email, String phoneNumber, String securityCode,
                               String suiteNumber, String buildingName,
-                              String buildingAddress, String residentAddress, String buildingUniqueNumber, String createdByEmail) {
+                              String buildingAddress, String residentAddress, String buildingUniqueNumber,
+                              String createdByEmail, String packageStatus) {
         this.id = id;
         this.number = number;
         this.qrCode = qrCode;
@@ -58,6 +61,7 @@ public class RetroLockerHistory {
         this.residentAddress = residentAddress;
         this.buildingUniqueNumber = buildingUniqueNumber;
         this.createdByEmail = createdByEmail;
+        this.psckageStatus = packageStatus;
     }
 
 

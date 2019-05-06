@@ -26,6 +26,7 @@ import com.dotcode.duoline.axdlockers.Utils.SaveSharedPreferences;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -40,12 +41,24 @@ public class SetRequests {
     GetDataService service;
     Map<String,String> parameters;
     Object body;
+    List<String> optionalList = null;
 
     public interface GetDataResponse {
         void onResponse(int currentRequestId, Object result);
         void onFailed(int currentRequestId, boolean mustLogOut);
     }
     //constructor
+    public SetRequests(Context context, GetDataResponse handler, int currentRequestId, Map<String, String> cv, Object body, List<String> optionalList){
+        requestId = currentRequestId;
+        mHandler = handler;
+        this.context = context;
+        parameters = cv;
+        this.body = body;
+        this.optionalList = optionalList;
+        service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+        attemptGetNewToken();
+    }
+
     public SetRequests(Context context, GetDataResponse handler, int currentRequestId, Map<String, String> cv, Object body){
         requestId = currentRequestId;
         mHandler = handler;
@@ -92,13 +105,13 @@ public class SetRequests {
                 setLocker(body);
                 break;
             case Helper.REQUEST_LOCKER_HISTORIES:
-                getLockerHistories(parameters);
+                getLockerHistories(parameters, optionalList);
                 break;
             case Helper.REQUEST_FILTERED_RESIDENTS:
                 getFilteredResidents(parameters);
                 break;
             case Helper.REQUEST_CHECK_BUILDING:
-                getBuildings(parameters);
+                getBuildings(parameters, optionalList);
                 break;
             case Helper.REQUEST_DELETE_LOCKER_BUILDING_RESIDENT:
                 deleteLBR(parameters);
@@ -160,7 +173,7 @@ public class SetRequests {
     }
 
     private void checkUser() {
-        Call<RetroUser> call = service.checkUser(SaveSharedPreferences.getUserId(context), SaveSharedPreferences.getAccesToken(context));
+        Call<RetroUser> call = service.checkUser(SaveSharedPreferences.getUserId(context), SaveSharedPreferences.getAccesToken(context), "role,buildingXUsers.building");
         call.enqueue(new Callback<RetroUser>() {
             @Override
             public void onResponse(Call<RetroUser> call, Response<RetroUser> response) {
@@ -400,11 +413,12 @@ public class SetRequests {
 
     }
 
-    private void getLockerHistories(Map<String, String> parameters) {
-        Call<RetroLockerHistoryList> call = service.getHistories(parameters, SaveSharedPreferences.getAccesToken(context));
+    private void getLockerHistories(Map<String, String> parameters, List<String> optionalList) {
+        Call<RetroLockerHistoryList> call = service.getHistories(parameters, SaveSharedPreferences.getAccesToken(context), optionalList);
         call.enqueue(new Callback<RetroLockerHistoryList>() {
             @Override
             public void onResponse(Call<RetroLockerHistoryList> call, Response<RetroLockerHistoryList> response) {
+                String url = response.raw().request().url().toString();
                 if (response.isSuccessful()) {
                     RetroLockerHistoryList lockerHistories = response.body();
                     Object lockerHistoriesObj = lockerHistories;
@@ -414,7 +428,6 @@ public class SetRequests {
                 } else {
                     try {
                         SaveSharedPreferences.logOutUser(context);
-                        String url = response.raw().request().url().toString();
 
                         String responseBody = "";
                         if (response.errorBody() != null) {
@@ -474,11 +487,12 @@ public class SetRequests {
 
     }
 
-    private void getBuildings(Map<String, String> parameters) {
-        Call<RetroBuildingList> call = service.getBuildings(parameters, SaveSharedPreferences.getAccesToken(context));
+    private void getBuildings(Map<String, String> parameters, List<String> optionalList) {
+        Call<RetroBuildingList> call = service.getBuildings(parameters, SaveSharedPreferences.getAccesToken(context), optionalList);
         call.enqueue(new Callback<RetroBuildingList>() {
             @Override
             public void onResponse(Call<RetroBuildingList> call, Response<RetroBuildingList> response) {
+                String url = response.raw().request().url().toString();
                 if (response.isSuccessful()) {
                     RetroBuildingList buildingList = response.body();
                     Object buildingListObj = buildingList;
@@ -488,7 +502,7 @@ public class SetRequests {
                 } else {
                     try {
                         SaveSharedPreferences.logOutUser(context);
-                        String url = response.raw().request().url().toString();
+
 
                         String responseBody = "";
                         if (response.errorBody() != null) {
@@ -626,6 +640,7 @@ public class SetRequests {
         call.enqueue(new Callback<RetroLockerBuildingResident>() {
             @Override
             public void onResponse(Call<RetroLockerBuildingResident> call, Response<RetroLockerBuildingResident> response) {
+                String url = response.raw().request().url().toString();
                 if (response.isSuccessful()) {
                     RetroLockerBuildingResident lbr = response.body();
                     Object lbrObj = lbr;
@@ -636,7 +651,7 @@ public class SetRequests {
                 } else {
                     try {
                         SaveSharedPreferences.logOutUser(context);
-                        String url = response.raw().request().url().toString();
+
 
                         String responseBody = "";
                         if (response.errorBody() != null) {

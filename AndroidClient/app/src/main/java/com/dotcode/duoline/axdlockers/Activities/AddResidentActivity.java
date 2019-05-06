@@ -1,7 +1,10 @@
 package com.dotcode.duoline.axdlockers.Activities;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,11 +20,14 @@ import android.widget.TextView;
 
 import com.dotcode.duoline.axdlockers.Models.RetroBuilding;
 import com.dotcode.duoline.axdlockers.Models.RetroBuildingList;
+import com.dotcode.duoline.axdlockers.Models.RetroBuildingXUser;
 import com.dotcode.duoline.axdlockers.Models.RetroFilteredResident;
 import com.dotcode.duoline.axdlockers.Models.RetroFilteredResidentsList;
 import com.dotcode.duoline.axdlockers.Models.RetroLocker;
 import com.dotcode.duoline.axdlockers.Models.RetroLockerHistory;
 import com.dotcode.duoline.axdlockers.Models.RetroLockerHistoryList;
+import com.dotcode.duoline.axdlockers.Models.RetroRole;
+import com.dotcode.duoline.axdlockers.Models.RetroUser;
 import com.dotcode.duoline.axdlockers.Network.SetRequests;
 import com.dotcode.duoline.axdlockers.R;
 import com.dotcode.duoline.axdlockers.Utils.Helper;
@@ -56,6 +62,8 @@ public class AddResidentActivity extends AppCompatActivity implements SetRequest
     private AddResidentActivity.ItemsAdapter adapter;
 
     private String qrCode;
+    private List<String> ownedBuildingsUniqueNumbers = new ArrayList<String>();
+   // private List<String> ownedBuildingsIds = new ArrayList<String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,9 +186,14 @@ public class AddResidentActivity extends AppCompatActivity implements SetRequest
     protected void onResume() {
         super.onResume();
         isLoading = true;
+        checkUserRequest();
+    }
 
+    private void checkUserRequest(){
+        new SetRequests(getApplicationContext(), AddResidentActivity.this, Helper.REQUEST_CHECK_USER, null, null);
+    }
+    private void mainRequest(){
         currentBuilding = SaveSharedPreferences.getBuilding(getApplicationContext());
-
         if(currentBuilding == null) {
             Map<String, String> param = new HashMap<String, String>();
             param.put("filter[qrCode]", qrCode);
@@ -203,7 +216,6 @@ public class AddResidentActivity extends AppCompatActivity implements SetRequest
             adapter.setList(new ArrayList<RetroFilteredResident>());
             makeResidentRequest();
         }
-
     }
 
     private void setupMenu(){
@@ -234,8 +246,10 @@ public class AddResidentActivity extends AppCompatActivity implements SetRequest
             param.put("filter[residentName]", searchString);
             param.put("filter[suiteNumber]", searchString);
         }
+
         new SetRequests(getApplicationContext(), AddResidentActivity.this,
                 Helper.REQUEST_FILTERED_RESIDENTS, param, null);
+
     }
 
     @Override
@@ -274,6 +288,28 @@ public class AddResidentActivity extends AppCompatActivity implements SetRequest
 
         isLoading = false;
         progressBar.setVisibility(View.INVISIBLE);
+
+        if (currentRequestId == Helper.REQUEST_CHECK_USER && result instanceof RetroUser) {
+            RetroRole role = ((RetroUser) result).getRole();
+            if(role.getHasRelatedBuildings()){
+                List<RetroBuildingXUser> buildingXUsers = ((RetroUser) result).getBuildingXUsers();
+                if(buildingXUsers.size() == 0){
+                    showAlert(AddResidentActivity.this, getString(R.string.no_user_building_title), getString(R.string.no_user_building_message) + getString(R.string.login_redirected_message));
+                } else {
+                   // ownedBuildingsIds.clear();
+                    ownedBuildingsUniqueNumbers.clear();
+                    for(RetroBuildingXUser building: buildingXUsers){
+                        ownedBuildingsUniqueNumbers.add(building.getBuilding().getBuildingUniqueNumber());
+                       // ownedBuildingsIds.add(building.getBuildingId());
+                    }
+                    mainRequest();
+                }
+            } else {
+                mainRequest();
+            }
+        }
+
+
         if (currentRequestId == Helper.REQUEST_LOCKERS){
             if(result != null && result instanceof RetroLocker) {
                 locker = ((RetroLocker) result);
@@ -287,8 +323,9 @@ public class AddResidentActivity extends AppCompatActivity implements SetRequest
                     Map<String, String> param = new HashMap<String, String>();
                     param.put("filter[qrCode]", qrCode);
                     param.put("sort", "-createdAt");
+
                     new SetRequests(getApplicationContext(), AddResidentActivity.this,
-                            Helper.REQUEST_LOCKER_HISTORIES, param, null);
+                            Helper.REQUEST_LOCKER_HISTORIES, param, null, ownedBuildingsUniqueNumbers);
                 }
             }
         }
@@ -307,13 +344,13 @@ public class AddResidentActivity extends AppCompatActivity implements SetRequest
                     } else {
 
                        // makeResidentRequest();
-                        emptyResidentMessage = "You have to choose building\nto see its residents";
+                        emptyResidentMessage = getString(R.string.choose_building_for_residents);//"You have to choose building\nto see its residents";
                         adapter.setList(residents);
                     }
 
 
                 } else {
-                    emptyResidentMessage = "You have to choose building\nto see its residents";
+                    emptyResidentMessage = getString(R.string.choose_building_for_residents);//"You have to choose building\nto see its residents";
                     adapter.setList(residents);
 //                    makeResidentRequest();
                 }
@@ -339,7 +376,8 @@ public class AddResidentActivity extends AppCompatActivity implements SetRequest
                 } else {
                     buildingUniqueNumber.setText("-");
                     buildingAddress.setText("-");
-                    makeResidentRequest();
+                    emptyResidentMessage = getString(R.string.choose_building_for_residents);
+                    adapter.setList(residents);
                 }
 
             }
@@ -363,6 +401,25 @@ public class AddResidentActivity extends AppCompatActivity implements SetRequest
     @Override
     public void onFailed(int currentRequestId, boolean mustLogOut) {
         progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    private void showAlert(Context ctx, String title, String msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+        builder.setTitle(title);
+        builder.setMessage(msg);
+//        builder.setIcon(R.drawable.ic_error_outline_yellow_24dp);
+        builder.setCancelable(false);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                SaveSharedPreferences.logOutUser(getApplicationContext());
+                Intent i = new Intent(AddResidentActivity.this, LoginActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
+        builder.show();
     }
 
     class ItemsAdapter extends RecyclerView.Adapter<AddResidentActivity.ItemsAdapter.ItemViewHolder>{
