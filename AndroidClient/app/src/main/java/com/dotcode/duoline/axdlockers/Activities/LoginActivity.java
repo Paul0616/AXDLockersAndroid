@@ -24,9 +24,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dotcode.duoline.axdlockers.Models.RetroBuildingXUser;
 import com.dotcode.duoline.axdlockers.Models.RetroEmail;
+import com.dotcode.duoline.axdlockers.Models.RetroRole;
 import com.dotcode.duoline.axdlockers.Models.RetroToken;
 import com.dotcode.duoline.axdlockers.Models.RetroTokenList;
+import com.dotcode.duoline.axdlockers.Models.RetroUser;
 import com.dotcode.duoline.axdlockers.Network.GetDataService;
 import com.dotcode.duoline.axdlockers.Network.RetrofitClientInstance;
 import com.dotcode.duoline.axdlockers.Network.SetRequests;
@@ -35,12 +38,13 @@ import com.dotcode.duoline.axdlockers.Utils.Helper;
 import com.dotcode.duoline.axdlockers.Utils.SaveSharedPreferences;
 
 import java.io.IOException;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements SetRequests.GetDataResponse{
     private AutoCompleteTextView mUserEmail;
     private TextInputEditText mPasswordView;
     private View mProgressView;
@@ -186,7 +190,7 @@ public class LoginActivity extends AppCompatActivity {
                     SaveSharedPreferences.setTokenExpireAt(getApplicationContext(), token.getTokenExpiresAt());
                     SaveSharedPreferences.setIsAdmin(getApplicationContext(), token.isSuperAdmin());
                     SaveSharedPreferences.setAccesToken(getApplicationContext(), token.getAccessToken());
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    new SetRequests(getApplicationContext(), LoginActivity.this, Helper.REQUEST_CHECK_USER, null, null);
                 } else {
                     try {
                         SaveSharedPreferences.logOutUser(getApplicationContext());
@@ -215,6 +219,31 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onResponse(int currentRequestId, Object result) {
+        if (currentRequestId == Helper.REQUEST_CHECK_USER && result instanceof RetroUser) {
+            RetroRole role = ((RetroUser) result).getRole();
+            if(role.getHasRelatedBuildings()){
+                List<RetroBuildingXUser> buildingXUsers = ((RetroUser) result).getBuildingXUsers();
+
+                if(buildingXUsers.size() == 0){
+                    showAlert(LoginActivity.this, getString(R.string.no_user_building_title), getString(R.string.no_user_building_message));
+                } else {
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                }
+
+            } else {
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            }
+        }
+    }
+
+    @Override
+    public void onFailed(int currentRequestId, boolean mustLogOut) {
+
+    }
+
     private void attemptLogin() {
         // Reset errors.
         mUserEmail.setError(null);

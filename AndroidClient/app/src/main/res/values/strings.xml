@@ -34,6 +34,7 @@
     <string name="size">size:</string>
     <string name="address">address:</string>
     <string name="building_unique_number">Building unique number:</string>
+    <string name="building_name">Building name:</string>
     <string name="building_address">Building address:</string>
     <string name="no_available_residents_in_current_building_and_with_that_name_or_suite_number">No available residents in current building and with that name or suite number</string>
     <string name="address_empty_list_message">No available addresses</string>
@@ -82,11 +83,16 @@
     <string name="this_email_does_not_exist">This email does not exist</string>
     <string name="something_went_wrong">Something went wrong...Internet appear to be offline!</string>
     <string name="login_error_title">Login error</string>
-    <string name="user_not_exist">User does not exist or RetroUser email/password is not correct</string>
+    <string name="user_not_exist">User does not exist or user email/password is not correct</string>
     <string name="camera_permission_denied">Camera permission denied!</string>
     <string name="search_resident">Search resident</string>
     <string name="search_by_street">Search by street</string>
     <string name="search_cities">Search cities</string>
     <string name="locker_not_found">Locker not found</string>
     <string name="locker_not_found_message">This locker was not found in database.\nWould you like to add it?</string>
+    <string name="no_user_building_title">No building</string>
+    <string name="no_user_building_message">You\'ve not been assigned any building. Please contact your administrator.</string>
+    <string name="login_redirected_message"> You\'ll be redirected to the login screen.</string>
+    <string name="choose_building_for_residents"> You have to choose building\n
+        to see its residents</string>
 </resources>
