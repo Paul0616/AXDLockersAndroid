@@ -184,7 +184,8 @@ public class SetRequests {
                     if (user != null) {
                         Object userObj = (Object) user;
 
-                       // users.add(user);
+                       SaveSharedPreferences.setFirstName(context, ((RetroUser) userObj).getFirstName());
+                        SaveSharedPreferences.setLastName(context, ((RetroUser) userObj).getLastName());
                         mHandler.onResponse(requestId, userObj);
 //                        startActivity(new Intent(SplashActivity.this, MainActivity.class));
 //                        finish();

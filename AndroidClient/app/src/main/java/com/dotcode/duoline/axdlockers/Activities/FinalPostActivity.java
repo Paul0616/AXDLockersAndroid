@@ -110,7 +110,8 @@ public class FinalPostActivity extends AppCompatActivity implements SetRequests.
                 lockerAddress, currentResident.getResident().getFirstName(), currentResident.getResident().getLastName(), currentResident.getResident().getEmail(),
                 currentResident.getResident().getPhoneNumber(), currentResident.getResident().getSecurityCode(), currentResident.getSuiteNumber(),
                 currentResident.getBuilding().getName(), buildingAddress, buildingAddress, currentResident.getBuilding().getBuildingUniqueNumber(),
-                SaveSharedPreferences.getEmail(getApplicationContext()), "STATUS_NOT_CONFIRMED");
+                SaveSharedPreferences.getEmail(getApplicationContext()), "STATUS_NOT_CONFIRMED", SaveSharedPreferences.getFirstName(getApplicationContext()),
+                SaveSharedPreferences.getLasttName(getApplicationContext()));
 
         new SetRequests(getApplicationContext(), FinalPostActivity.this, Helper.REQUEST_INSERT_LOCKER_HISTORY, null, body);
     }

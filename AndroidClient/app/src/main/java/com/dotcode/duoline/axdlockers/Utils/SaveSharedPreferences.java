@@ -33,7 +33,24 @@ public class SaveSharedPreferences {
         editor.putString("ENCRYPTED_PASSWORD", password);
         editor.commit();
     }
+    public static String getFirstName(Context ctx) {
+        return getSharedPreference(ctx).getString("userFIRSTNAME", "");
+    }
 
+    public static void setFirstName(Context ctx, String userFIRSTNAME) {
+        SharedPreferences.Editor editor = getSharedPreference(ctx).edit();
+        editor.putString("userFIRSTNAME", userFIRSTNAME);
+        editor.commit();
+    }
+    public static String getLasttName(Context ctx) {
+        return getSharedPreference(ctx).getString("userLASTNAME", "");
+    }
+
+    public static void setLastName(Context ctx, String userLASTNAME) {
+        SharedPreferences.Editor editor = getSharedPreference(ctx).edit();
+        editor.putString("userLASTNAME", userLASTNAME);
+        editor.commit();
+    }
 
     public static String getEmail(Context ctx) {
         return getSharedPreference(ctx).getString("EMAIL", "");
