@@ -7,6 +7,10 @@ import java.util.List;
 public class RetroUser {
     @SerializedName("id")
     private int userId;
+    @SerializedName("firstName")
+    private String firstName;
+    @SerializedName("lastName")
+    private String lastName;
     @SerializedName("role")
     private RetroRole role;
     @SerializedName("buildingXUsers")
@@ -22,5 +26,13 @@ public class RetroUser {
 
     public List<RetroBuildingXUser> getBuildingXUsers() {
         return buildingXUsers;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
     }
 }
