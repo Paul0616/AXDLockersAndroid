@@ -27,9 +27,9 @@ import java.util.Map;
 
 import info.androidhive.barcode.BarcodeReader;
 
-public class MainActivity extends AppCompatActivity implements BarcodeReader.BarcodeReaderListener, SetRequests.GetDataResponse {
+public class QRScanActivity extends AppCompatActivity implements BarcodeReader.BarcodeReaderListener, SetRequests.GetDataResponse {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = QRScanActivity.class.getSimpleName();
 
     private BarcodeReader barcodeReader;
     private TextView textView;
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_qrscan);
 
         // getting barcode instance
         textView = (TextView) findViewById(R.id.textView);
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
             @Override
             public void onClick(View view) {
                 SaveSharedPreferences.logOutUser(getApplicationContext());
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                startActivity(new Intent(QRScanActivity.this, LoginActivity.class));
                 finish();
             }
         });
@@ -65,11 +65,11 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
             if(result != null && result instanceof RetroLocker) {
                 int id = ((RetroLocker) result).getId();
                 //locker found
-                Intent i = new Intent(MainActivity.this, AddResidentActivity.class);
+                Intent i = new Intent(QRScanActivity.this, AddResidentActivity.class);
                 i.putExtra("qrCode", detectedqrCode);
                 startActivity(i);
             } else {
-                showAlert(MainActivity.this, getString(R.string.locker_not_found), getString(R.string.locker_not_found_message));
+                showAlert(QRScanActivity.this, getString(R.string.locker_not_found), getString(R.string.locker_not_found_message));
 
             }
         }
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                Intent i = new Intent(MainActivity.this, AddLockerActivity.class);
+                Intent i = new Intent(QRScanActivity.this, AddLockerActivity.class);
                 i.putExtra("qrCode", detectedqrCode);
                 startActivity(i);
             }
@@ -120,12 +120,12 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    //showAlert(MainActivity.this, "Test", qrCode);
+                    //showAlert(QRScanActivity.this, "Test", qrCode);
                     if (barcode.format == Barcode.QR_CODE){
                         detectedqrCode = qrCode;
                         Map<String, String> param = new HashMap<String, String>();
                         param.put("filter[qrCode]", qrCode);
-                        new SetRequests(getApplicationContext(), MainActivity.this, Helper.REQUEST_LOCKERS, param, null);
+                        new SetRequests(getApplicationContext(), QRScanActivity.this, Helper.REQUEST_LOCKERS, param, null);
                     }
                 }
             });

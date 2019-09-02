@@ -21,9 +21,7 @@ import com.dotcode.duoline.axdlockers.R;
 import com.dotcode.duoline.axdlockers.Utils.Helper;
 import com.dotcode.duoline.axdlockers.Utils.SaveSharedPreferences;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class SplashActivity extends AppCompatActivity implements SetRequests.GetDataResponse {
     GetDataService service;
@@ -55,19 +53,16 @@ public class SplashActivity extends AppCompatActivity implements SetRequests.Get
             RetroRole role = ((RetroUser) result).getRole();
             if(role.getHasRelatedBuildings()){
                List<RetroBuildingXUser> buildingXUsers = ((RetroUser) result).getBuildingXUsers();
-//                Set<String> set = new HashSet<String>();
-//                for(RetroBuildingXUser building : buildingXUsers) {
-//                    set.add(building.getBuildingId());
-//                }
+
                 if(buildingXUsers.size() == 0){
                     showAlert(SplashActivity.this, getString(R.string.no_user_building_title), getString(R.string.no_user_building_message) + getString(R.string.login_redirected_message));
                 } else {
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                    startActivity(new Intent(SplashActivity.this, MainMenuActivity.class));
                     finish();
                 }
 
             } else {
-                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                startActivity(new Intent(SplashActivity.this, MainMenuActivity.class));
                 finish();
             }
         }
@@ -76,6 +71,7 @@ public class SplashActivity extends AppCompatActivity implements SetRequests.Get
     @Override
     public void onFailed(int currentRequestId, boolean mustLogOut) {
         if (mustLogOut) {
+            SaveSharedPreferences.logOutUser(getApplicationContext());
             startActivity(new Intent(SplashActivity.this, LoginActivity.class));
             finish();
         }

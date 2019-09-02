@@ -173,7 +173,7 @@ public class SetRequests {
     }
 
     private void checkUser() {
-        Call<RetroUser> call = service.checkUser(SaveSharedPreferences.getUserId(context), SaveSharedPreferences.getAccesToken(context), "role,buildingXUsers.building");
+        Call<RetroUser> call = service.checkUser(SaveSharedPreferences.getUserId(context), SaveSharedPreferences.getAccesToken(context), "userXRights.right.code,role,buildingXUsers.building");
         call.enqueue(new Callback<RetroUser>() {
             @Override
             public void onResponse(Call<RetroUser> call, Response<RetroUser> response) {
@@ -187,7 +187,7 @@ public class SetRequests {
                        SaveSharedPreferences.setFirstName(context, ((RetroUser) userObj).getFirstName());
                         SaveSharedPreferences.setLastName(context, ((RetroUser) userObj).getLastName());
                         mHandler.onResponse(requestId, userObj);
-//                        startActivity(new Intent(SplashActivity.this, MainActivity.class));
+//                        startActivity(new Intent(SplashActivity.this, QRScanActivity.class));
 //                        finish();
                     }
                 } else {

@@ -98,6 +98,7 @@ public class SaveSharedPreferences {
         editor.remove("TOKEN_EXPIRE_AT");
         editor.remove("IS_ADMIN");
         editor.remove("ACCES_TOKEN");
+        //........
         editor.commit();
     }
 

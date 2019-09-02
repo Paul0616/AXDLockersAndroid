@@ -9,11 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -145,7 +143,7 @@ public class AddLockerActivity extends AppCompatActivity implements SetRequests.
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent i = new Intent(AddLockerActivity.this, MainActivity.class);
+                Intent i = new Intent(AddLockerActivity.this, QRScanActivity.class);
                 finish();  //Kill the activity from which you will go to next activity
                 startActivity(i);
             }

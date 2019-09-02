@@ -18,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activities.FinalPostActivity"></activity>
+
+        <activity android:name=".Activities.FinalPostActivity" />
         <activity
             android:name=".Activities.SecurityCodeActivity"
             android:parentActivityName=".Activities.AddResidentActivity"
@@ -38,18 +39,24 @@
             android:theme="@style/TitleTheme" />
         <activity
             android:name=".Activities.AddLockerActivity"
-            android:parentActivityName=".Activities.MainActivity"
+            android:parentActivityName=".Activities.QRScanActivity"
             android:theme="@style/TitleTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Activities.AddResidentActivity"
-            android:parentActivityName=".Activities.MainActivity"
+            android:parentActivityName=".Activities.QRScanActivity"
             android:theme="@style/TitleTheme" />
-        <activity android:name=".Activities.LoginActivity" android:windowSoftInputMode="adjustPan"/> <!-- <activity -->
+        <activity
+            android:name=".Activities.LoginActivity"
+            android:windowSoftInputMode="adjustPan" /> <!-- <activity -->
         <!-- android:name=".LoginActivity" -->
         <!-- android:label="@string/title_activity_login" /> -->
         <activity
-            android:name=".Activities.MainActivity"
+            android:name=".Activities.QRScanActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".Activities.MainMenuActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme" />
         <activity

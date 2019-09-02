@@ -69,7 +69,7 @@ public class FinalPostActivity extends AppCompatActivity implements SetRequests.
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(FinalPostActivity.this, MainActivity.class));
+                startActivity(new Intent(FinalPostActivity.this, QRScanActivity.class));
                 finish();
             }
         });

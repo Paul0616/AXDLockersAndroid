@@ -230,11 +230,11 @@ public class LoginActivity extends AppCompatActivity implements SetRequests.GetD
                 if(buildingXUsers.size() == 0){
                     showAlert(LoginActivity.this, getString(R.string.no_user_building_title), getString(R.string.no_user_building_message));
                 } else {
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    startActivity(new Intent(LoginActivity.this, MainMenuActivity.class));
                 }
 
             } else {
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                startActivity(new Intent(LoginActivity.this, MainMenuActivity.class));
             }
         }
     }

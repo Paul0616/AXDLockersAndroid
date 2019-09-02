@@ -15,6 +15,8 @@ public class RetroUser {
     private RetroRole role;
     @SerializedName("buildingXUsers")
     private List<RetroBuildingXUser> buildingXUsers;
+    @SerializedName("userXRights")
+    private List<RetroUserXRight> userXRights;
 
     public int getUserId() {
         return userId;
@@ -34,5 +36,9 @@ public class RetroUser {
 
     public String getLastName() {
         return lastName;
+    }
+
+    public List<RetroUserXRight> getUserXRights() {
+        return userXRights;
     }
 }
