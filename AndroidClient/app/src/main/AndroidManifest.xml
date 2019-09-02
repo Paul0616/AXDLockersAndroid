@@ -18,10 +18,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activities.OCRResultActivity"
+        <activity android:name=".Activities.ImageActivity"></activity>
+        <activity
+            android:name=".Activities.OCRResultActivity"
             android:parentActivityName=".Activities.MainMenuActivity"
-            android:theme="@style/TitleTheme"/>
-
+            android:theme="@style/TitleTheme" />
         <activity android:name=".Activities.ScanLabelActivity" />
         <activity android:name=".Activities.FinalPostActivity" />
         <activity

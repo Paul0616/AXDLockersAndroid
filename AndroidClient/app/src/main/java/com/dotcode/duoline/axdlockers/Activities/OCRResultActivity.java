@@ -1,6 +1,8 @@
 package com.dotcode.duoline.axdlockers.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,7 +33,7 @@ public class OCRResultActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_scan) {
-            Toast.makeText(this, "SCAN", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(OCRResultActivity.this, ScanLabelActivity.class));
             return true;
         }
 
