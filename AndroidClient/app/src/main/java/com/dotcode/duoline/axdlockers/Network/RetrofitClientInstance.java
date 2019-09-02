@@ -8,7 +8,7 @@ import retrofit2.http.HTTP;
 public class RetrofitClientInstance {
 
 
-    static final String BASE_URL = "http://lockers.ondesign.ro/v1/";//"http://admin.smartlockers.ca/v1/";
+    static final String BASE_URL = "https://lockers.ondesign.ro/v1/";//"http://admin.smartlockers.ca/v1/";
     private static Retrofit retrofit;
 
     public static Retrofit getRetrofitInstance() {
