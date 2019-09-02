@@ -52,7 +52,7 @@
                 android:textSize="12sp"
                 android:textStyle="italic" />
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textinputLayoutLockerNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
                     android:padding="10dp"
                     android:singleLine="true" />
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/lockerAddressLabel"
@@ -95,7 +95,7 @@
                 android:padding="8dp"
                 android:baselineAligned="false">
 
-                <android.support.constraint.ConstraintLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight=".2">
@@ -169,7 +169,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/zipCodeTextView"
                         app:layout_constraintTop_toBottomOf="parent" />
-                </android.support.constraint.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -201,7 +201,7 @@
                 android:textStyle="italic"
                 android:layout_marginStart="8dp" />
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayoutPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -212,7 +212,7 @@
                 app:passwordToggleEnabled="true"
                 app:passwordToggleTint="@android:color/darker_gray">
 
-                <android.support.design.widget.TextInputEditText
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/lockerSize"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -226,7 +226,7 @@
                     android:padding="10dp"
                     android:singleLine="true" />
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
     </ScrollView>

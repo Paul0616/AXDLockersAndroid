@@ -1,16 +1,14 @@
 package com.dotcode.duoline.axdlockers.Activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.dotcode.duoline.axdlockers.Models.RetroBuilding;
 import com.dotcode.duoline.axdlockers.Models.RetroFilteredResident;
 import com.dotcode.duoline.axdlockers.Models.RetroLocker;
-import com.dotcode.duoline.axdlockers.Models.RetroResident;
 import com.dotcode.duoline.axdlockers.R;
 import com.google.gson.Gson;
 

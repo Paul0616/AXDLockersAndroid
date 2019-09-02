@@ -1,9 +1,9 @@
 package com.dotcode.duoline.axdlockers.Models;
 
 import android.content.Context;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import android.widget.ImageView;
 import android.widget.TextView;
 

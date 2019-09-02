@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="center"
-        android:text="@string/capture"
+        android:text="Capture"
         android:textAllCaps="false"
         android:textColor="@android:color/black"
         app:layout_constraintBottom_toBottomOf="parent"

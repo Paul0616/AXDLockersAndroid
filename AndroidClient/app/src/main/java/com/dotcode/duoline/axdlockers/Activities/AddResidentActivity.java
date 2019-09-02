@@ -3,13 +3,13 @@ package com.dotcode.duoline.axdlockers.Activities;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -124,7 +124,7 @@ public class AddResidentActivity extends AppCompatActivity implements SetRequest
             }
         });
 
-        View closeButton = searchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn);
+        View closeButton = searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
 
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override

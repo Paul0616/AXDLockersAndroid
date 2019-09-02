@@ -4,13 +4,11 @@ package com.dotcode.duoline.axdlockers.Activities;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +16,6 @@ import com.dotcode.duoline.axdlockers.Models.RetroLocker;
 import com.dotcode.duoline.axdlockers.Network.SetRequests;
 import com.dotcode.duoline.axdlockers.R;
 import com.dotcode.duoline.axdlockers.Utils.Helper;
-import com.dotcode.duoline.axdlockers.Utils.SaveSharedPreferences;
 import com.google.android.gms.vision.barcode.Barcode;
 
 import java.util.HashMap;
