@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_scan"
+        android:icon="@android:drawable/ic_menu_camera"
+        android:orderInCategory="101"
+        android:title="@string/choose_an_address"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_find"
+        android:icon="@android:drawable/ic_menu_search"
+        android:orderInCategory="102"
+        android:title="@string/search_resident"
+        app:showAsAction="ifRoom" />
+</menu>

@@ -34,7 +34,6 @@ public class QRScanActivity extends AppCompatActivity implements BarcodeReader.B
     private BarcodeReader barcodeReader;
     private TextView textView;
     private boolean codeWasDetected = false;
-    private ImageView bLogOut;
     private String detectedqrCode;
 
     @Override
@@ -45,16 +44,6 @@ public class QRScanActivity extends AppCompatActivity implements BarcodeReader.B
         // getting barcode instance
         textView = (TextView) findViewById(R.id.textView);
         barcodeReader = (BarcodeReader) getSupportFragmentManager().findFragmentById(R.id.barcode_fragment);
-        bLogOut = (ImageView) findViewById(R.id.logOutImageView);
-
-        bLogOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SaveSharedPreferences.logOutUser(getApplicationContext());
-                startActivity(new Intent(QRScanActivity.this, LoginActivity.class));
-                finish();
-            }
-        });
 
     }
 
