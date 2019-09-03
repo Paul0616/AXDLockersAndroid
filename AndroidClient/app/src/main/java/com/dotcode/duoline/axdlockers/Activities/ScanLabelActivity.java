@@ -19,6 +19,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.hardware.Camera;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.dotcode.duoline.axdlockers.R;
+import com.dotcode.duoline.axdlockers.Utils.Helper;
 
 import java.io.File;
 import java.io.IOException;
@@ -79,7 +81,7 @@ public class ScanLabelActivity extends AppCompatActivity {
         Size screen = new Size(textureView.getWidth(), textureView.getHeight()); //size of the screen
 
 
-        PreviewConfig pConfig = new PreviewConfig.Builder().setTargetAspectRatio(aspectRatio).setTargetResolution(screen).build();
+        PreviewConfig pConfig = new PreviewConfig.Builder().setTargetAspectRatio(aspectRatio).build();
         Preview preview = new Preview(pConfig);
 
         preview.setOnPreviewOutputUpdateListener(
@@ -99,7 +101,7 @@ public class ScanLabelActivity extends AppCompatActivity {
 
 
         ImageCaptureConfig imageCaptureConfig = new ImageCaptureConfig.Builder().setCaptureMode(ImageCapture.CaptureMode.MIN_LATENCY)
-                .setTargetRotation(getWindowManager().getDefaultDisplay().getRotation()).setLensFacing(CameraX.LensFacing.BACK).build();
+                .setTargetRotation(getWindowManager().getDefaultDisplay().getRotation()).setLensFacing(CameraX.LensFacing.BACK).setTargetAspectRatio(aspectRatio).setTargetResolution(screen).build();
         final ImageCapture imgCap = new ImageCapture(imageCaptureConfig);
 
         findViewById(R.id.imgCapture).setOnClickListener(new View.OnClickListener() {
@@ -107,6 +109,7 @@ public class ScanLabelActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 File file = null;
+                Helper.deleteCache(getApplicationContext());
                 try {
                     File outputDir = getCacheDir(); // context being the Activity pointer
                     file = File.createTempFile("CAMERA_TEMP", ".JPG", outputDir);

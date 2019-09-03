@@ -40,4 +40,20 @@
         <!--<item name="colorControlActivated">@android:color/darker_gray</item>-->
         <!--<item name="colorControlHighlight">@android:color/darker_gray</item>-->
     </style>
+
+
+    <style name="NoTitleTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="NoTitleAndAnimTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowAnimationStyle">@style/noAnimTheme</item>
+    </style>
+
+    <style name="noAnimTheme" parent="android:Theme">
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
 </resources>

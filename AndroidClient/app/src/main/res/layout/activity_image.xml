@@ -10,8 +10,150 @@
         android:id="@+id/imageViewTaken"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ImageView
+        android:id="@+id/croppingRect"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/cropping_rect" />
+
+    <ImageView
+        android:id="@+id/topLeftCircle"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="150dp"
+        android:background="@drawable/round_corner_circle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/topLeftDot"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:background="@drawable/dot"
+        app:layout_constraintBottom_toBottomOf="@+id/topLeftCircle"
+        app:layout_constraintEnd_toEndOf="@+id/topLeftCircle"
+        app:layout_constraintStart_toStartOf="@+id/topLeftCircle"
+        app:layout_constraintTop_toTopOf="@+id/topLeftCircle" />
+
+    <ImageView
+        android:id="@+id/topRightCircle"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="50dp"
+        android:background="@drawable/round_corner_circle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/topRightDot"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:background="@drawable/dot"
+        app:layout_constraintBottom_toBottomOf="@+id/topRightCircle"
+        app:layout_constraintEnd_toEndOf="@+id/topRightCircle"
+        app:layout_constraintStart_toStartOf="@+id/topRightCircle"
+        app:layout_constraintTop_toTopOf="@+id/topRightCircle" />
+
+    <ImageView
+        android:id="@+id/bottomLeftCircle"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginBottom="100dp"
+        android:background="@drawable/round_corner_circle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/bottomLeftDot"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:background="@drawable/dot"
+        app:layout_constraintBottom_toBottomOf="@+id/bottomLeftCircle"
+        app:layout_constraintEnd_toEndOf="@+id/bottomLeftCircle"
+        app:layout_constraintStart_toStartOf="@+id/bottomLeftCircle"
+        app:layout_constraintTop_toTopOf="@+id/bottomLeftCircle" />
+
+    <ImageView
+        android:id="@+id/bottomRightCircle"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginBottom="100dp"
+        android:background="@drawable/round_corner_circle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/bottomRightDot"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:background="@drawable/dot"
+        app:layout_constraintBottom_toBottomOf="@+id/bottomRightCircle"
+        app:layout_constraintEnd_toEndOf="@+id/bottomRightCircle"
+        app:layout_constraintStart_toStartOf="@+id/bottomRightCircle"
+        app:layout_constraintTop_toTopOf="@+id/bottomRightCircle" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="W:"
+        android:textColor="@color/colorLightOrange"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="H:"
+        android:textColor="@color/colorLightOrange"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineV10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineV90"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".9" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH40"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".4" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH60"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".6" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
