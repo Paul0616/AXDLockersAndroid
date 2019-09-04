@@ -148,6 +148,7 @@ public class SetRequests {
                     callMethod(requestId);
                 } else {
                     try {
+
                         SaveSharedPreferences.logOutUser(context);
                         String url = response.raw().request().url().toString();
 
@@ -385,7 +386,6 @@ public class SetRequests {
                 if (response.isSuccessful()) {
                     RetroCityList cities = response.body();
                     Object citiesObj = cities;
-
                     mHandler.onResponse(requestId, cities);
 
                 } else {
