@@ -2,18 +2,17 @@ package com.dotcode.duoline.axdlockers.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.view.MotionEventCompat;
 import androidx.exifinterface.media.ExifInterface;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.util.SparseArray;
-import android.view.DragEvent;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -22,28 +21,30 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dotcode.duoline.axdlockers.R;
-import com.dotcode.duoline.axdlockers.Utils.Dot;
-import com.google.android.gms.vision.Detector;
+import com.dotcode.duoline.axdlockers.Utils.TextRectangle;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
 import java.io.IOException;
+import java.util.List;
 
 public class ImageActivity extends AppCompatActivity {
 
-    private ImageView iv, topLeftDot, topLeftCircle,topRightCircle, bottomLeftCircle, bottomRightCircle, croppingRectImageView;
+    private ImageView iv, topLeftCircle,topRightCircle, bottomLeftCircle, bottomRightCircle, croppingRectImageView;
     private TextView wTextView, hTextView;
     private Bitmap rotatedBitmap;
-    int containerWidth, containerHeight;
+    int containerWidth, containerHeight, circleWidth, dotWidth, gap;
     private Button detectButton;
     private String detectedString;
+    private ConstraintLayout constraintLayout;
     //Dot d1;
 
 
     private float mLastTouchX;
     private float mLastTouchY;
+    private List<Text> lines;
 
 
 
@@ -87,7 +88,7 @@ public class ImageActivity extends AppCompatActivity {
 
         iv = (ImageView) findViewById(R.id.imageViewTaken);
 
-        topLeftDot = (ImageView) findViewById(R.id.topLeftDot);
+       // topLeftDot = (ImageView) findViewById(R.id.topLeftDot);
         topLeftCircle = (ImageView) findViewById(R.id.topLeftCircle);
 
         topRightCircle = (ImageView) findViewById(R.id.topRightCircle);
@@ -99,6 +100,7 @@ public class ImageActivity extends AppCompatActivity {
         wTextView = (TextView) findViewById(R.id.textView14);
         hTextView = (TextView) findViewById(R.id.textView15);
         croppingRectImageView = (ImageView) findViewById(R.id.croppingRect);
+        constraintLayout = (ConstraintLayout) findViewById(R.id.contraintLayoutBase);
 
 
         iv.setImageBitmap(rotatedBitmap);
@@ -135,10 +137,13 @@ public class ImageActivity extends AppCompatActivity {
                         Frame frame = new Frame.Builder().setBitmap(resizedbitmap).build();
                         SparseArray items = txtRecognizer.detect(frame);
                         StringBuilder strBuilder = new StringBuilder();
+                        if (items.size() > 0)
+                            detectedString = "";
                         for (int i = 0; i < items.size(); i++) {
                             TextBlock item = (TextBlock) items.valueAt(i);
                             strBuilder.append(item.getValue());
                             strBuilder.append("/");
+
                             for (Text line : item.getComponents()) {
                                 //extract scanned text lines here
                                 Log.v("lines", line.getValue());
@@ -147,12 +152,25 @@ public class ImageActivity extends AppCompatActivity {
                                     //extract scanned text words here
                                     Log.v("element", element.getValue());
                                     Rect elB = element.getBoundingBox();
+                                    elB.left = elB.left + croppingRectImageView.getLeft();
+                                    elB.top = elB.top + croppingRectImageView.getTop();
+                                    elB.bottom = elB.bottom + croppingRectImageView.getTop();
+                                    elB.right = elB.right + croppingRectImageView.getLeft();
+                                    constraintLayout.addView(new TextRectangle(getApplicationContext(), elB));
                                     String elements = element.getValue();
                                 }
                             }
                         }
                         detectedString = strBuilder.toString().substring(0, strBuilder.toString().length() - 1);
+                        Toast.makeText(ImageActivity.this, detectedString, Toast.LENGTH_LONG).show();
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent i = new Intent(ImageActivity.this, OCRResultActivity.class);
 
+                            }
+                        }, 1000);
                     }
                 }
             });
@@ -167,18 +185,28 @@ public class ImageActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_DOWN:
                         mLastTouchX = event.getX();
                         mLastTouchY = event.getY();
-                        wTextView.setText(""+mLastTouchX);
-                        hTextView.setText(""+mLastTouchY);
+//                        wTextView.setText(""+mLastTouchX);
+//                        hTextView.setText(""+mLastTouchY);
                         break;
                     case MotionEvent.ACTION_MOVE:
 
                         int dx = (int) (event.getX() - mLastTouchX);
                         int dy = (int) (event.getY() - mLastTouchY);
 
-                        layoutParams.leftMargin += dx;
-                        layoutParams.topMargin += dy;
-                        croppingRectImageView.setLayoutParams(layoutParams);
+                        if ((layoutParams.leftMargin + dx) >= dotWidth/2 &&
+                                ((layoutParams.leftMargin + dx) <= (containerWidth - layoutParams.width - dotWidth/2))){
+                            layoutParams.leftMargin += dx;
+                        }
+
+                        if ((layoutParams.topMargin + dy) >= dotWidth/2 &&
+                                ((layoutParams.topMargin + dy) <= (containerHeight - layoutParams.height - dotWidth/2))){
+                            layoutParams.topMargin += dy;
+                        }
+
+                        //croppingRectImageView.setLayoutParams(layoutParams);
+                        croppingRectImageView.requestLayout();
                         updateDots();
+                        showRectCoord();
                     default:
                         break;
                 }
@@ -200,22 +228,25 @@ public class ImageActivity extends AppCompatActivity {
                         int x_cord = (int) event.getRawX();
                         int y_cord = (int) event.getRawY();
 
-                        if (x_cord > containerWidth-topLeftCircle.getWidth()+25) {
-                            x_cord = containerWidth-topLeftCircle.getWidth()+25;
+                        if (x_cord > containerWidth- circleWidth +25) {
+                            x_cord = containerWidth- circleWidth +25;
                         }
-                        if (y_cord > containerHeight-topLeftCircle.getHeight()+75) {
-                            y_cord = containerHeight-topLeftCircle.getHeight()+75;
+                        if (y_cord > containerHeight- circleWidth +75) {
+                            y_cord = containerHeight- circleWidth +75;
                         }
 
                         topLeftCircleLayoutParams.leftMargin = x_cord-25;
                         topLeftCircleLayoutParams.topMargin = y_cord-75;
-                        topLeftCircle.setLayoutParams(topLeftCircleLayoutParams);
+                        //topLeftCircle.setLayoutParams(topLeftCircleLayoutParams);
+                        topLeftCircle.requestLayout();
 
                         topRightCirclelayoutParams.topMargin = topLeftCircleLayoutParams.topMargin;
-                        topRightCircle.setLayoutParams(topRightCirclelayoutParams);
+                        //topRightCircle.setLayoutParams(topRightCirclelayoutParams);
+                        topLeftCircle.requestLayout();
 
                         bottomLeftCirclelayoutParams.leftMargin = topLeftCircleLayoutParams.leftMargin;
-                        bottomLeftCircle.setLayoutParams(bottomLeftCirclelayoutParams);
+                        //bottomLeftCircle.setLayoutParams(bottomLeftCirclelayoutParams);
+                        bottomLeftCircle.requestLayout();
 
                         updateCroppingRect();
 
@@ -242,21 +273,24 @@ public class ImageActivity extends AppCompatActivity {
                         int x_cord = (int) event.getRawX();
                         int y_cord = (int) event.getRawY();
 
-                        if (x_cord > containerWidth-topRightCircle.getWidth()+25) {
-                            x_cord = containerWidth-topRightCircle.getWidth()+25;
+                        if (x_cord > containerWidth- circleWidth +25) {
+                            x_cord = containerWidth- circleWidth +25;
                         }
-                        if (y_cord > containerHeight-topRightCircle.getHeight()+75) {
-                            y_cord = containerHeight-topRightCircle.getHeight()+75;
+                        if (y_cord > containerHeight- circleWidth +75) {
+                            y_cord = containerHeight- circleWidth +75;
                         }
 
                         topRightCircleLayoutParams.leftMargin = x_cord-25;
                         topRightCircleLayoutParams.topMargin = y_cord-75;
-                        topRightCircle.setLayoutParams(topRightCircleLayoutParams);
+                        //topRightCircle.setLayoutParams(topRightCircleLayoutParams);
+                        topRightCircle.requestLayout();
 
                         topLeftCircleLayoutParams.topMargin = topRightCircleLayoutParams.topMargin;
-                        topLeftCircle.setLayoutParams(topLeftCircleLayoutParams);
+                        //topLeftCircle.setLayoutParams(topLeftCircleLayoutParams);
+                        topLeftCircle.requestLayout();
                         bottomRightCircleLayoutParams.leftMargin = topRightCircleLayoutParams.leftMargin;
-                        bottomRightCircle.setLayoutParams(bottomRightCircleLayoutParams);
+//                        bottomRightCircle.setLayoutParams(bottomRightCircleLayoutParams);
+                        bottomRightCircle.requestLayout();
 
 
                         updateCroppingRect();
@@ -286,22 +320,24 @@ public class ImageActivity extends AppCompatActivity {
                         int x_cord = (int) event.getRawX();
                         int y_cord = (int) event.getRawY();
 
-                        if (x_cord > containerWidth-bottomRightCircle.getWidth()+25) {
-                            x_cord = containerWidth-bottomRightCircle.getWidth()+25;
+                        if (x_cord > containerWidth- circleWidth +25) {
+                            x_cord = containerWidth- circleWidth +25;
                         }
-                        if (y_cord > containerHeight-bottomRightCircle.getHeight()+75) {
-                            y_cord = containerHeight-bottomRightCircle.getHeight()+75;
+                        if (y_cord > containerHeight- circleWidth +75) {
+                            y_cord = containerHeight- circleWidth +75;
                         }
 
                         bottomRightCircleLayoutParams.leftMargin = x_cord-25;
                         bottomRightCircleLayoutParams.topMargin = y_cord-75;
-                        bottomRightCircle.setLayoutParams(bottomRightCircleLayoutParams);
+//                        bottomRightCircle.setLayoutParams(bottomRightCircleLayoutParams);
+                        bottomRightCircle.requestLayout();
 
                         topRightCircleLayoutParams.leftMargin = bottomRightCircleLayoutParams.leftMargin;
-                        topRightCircle.setLayoutParams(topRightCircleLayoutParams);
+//                        topRightCircle.setLayoutParams(topRightCircleLayoutParams);
+                        topRightCircle.requestLayout();
                         bottomLeftCircleLayoutParams.topMargin = bottomRightCircleLayoutParams.topMargin;
-                        bottomLeftCircle.setLayoutParams(bottomLeftCircleLayoutParams);
-
+//                        bottomLeftCircle.setLayoutParams(bottomLeftCircleLayoutParams);
+                        bottomLeftCircle.requestLayout();
 
                         updateCroppingRect();
 
@@ -329,22 +365,24 @@ public class ImageActivity extends AppCompatActivity {
                         int x_cord = (int) event.getRawX();
                         int y_cord = (int) event.getRawY();
 
-                        if (x_cord > containerWidth-bottomLeftCircle.getWidth()+25) {
-                            x_cord = containerWidth-bottomLeftCircle.getWidth()+25;
+                        if (x_cord > containerWidth- circleWidth +25) {
+                            x_cord = containerWidth- circleWidth +25;
                         }
-                        if (y_cord > containerHeight-bottomLeftCircle.getHeight()+75) {
-                            y_cord = containerHeight-bottomLeftCircle.getHeight()+75;
+                        if (y_cord > containerHeight- circleWidth +75) {
+                            y_cord = containerHeight- circleWidth +75;
                         }
 
                         bottomLeftCircleLayoutParams.leftMargin = x_cord-25;
                         bottomLeftCircleLayoutParams.topMargin = y_cord-75;
-                        bottomLeftCircle.setLayoutParams(bottomLeftCircleLayoutParams);
+//                        bottomLeftCircle.setLayoutParams(bottomLeftCircleLayoutParams);
+                        bottomLeftCircle.requestLayout();
 
                         topLeftCircleLayoutParams.leftMargin = bottomLeftCircleLayoutParams.leftMargin;
-                        topLeftCircle.setLayoutParams(topLeftCircleLayoutParams);
+//                        topLeftCircle.setLayoutParams(topLeftCircleLayoutParams);
+                        topLeftCircle.requestLayout();
                         bottomRightCircleLayoutParams.topMargin = bottomLeftCircleLayoutParams.topMargin;
-                        bottomRightCircle.setLayoutParams(bottomRightCircleLayoutParams);
-
+//                        bottomRightCircle.setLayoutParams(bottomRightCircleLayoutParams);
+                        bottomRightCircle.requestLayout();
 
                         updateCroppingRect();
 
@@ -374,11 +412,15 @@ public class ImageActivity extends AppCompatActivity {
         ConstraintLayout.LayoutParams topRightCircleLayoutParams = (ConstraintLayout.LayoutParams) topRightCircle.getLayoutParams();
         ConstraintLayout.LayoutParams bottomLeftCircleLayoutParams = (ConstraintLayout.LayoutParams) bottomLeftCircle.getLayoutParams();
 
-        croppingRectLayoutParams.topMargin = topLeftCircleLayoutParams.topMargin + topLeftCircle.getHeight() / 2;
-        croppingRectLayoutParams.leftMargin = topLeftCircleLayoutParams.leftMargin + topLeftCircle.getWidth() / 2;
-        croppingRectLayoutParams.width = topRightCircleLayoutParams.leftMargin - topLeftCircleLayoutParams.leftMargin;//int) (topRightCircle.getX() - topLeftCircle.getX());
-        croppingRectLayoutParams.height = bottomLeftCircleLayoutParams.topMargin - topLeftCircleLayoutParams.topMargin;//(int) (bottomRightCircle.getY() - topRightCircle.getY());
-        croppingRectImageView.setLayoutParams(croppingRectLayoutParams);
+        int minX = Math.min(topRightCircleLayoutParams.leftMargin, topLeftCircleLayoutParams.leftMargin);
+        int minY = Math.min(bottomLeftCircleLayoutParams.topMargin, topLeftCircleLayoutParams.topMargin);
+
+        croppingRectLayoutParams.topMargin = minY + dotWidth /2;
+        croppingRectLayoutParams.leftMargin = minX + dotWidth /2;
+        croppingRectLayoutParams.width = Math.abs(topRightCircleLayoutParams.leftMargin - topLeftCircleLayoutParams.leftMargin) + gap;//int) (topRightCircle.getX() - topLeftCircle.getX());
+        croppingRectLayoutParams.height = Math.abs(bottomLeftCircleLayoutParams.topMargin - topLeftCircleLayoutParams.topMargin) + gap;//(int) (bottomRightCircle.getY() - topRightCircle.getY());
+        //croppingRectImageView.setLayoutParams(croppingRectLayoutParams);
+        croppingRectImageView.requestLayout();
     }
 
     private void updateDots() {
@@ -389,21 +431,25 @@ public class ImageActivity extends AppCompatActivity {
         ConstraintLayout.LayoutParams bottomLeftCircleLayoutParams = (ConstraintLayout.LayoutParams) bottomLeftCircle.getLayoutParams();
         ConstraintLayout.LayoutParams bottomRightCircleLayoutParams = (ConstraintLayout.LayoutParams) bottomRightCircle.getLayoutParams();
 
-        topLeftCircleLayoutParams.topMargin = croppingRectLayoutParams.topMargin - topLeftCircle.getHeight() / 2;
-        topLeftCircleLayoutParams.leftMargin = croppingRectLayoutParams.leftMargin - topLeftCircle.getWidth() / 2;
-        topLeftCircle.setLayoutParams(topLeftCircleLayoutParams);
+        topLeftCircleLayoutParams.topMargin = croppingRectLayoutParams.topMargin - dotWidth /2;
+        topLeftCircleLayoutParams.leftMargin = croppingRectLayoutParams.leftMargin - dotWidth /2;
+//        topLeftCircle.setLayoutParams(topLeftCircleLayoutParams);
+        topLeftCircle.requestLayout();
 
-        topRightCircleLayoutParams.topMargin = croppingRectLayoutParams.topMargin - topRightCircle.getHeight() / 2;
-        topRightCircleLayoutParams.leftMargin = topLeftCircleLayoutParams.leftMargin + croppingRectLayoutParams.width;
-        topRightCircle.setLayoutParams(topRightCircleLayoutParams);
+        topRightCircleLayoutParams.topMargin = croppingRectLayoutParams.topMargin - dotWidth/2;
+        topRightCircleLayoutParams.leftMargin = topLeftCircleLayoutParams.leftMargin + croppingRectLayoutParams.width - gap;
+//        topRightCircle.setLayoutParams(topRightCircleLayoutParams);
+        topRightCircle.requestLayout();
 
-        bottomLeftCircleLayoutParams.topMargin = topLeftCircleLayoutParams.topMargin + croppingRectLayoutParams.height;
-        bottomLeftCircleLayoutParams.leftMargin = croppingRectLayoutParams.leftMargin - bottomLeftCircle.getWidth() / 2;
-        bottomLeftCircle.setLayoutParams(bottomLeftCircleLayoutParams);
+        bottomLeftCircleLayoutParams.topMargin = topLeftCircleLayoutParams.topMargin + croppingRectLayoutParams.height - gap;
+        bottomLeftCircleLayoutParams.leftMargin = croppingRectLayoutParams.leftMargin - dotWidth/2;
+//        bottomLeftCircle.setLayoutParams(bottomLeftCircleLayoutParams);
+        bottomLeftCircle.requestLayout();
 
-        bottomRightCircleLayoutParams.topMargin = topLeftCircleLayoutParams.topMargin + croppingRectLayoutParams.height;
-        bottomRightCircleLayoutParams.leftMargin = topLeftCircleLayoutParams.leftMargin + croppingRectLayoutParams.width;
-        bottomRightCircle.setLayoutParams(bottomRightCircleLayoutParams);
+        bottomRightCircleLayoutParams.topMargin = topLeftCircleLayoutParams.topMargin + croppingRectLayoutParams.height - gap;
+        bottomRightCircleLayoutParams.leftMargin = topLeftCircleLayoutParams.leftMargin + croppingRectLayoutParams.width - gap;
+//        bottomRightCircle.setLayoutParams(bottomRightCircleLayoutParams);
+        bottomRightCircle.requestLayout();
     }
 
     private static Bitmap rotateImage(Bitmap source, float angle) {
@@ -418,12 +464,15 @@ public class ImageActivity extends AppCompatActivity {
     public void onWindowFocusChanged(boolean hasFocus) {
         wTextView.setText("W:"+rotatedBitmap.getWidth()+" px/"+iv.getWidth());
         hTextView.setText("H:"+rotatedBitmap.getHeight()+" px/"+iv.getHeight());
-//        wTextView.setText("W:"+croppingRectImageView.getWidth()+" px/"+croppingRectImageView.getX());
-//        hTextView.setText("H:"+croppingRectImageView.getHeight()+" px/"+croppingRectImageView.getY());
+
         containerWidth = iv.getWidth();
         containerHeight = iv.getHeight();
-//        d1.setXPos(300);
-//        d1.setYPos(100);
+
+        //marginOffset is how much cropping rect must approach to margin of screen
+       // marginOffset = 0;
+        dotWidth = 0;//topLeftDot.getWidth();
+        circleWidth = topLeftCircle.getWidth();
+        gap = topLeftCircle.getWidth();// - topLeftDot.getWidth();
         super.onWindowFocusChanged(hasFocus);
     }
 
