@@ -16,16 +16,20 @@ import androidx.lifecycle.LifecycleOwner;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.hardware.Camera;
+import android.hardware.SensorManager;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Rational;
 import android.util.Size;
+import android.view.Display;
+import android.view.OrientationEventListener;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
@@ -46,6 +50,7 @@ public class ScanLabelActivity extends AppCompatActivity {
     private final String[] REQUIRED_PERMISSIONS = new String[]{"android.permission.CAMERA"}; //, "android.permission.WRITE_EXTERNAL_STORAGE"
     TextureView textureView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +64,14 @@ public class ScanLabelActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+//         OrientationEventListener orientationEventListener = new OrientationEventListener(getApplicationContext(), SensorManager.SENSOR_DELAY_NORMAL) {
+//            @Override
+//            public void onOrientationChanged(int orientation) {
+//                Toast.makeText(ScanLabelActivity.this, ""+orientation, Toast.LENGTH_LONG).show();
+//                //startCamera();
+//            }
+//        };
+//        orientationEventListener.enable();
 
     }
 
@@ -67,6 +80,8 @@ public class ScanLabelActivity extends AppCompatActivity {
         super.onWindowFocusChanged(hasFocus);
         //Here you can get the size!
         if(allPermissionsGranted()){
+            //rotation = Display.getRotation();
+
             startCamera(); //start camera if permission has been granted by user
         } else{
             ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
@@ -89,6 +104,7 @@ public class ScanLabelActivity extends AppCompatActivity {
                     //to update the surface texture we  have to destroy it first then re-add it
                     @Override
                     public void onUpdated(Preview.PreviewOutput output){
+
                         ViewGroup parent = (ViewGroup) textureView.getParent();
                         parent.removeView(textureView);
                         parent.addView(textureView, 0);
@@ -117,20 +133,6 @@ public class ScanLabelActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                //File file = new File(Environment.getExternalStorageDirectory() + "/" + System.currentTimeMillis() + ".png");
-//                imgCap.takePicture(new ImageCapture.OnImageCapturedListener() {
-//                    @Override
-//                    public void onCaptureSuccess(ImageProxy image, int rotationDegrees) {
-//                        ByteBuffer buffer = image.getImage().getPlanes()[0].getBuffer();
-//                        ByteArr
-//                        super.onCaptureSuccess(image, rotationDegrees);
-//                    }
-//
-//                    @Override
-//                    public void onError(ImageCapture.UseCaseError useCaseError, String message, @Nullable Throwable cause) {
-//                        super.onError(useCaseError, message, cause);
-//                    }
-//                });
                 imgCap.takePicture(file, new ImageCapture.OnImageSavedListener() {
                     @Override
                     public void onImageSaved(@NonNull File file) {
@@ -159,6 +161,7 @@ public class ScanLabelActivity extends AppCompatActivity {
             }
         });
 
+
         //bind to lifecycle:
         CameraX.bindToLifecycle((LifecycleOwner)this, preview, imgCap);
     }
@@ -172,7 +175,7 @@ public class ScanLabelActivity extends AppCompatActivity {
         float cY = h / 2f;
 
         int rotationDgr;
-        int rotation = (int)textureView.getRotation();
+        int rotation = textureView.getDisplay().getRotation();
 
         switch(rotation){
             case Surface.ROTATION_0:
@@ -191,8 +194,22 @@ public class ScanLabelActivity extends AppCompatActivity {
                 return;
         }
 
-        mx.postRotate((float)rotationDgr, cX, cY);
+        mx.postRotate(-(float)rotationDgr, cX, cY);
         textureView.setTransform(mx);
+
+        float scaledWidth, scaledHeight;
+        if (w > h) {
+            scaledHeight = w;
+            scaledWidth = w;
+        } else {
+            scaledHeight = h;
+            scaledWidth = w;
+        }
+        float xScale = scaledWidth / w;
+        float yScale = scaledHeight / h;
+        mx.preScale(xScale,yScale,cX,cY);
+        textureView.setTransform(mx);
+        textureView.getSurfaceTexture().setDefaultBufferSize(textureView.getWidth(),textureView.getHeight());
     }
 
     @Override

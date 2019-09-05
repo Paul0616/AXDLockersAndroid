@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
 import com.dotcode.duoline.axdlockers.R;
@@ -17,12 +18,16 @@ import com.dotcode.duoline.axdlockers.Utils.Helper;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OCRResultActivity extends AppCompatActivity {
 
     public static final int REQUEST_CAMERA = 120;
     public static final int PIC_CROP = 2;
     private Uri cameraUri;
+    private List<String> first4Strings = new ArrayList<String>();
+    private AutoCompleteTextView fullName, unitNumber;
     File file = null;
 
     @Override
@@ -30,8 +35,58 @@ public class OCRResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ocrresult);
         setTitle("Finding Resident");
+        fullName = (AutoCompleteTextView) findViewById(R.id.fullName);
+        unitNumber = (AutoCompleteTextView) findViewById(R.id.unitNumber);
+        ArrayList<String> lines = getIntent().getStringArrayListExtra("lines");
+        if (lines != null) {
+            first4Strings = getFirst3Lines(lines);
+            if (first4Strings.size() > 0) {
+                fullName.setText(first4Strings.get(0));
+                if (first4Strings.size() > 1){
+                    unitNumber.setText(first4Strings.get(1));
+                }
+            }
+        }
     }
 
+    private List<String> getFirst3Lines(ArrayList<String> lines){
+        //0 - name; 1 - unit; 2 - street; 3 - address
+        List<String> l = new ArrayList<String>();
+        if (lines.size() > 0) {
+            l.add(lines.get(0).trim()); //0
+        }
+        if (lines.size() > 1) {
+            String[] separatedByMinus = lines.get(1).split("-");
+            String[] separatedByUnit = lines.get(1).split("(?i)UNIT");
+
+            if (separatedByMinus.length > 1) {
+                l.add(separatedByMinus[0].trim()); // 1
+                if(separatedByMinus.length > 2){
+                    String street = "";
+                    for (int i = 1; i<separatedByMinus.length; i++){
+                        street += separatedByMinus[i];
+                    }
+                    l.add(street.trim()); //2
+                } else {
+                    l.add(separatedByMinus[1].trim()); //2
+                }
+            }
+            if (separatedByUnit.length > 1) {
+                String unit = separatedByUnit[1].trim();
+                l.add(unit.replaceAll("[^0-9]", "")); //1
+                l.add(separatedByUnit[0].trim()); //2
+            }
+            if (l.size() == 1){
+                l.add("");
+                l.add("");
+            }
+        }
+        if (lines.size() > 2) {
+            l.add(lines.get(2).trim()); //3
+        }
+        return l;
+
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_scan_with_search, menu);

@@ -28,6 +28,7 @@ import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ImageActivity extends AppCompatActivity {
@@ -44,7 +45,7 @@ public class ImageActivity extends AppCompatActivity {
 
     private float mLastTouchX;
     private float mLastTouchY;
-    private List<Text> lines;
+    private ArrayList<String> lines = new ArrayList<String>();
 
 
 
@@ -104,7 +105,6 @@ public class ImageActivity extends AppCompatActivity {
 
 
         iv.setImageBitmap(rotatedBitmap);
-        //d1 = new Dot(this, constraintLayout);
 
         //Toast.makeText(this, "Final image size: w:" + rotatedBitmap.getWidth() + "x h:" + rotatedBitmap.getHeight(), Toast.LENGTH_LONG).show();
 
@@ -147,7 +147,10 @@ public class ImageActivity extends AppCompatActivity {
                             for (Text line : item.getComponents()) {
                                 //extract scanned text lines here
                                 Log.v("lines", line.getValue());
-                                String lines = line.getValue();
+
+                                String lines1 = line.getValue();
+                                lines.add(lines1);
+
                                 for (Text element : line.getComponents()) {
                                     //extract scanned text words here
                                     Log.v("element", element.getValue());
@@ -168,7 +171,8 @@ public class ImageActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 Intent i = new Intent(ImageActivity.this, OCRResultActivity.class);
-
+                                i.putStringArrayListExtra("lines", lines);
+                                startActivity(i);
                             }
                         }, 1000);
                     }
