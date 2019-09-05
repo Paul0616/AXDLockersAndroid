@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.dotcode.duoline.axdlockers">
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
-
 
     <application
         android:allowBackup="true"
@@ -12,23 +10,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".Activities.ResidentsFilteredActivity"
+            android:parentActivityName=".Activities.OCRResultActivity"
+            android:theme="@style/TitleTheme"></activity>
 
-
-
-
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="com.dotcode.duoline.axdlockers"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
-        </provider>
-
-
-        <activity android:name=".Activities.ImageWithCropActivity"
+        <activity
+            android:name=".Activities.ImageWithCropActivity"
             android:theme="@style/NoTitleAndAnimTheme" />
+
         <activity
             android:name=".Activities.ImageActivity"
             android:theme="@style/NoTitleAndAnimTheme" />
@@ -68,13 +57,13 @@
             android:theme="@style/TitleTheme" />
         <activity
             android:name=".Activities.LoginActivity"
-            android:windowSoftInputMode="adjustPan" /> <!-- <activity -->
-        <!-- android:name=".LoginActivity" -->
-        <!-- android:label="@string/title_activity_login" /> -->
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Activities.QRScanActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme" /> <!-- <activity -->
+        <!-- android:name=".LoginActivity" -->
+        <!-- android:label="@string/title_activity_login" /> -->
         <activity
             android:name=".Activities.MainMenuActivity"
             android:label="@string/app_name"
@@ -88,14 +77,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.dotcode.duoline.axdlockers"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
+
     <uses-feature android:name="android.hardware.camera" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-
     <uses-permission android:name="android.permission.READ_PROFILE" />
+
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
 </manifest>

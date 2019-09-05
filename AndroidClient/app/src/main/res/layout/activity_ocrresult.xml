@@ -137,7 +137,6 @@
             android:imeOptions="actionDone"
             android:inputType="textVisiblePassword|textCapCharacters"
             android:maxLines="1"
-            android:nextFocusDown="@id/lockerSize"
             android:padding="10dp"
             android:singleLine="true"
             android:textSize="17sp" />

@@ -88,6 +88,7 @@
     <string name="user_not_exist">User does not exist or user email/password is not correct</string>
     <string name="camera_permission_denied">Camera permission denied!</string>
     <string name="search_resident">Search resident</string>
+    <string name="scan_label">SCAN</string>
     <string name="search_by_street">Search by street</string>
     <string name="search_cities">Search cities</string>
     <string name="locker_not_found">Locker not found</string>

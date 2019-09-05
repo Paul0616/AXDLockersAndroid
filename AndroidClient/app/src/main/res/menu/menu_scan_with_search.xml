@@ -4,13 +4,13 @@
 
     <item
         android:id="@+id/action_scan"
-        android:icon="@android:drawable/ic_menu_camera"
+        android:icon="@drawable/ic_photo_camera_white_24dp"
         android:orderInCategory="101"
-        android:title="@string/choose_an_address"
+        android:title="@string/scan_label"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_find"
-        android:icon="@android:drawable/ic_menu_search"
+        android:icon="@drawable/ic_search_white_24dp"
         android:orderInCategory="102"
         android:title="@string/search_resident"
         app:showAsAction="ifRoom" />

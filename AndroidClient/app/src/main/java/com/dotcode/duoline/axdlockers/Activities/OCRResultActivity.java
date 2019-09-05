@@ -1,5 +1,6 @@
 package com.dotcode.duoline.axdlockers.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
@@ -8,9 +9,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dotcode.duoline.axdlockers.R;
@@ -23,12 +30,14 @@ import java.util.List;
 
 public class OCRResultActivity extends AppCompatActivity {
 
-    public static final int REQUEST_CAMERA = 120;
-    public static final int PIC_CROP = 2;
-    private Uri cameraUri;
-    private List<String> first4Strings = new ArrayList<String>();
+//    public static final int REQUEST_CAMERA = 120;
+//    public static final int PIC_CROP = 2;
+//    private Uri cameraUri;
+    private ArrayList<String> first4Strings = new ArrayList<String>();
     private AutoCompleteTextView fullName, unitNumber;
-    File file = null;
+    private Menu menu;
+    private boolean menuSearchDisabled = true;
+//    File file = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +56,66 @@ public class OCRResultActivity extends AppCompatActivity {
                 }
             }
         }
+
+
+        unitNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                setSearchButtonStatus();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        fullName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                setSearchButtonStatus();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
     }
 
-    private List<String> getFirst3Lines(ArrayList<String> lines){
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setSearchButtonStatus();
+    }
+
+    private void setSearchButtonStatus(){
+        if(menu != null){
+            boolean searchEnabled = !fullName.getText().toString().trim().equals("") || !unitNumber.getText().toString().trim().equals("");
+            if (searchEnabled) {
+                menu.getItem(1).setEnabled(true);
+                menu.getItem(1).getIcon().setAlpha(255);
+            } else {
+                menu.getItem(1).setEnabled(false);
+                menu.getItem(1).getIcon().setAlpha(130);
+            }
+        }
+    }
+
+
+    private ArrayList<String> getFirst3Lines(ArrayList<String> lines){
         //0 - name; 1 - unit; 2 - street; 3 - address
-        List<String> l = new ArrayList<String>();
+        ArrayList<String> l = new ArrayList<String>();
         if (lines.size() > 0) {
             l.add(lines.get(0).trim()); //0
         }
@@ -90,6 +154,8 @@ public class OCRResultActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_scan_with_search, menu);
+        this.menu = menu;
+        setSearchButtonStatus();
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -97,7 +163,20 @@ public class OCRResultActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_find) {
-            Toast.makeText(this, "FIND", Toast.LENGTH_SHORT).show();
+
+            if (first4Strings.size() != 0){
+                first4Strings.set(0, fullName.getText().toString().trim());
+                first4Strings.set(1, unitNumber.getText().toString().trim());
+            } else {
+                first4Strings.add(fullName.getText().toString().trim());
+                first4Strings.add(unitNumber.getText().toString().trim());
+                first4Strings.add("");
+                first4Strings.add("");
+//                Toast.makeText(this, "No FULL NAME or UNIT NUMBER detected.", Toast.LENGTH_SHORT).show();
+            }
+            Intent i = new Intent(OCRResultActivity.this, ResidentsFilteredActivity.class);
+            i.putStringArrayListExtra("first4lines", first4Strings);
+            startActivity(i);
             return true;
         }
         if (id == R.id.action_scan) {
@@ -109,7 +188,10 @@ public class OCRResultActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//    private void cameraIntent() {
+
+
+
+    //    private void cameraIntent() {
 //        Helper.deleteCache(getApplicationContext());
 //        try {
 //            File outputDir = getCacheDir(); // context being the Activity pointer
