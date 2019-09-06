@@ -7,6 +7,7 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,6 +25,7 @@ import com.dotcode.duoline.axdlockers.Models.RetroFullName;
 import com.dotcode.duoline.axdlockers.Network.SetRequests;
 import com.dotcode.duoline.axdlockers.R;
 import com.dotcode.duoline.axdlockers.Utils.Helper;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,7 +71,10 @@ public class ResidentsFilteredActivity extends AppCompatActivity implements SetR
         addOrphanCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(ResidentsFilteredActivity.this, "ADD ORPHAN", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(ResidentsFilteredActivity.this, "ADD ORPHAN", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(ResidentsFilteredActivity.this, AddOrphanParcelActivity.class);
+                i.putStringArrayListExtra("first4lines", first4Strings);
+                startActivity(i);
             }
         });
         progressBar.setVisibility(View.INVISIBLE);
@@ -141,7 +146,12 @@ public class ResidentsFilteredActivity extends AppCompatActivity implements SetR
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_next) {
-            Toast.makeText(this, "NEXT", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(ResidentsFilteredActivity.this, ConfirmResidentActivity.class);
+            Gson gson = new Gson();
+            String json = gson.toJson(currentResident);
+            i.putExtra("JSON_RESIDENT", json);
+            startActivity(i);
+//            Toast.makeText(this, "NEXT", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }

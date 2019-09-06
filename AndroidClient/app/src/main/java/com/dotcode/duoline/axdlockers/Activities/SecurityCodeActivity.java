@@ -66,6 +66,6 @@ public class SecurityCodeActivity extends AppCompatActivity {
         suiteNumber.setText(currentResident.getSuiteNumber());
         phone.setText(currentResident.getResident().getPhoneNumber());
         email.setText(currentResident.getResident().getEmail());
-        securityCode.setText(currentResident.getResident().getSecurityCode());
+       // securityCode.setText(currentResident.getResident().getSecurityCode());
     }
 }

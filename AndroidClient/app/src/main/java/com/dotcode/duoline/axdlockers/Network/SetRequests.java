@@ -19,6 +19,7 @@ import com.dotcode.duoline.axdlockers.Models.RetroLockerHistory;
 import com.dotcode.duoline.axdlockers.Models.RetroLockerHistoryList;
 import com.dotcode.duoline.axdlockers.Models.RetroLockerList;
 import com.dotcode.duoline.axdlockers.Models.RetroNotification;
+import com.dotcode.duoline.axdlockers.Models.RetroOrphanParcel;
 import com.dotcode.duoline.axdlockers.Models.RetroTokenList;
 import com.dotcode.duoline.axdlockers.Models.RetroUser;
 import com.dotcode.duoline.axdlockers.R;
@@ -134,6 +135,9 @@ public class SetRequests {
                 break;
             case Helper.REQUEST_RESIDENTS_GET_BY_FULL_NAME_OR_UNIT:
                 getResidentByFullNameOrUnit(body, parameters);
+                break;
+            case Helper.REQUEST_INSERT_ORPHAN_PARCEL:
+                createOrphanParcel(body);
                 break;
         }
     }
@@ -718,6 +722,41 @@ public class SetRequests {
 
     }
 
+    private void createOrphanParcel(Object orphanParcel){
+        Call<RetroOrphanParcel> call = service.createOrphanParcel(((RetroOrphanParcel) orphanParcel), SaveSharedPreferences.getAccesToken(context));
+        call.enqueue(new Callback<RetroOrphanParcel>() {
+            @Override
+            public void onResponse(Call<RetroOrphanParcel> call, Response<RetroOrphanParcel> response) {
+                String url = response.raw().request().url().toString();
+                if (response.isSuccessful()) {
+                    RetroOrphanParcel orphanParcel1 = response.body();
+                    Object orphanParcel2 = orphanParcel1;
+
+                    mHandler.onResponse(requestId, orphanParcel2);
+
+                } else {
+                    try {
+                        SaveSharedPreferences.logOutUser(context);
+
+                        String responseBody = "";
+                        if (response.errorBody() != null) {
+                            responseBody = response.errorBody().string();
+                        }
+                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
+                        mHandler.onFailed(requestId, true);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RetroOrphanParcel> call, Throwable t) {
+                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     private void createLHs(Object lh) {
 
         Call<RetroLockerHistory> call = service.createLHs(((RetroLockerHistory)lh), SaveSharedPreferences.getAccesToken(context));

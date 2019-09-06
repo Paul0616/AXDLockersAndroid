@@ -32,6 +32,7 @@ public class QRScanActivity extends AppCompatActivity implements BarcodeReader.B
     private TextView textView;
     private boolean codeWasDetected = false;
     private String detectedqrCode;
+    //private
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 
 import com.dotcode.duoline.axdlockers.Models.RetroAddress;
 import com.dotcode.duoline.axdlockers.Models.RetroBuilding;
+import com.dotcode.duoline.axdlockers.Models.RetroResident;
 import com.google.gson.Gson;
 
 public class SaveSharedPreferences {
@@ -130,6 +131,20 @@ public class SaveSharedPreferences {
         editor.putString("BUILDING", json);
         editor.commit();
     }
+
+//    public static RetroResident getResident(Context ctx) {
+//        Gson gson = new Gson();
+//        String json = getSharedPreference(ctx).getString("RESIDENT", "");
+//        return gson.fromJson(json, RetroResident.class);
+//    }
+//
+//    public static void setResident(Context ctx, RetroResident resident){
+//        SharedPreferences.Editor editor = getSharedPreference(ctx).edit();
+//        Gson gson = new Gson();
+//        String json = gson.toJson(resident);
+//        editor.putString("RESIDENT", json);
+//        editor.commit();
+//    }
 
     public static RetroBuilding getBuilding(Context ctx) {
         Gson gson = new Gson();

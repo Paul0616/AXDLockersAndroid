@@ -98,5 +98,6 @@
     <string name="no_user_building_message">You\'ve not been assigned any building. Please contact your administrator.</string>
     <string name="login_redirected_message"> You\'ll be redirected to the login screen.</string>
     <string name="choose_building_for_residents"> You have to choose building\nto see its residents</string>
-    <string name="add_orphan_parcel">If no resident match to parcel\'s label than you can:  ADD TO UNKNOWN PARCELS</string>
+    <string name="add_orphan_parcel">If no resident match to parcel\'s label than you can \nADD TO UNKNOWN PARCELS</string>
+    <string name="building">Building:</string>
 </resources>

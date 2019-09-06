@@ -18,16 +18,15 @@ public class RetroResident {
     @SerializedName("phoneNumber")
     private String phoneNumber;
 
-    @SerializedName("securityCode")
-    private String securityCode;
 
-    public RetroResident(int id, String firstName, String lastName, String email, String phone, String securityCode) {
+
+    public RetroResident(int id, String firstName, String lastName, String email, String phone) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phoneNumber = phone;
-        this.securityCode = securityCode;
+
     }
 
     public int getId() {
@@ -50,7 +49,5 @@ public class RetroResident {
         return phoneNumber;
     }
 
-    public String getSecurityCode() {
-        return securityCode;
-    }
+
 }

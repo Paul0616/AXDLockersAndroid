@@ -108,7 +108,8 @@ public class FinalPostActivity extends AppCompatActivity implements SetRequests.
                 currentResident.getBuilding().getAddress().getZipCode();
         RetroLockerHistory body = new RetroLockerHistory(0, currentLocker.getQrCode(), currentLocker.getNumber(), currentLocker.getSize(),
                 lockerAddress, currentResident.getResident().getFirstName(), currentResident.getResident().getLastName(), currentResident.getResident().getEmail(),
-                currentResident.getResident().getPhoneNumber(), currentResident.getResident().getSecurityCode(), currentResident.getSuiteNumber(),
+                currentResident.getResident().getPhoneNumber(),
+                "SECURITY", currentResident.getSuiteNumber(),
                 currentResident.getBuilding().getName(), buildingAddress, buildingAddress, currentResident.getBuilding().getBuildingUniqueNumber(),
                 SaveSharedPreferences.getEmail(getApplicationContext()), "STATUS_NOT_CONFIRMED", SaveSharedPreferences.getFirstName(getApplicationContext()),
                 SaveSharedPreferences.getLasttName(getApplicationContext()));

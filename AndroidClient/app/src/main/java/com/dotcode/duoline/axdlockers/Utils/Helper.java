@@ -3,6 +3,8 @@ package com.dotcode.duoline.axdlockers.Utils;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.dotcode.duoline.axdlockers.Models.RetroUserXRight;
+
 import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -27,6 +29,7 @@ public class Helper {
     public static final int REQUEST_INSERT_NOTIFICATION = 15;
     public static final int REQUEST_GET_OWNED_BUILDINGS = 16;
     public static final int REQUEST_RESIDENTS_GET_BY_FULL_NAME_OR_UNIT = 17;
+    public static final int REQUEST_INSERT_ORPHAN_PARCEL = 18;
 
     public static final int STATUS_NOT_CONFIRMED = 1;
     /**
@@ -88,5 +91,14 @@ public class Helper {
         } else {
             return false;
         }
+    }
+
+    public static boolean userHaveRight(List<RetroUserXRight> userXRights, String code) {
+        for(RetroUserXRight item : userXRights){
+            if(item.getRight().getCode().equals(code)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

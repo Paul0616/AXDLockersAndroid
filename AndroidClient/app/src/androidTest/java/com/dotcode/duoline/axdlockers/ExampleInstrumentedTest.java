@@ -23,4 +23,5 @@ public class ExampleInstrumentedTest {
 
         assertEquals("com.dotcode.duoline.axdlockers", appContext.getPackageName());
     }
+
 }

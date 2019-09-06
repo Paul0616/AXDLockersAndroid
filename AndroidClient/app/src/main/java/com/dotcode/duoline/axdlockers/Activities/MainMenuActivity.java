@@ -19,6 +19,8 @@ import com.dotcode.duoline.axdlockers.Utils.SaveSharedPreferences;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class MainMenuActivity extends AppCompatActivity implements SetRequests.GetDataResponse {
 
     private ConstraintLayout addParcelButton, addLockerButton;
@@ -87,21 +89,14 @@ public class MainMenuActivity extends AppCompatActivity implements SetRequests.G
     public void onResponse(int currentRequestId, Object result) {
         if (currentRequestId == Helper.REQUEST_CHECK_USER && result instanceof RetroUser) {
             List<RetroUserXRight> userXRights = ((RetroUser) result).getUserXRights();
-            boolean state = userHaveRight(userXRights, "READ_RESIDENT") && userHaveRight(userXRights, "READ_BUILDING");
+            boolean state = Helper.userHaveRight(userXRights, "READ_RESIDENT") && Helper.userHaveRight(userXRights, "READ_BUILDING");
             buttonList.get(0).setButtonEnabled(state);
-            state = userHaveRight(userXRights, "CREATE_LOCKER");
+            state = Helper.userHaveRight(userXRights, "CREATE_LOCKER");
             buttonList.get(1).setButtonEnabled(state);
         }
     }
 
-    private boolean userHaveRight(List<RetroUserXRight> userXRights, String code) {
-        for(RetroUserXRight item : userXRights){
-            if(item.getRight().getCode().equals(code)) {
-                return true;
-            }
-        }
-        return false;
-    }
+
 
     @Override
     public void onFailed(int currentRequestId, boolean mustLogOut) {

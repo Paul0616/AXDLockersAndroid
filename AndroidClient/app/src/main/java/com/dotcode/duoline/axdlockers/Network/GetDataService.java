@@ -19,6 +19,7 @@ import com.dotcode.duoline.axdlockers.Models.RetroLockerHistory;
 import com.dotcode.duoline.axdlockers.Models.RetroLockerHistoryList;
 import com.dotcode.duoline.axdlockers.Models.RetroLockerList;
 import com.dotcode.duoline.axdlockers.Models.RetroNotification;
+import com.dotcode.duoline.axdlockers.Models.RetroOrphanParcel;
 import com.dotcode.duoline.axdlockers.Models.RetroTokenList;
 import com.dotcode.duoline.axdlockers.Models.RetroUser;
 
@@ -92,5 +93,8 @@ public interface GetDataService {
 
     @PUT("users/reset-password")
     Call<Void> resetPassword(@Body RetroEmail email);
+
+    @POST("orphan-parcels")
+    Call<RetroOrphanParcel> createOrphanParcel(@Body RetroOrphanParcel orphanParcel, @Query("access-token") String token);
 
 }
