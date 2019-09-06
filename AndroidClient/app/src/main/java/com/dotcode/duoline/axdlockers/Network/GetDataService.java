@@ -10,6 +10,7 @@ import com.dotcode.duoline.axdlockers.Models.RetroCityList;
 import com.dotcode.duoline.axdlockers.Models.RetroEmail;
 import com.dotcode.duoline.axdlockers.Models.RetroFilteredResident;
 import com.dotcode.duoline.axdlockers.Models.RetroFilteredResidentsList;
+import com.dotcode.duoline.axdlockers.Models.RetroFullName;
 import com.dotcode.duoline.axdlockers.Models.RetroLocker;
 import com.dotcode.duoline.axdlockers.Models.RetroLockerBuildingResident;
 import com.dotcode.duoline.axdlockers.Models.RetroLockerBuildingResidentID;
@@ -64,6 +65,9 @@ public interface GetDataService {
 
     @GET("building-residents/get-filtered-residents")
     Call<RetroFilteredResidentsList> getFilteredResidents(@QueryMap Map<String, String> options, @Query("access-token") String token);
+
+    @POST("residents/get-by-full-name-and-unit-number")
+    Call<RetroFilteredResidentsList> getResidentByFullNameOrUnit(@Body RetroFullName fullName, @Query("access-token") String token, @QueryMap Map<String, String> options);
 
     @GET("buildings")
     Call<RetroBuildingList> getBuildings(@QueryMap Map<String, String> options, @Query("access-token") String token, @Query("filter[buildingUniqueNumber][in][]") List<String> buildingUniqueNumberList);

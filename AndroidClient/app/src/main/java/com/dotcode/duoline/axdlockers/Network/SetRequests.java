@@ -10,6 +10,7 @@ import com.dotcode.duoline.axdlockers.Models.RetroAddressList;
 import com.dotcode.duoline.axdlockers.Models.RetroBuildingList;
 import com.dotcode.duoline.axdlockers.Models.RetroCityList;
 import com.dotcode.duoline.axdlockers.Models.RetroFilteredResidentsList;
+import com.dotcode.duoline.axdlockers.Models.RetroFullName;
 import com.dotcode.duoline.axdlockers.Models.RetroLocker;
 import com.dotcode.duoline.axdlockers.Models.RetroLockerBuildingResident;
 import com.dotcode.duoline.axdlockers.Models.RetroLockerBuildingResidentID;
@@ -131,8 +132,14 @@ public class SetRequests {
             case Helper.REQUEST_INSERT_NOTIFICATION:
                 createNotification(body);
                 break;
+            case Helper.REQUEST_RESIDENTS_GET_BY_FULL_NAME_OR_UNIT:
+                getResidentByFullNameOrUnit(body, parameters);
+                break;
         }
     }
+
+
+
     private void tokenRequest() {
         Call<RetroTokenList> call = service.getToken(SaveSharedPreferences.getEmail(context), SaveSharedPreferences.getEncryptedPassword(context));
         call.enqueue(new Callback<RetroTokenList>() {
@@ -633,6 +640,42 @@ public class SetRequests {
             }
         });
 
+    }
+
+    private void getResidentByFullNameOrUnit(Object body, Map<String, String> parameters) {
+        Call<RetroFilteredResidentsList> call = service.getResidentByFullNameOrUnit((RetroFullName) body, SaveSharedPreferences.getAccesToken(context), parameters);
+        call.enqueue(new Callback<RetroFilteredResidentsList>() {
+            @Override
+            public void onResponse(Call<RetroFilteredResidentsList> call, Response<RetroFilteredResidentsList> response) {
+                String url = response.raw().request().url().toString();
+                if (response.isSuccessful()) {
+                    RetroFilteredResidentsList residentBuilding = response.body();
+                    Object lbrObj = residentBuilding;
+                    mHandler.onResponse(requestId, lbrObj);
+
+                } else {
+                    try {
+                        SaveSharedPreferences.logOutUser(context);
+
+
+                        String responseBody = "";
+                        if (response.errorBody() != null) {
+                            responseBody = response.errorBody().string();
+                        }
+                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
+                        mHandler.onFailed(requestId, true);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RetroFilteredResidentsList> call, Throwable t) {
+                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void createLBRs(Object lbr) {

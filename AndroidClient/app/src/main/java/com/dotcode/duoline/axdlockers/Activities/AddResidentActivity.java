@@ -478,9 +478,9 @@ public class AddResidentActivity extends AppCompatActivity implements SetRequest
             public ItemViewHolder(View view){
                 super(view);
                 tvName = view.findViewById(R.id.tvName);
-                tvEmail = view.findViewById(R.id.tvEmail);
-                tvPhone = view.findViewById(R.id.tvPhone);
-                tvSuiteNumber = view.findViewById(R.id.tvSuiteNumber);
+                tvEmail = view.findViewById(R.id.tvStreet);
+                tvPhone = view.findViewById(R.id.tvBuildingName);
+                tvSuiteNumber = view.findViewById(R.id.tvUnitNumber);
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

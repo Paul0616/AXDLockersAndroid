@@ -12,6 +12,9 @@ public class RetroState {
     @SerializedName("countryId")
     private int countryId;
 
+    @SerializedName("country")
+    private RetroCountry country;
+
 
     public RetroState(int id, String name, int countryId) {
         this.id = id;
@@ -42,5 +45,13 @@ public class RetroState {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public RetroCountry getCountry() {
+        return country;
+    }
+
+    public void setCountry(RetroCountry country) {
+        this.country = country;
     }
 }

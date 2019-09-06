@@ -26,6 +26,7 @@ public class Helper {
     public static final int REQUEST_INSERT_LOCKER_HISTORY = 14;
     public static final int REQUEST_INSERT_NOTIFICATION = 15;
     public static final int REQUEST_GET_OWNED_BUILDINGS = 16;
+    public static final int REQUEST_RESIDENTS_GET_BY_FULL_NAME_OR_UNIT = 17;
 
     public static final int STATUS_NOT_CONFIRMED = 1;
     /**

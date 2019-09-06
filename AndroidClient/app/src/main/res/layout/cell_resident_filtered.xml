@@ -10,8 +10,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:textAllCaps="false"
         android:textColor="@color/colorAccent"
         android:textSize="15sp"
@@ -36,7 +36,7 @@
         android:id="@+id/tvBuildingNameLabel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/phone"
+        android:text="@string/building_name"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/tvUnitNumberLabel"
         app:layout_constraintTop_toTopOf="@+id/tvBuildingName" />
@@ -45,10 +45,19 @@
         android:id="@+id/tvStreetLabel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/email"
+        android:text="@string/street"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/tvBuildingNameLabel"
         app:layout_constraintTop_toTopOf="@+id/tvStreet" />
+
+    <TextView
+        android:id="@+id/tvAddressLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/address"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/tvBuildingNameLabel"
+        app:layout_constraintTop_toTopOf="@+id/tvAddress" />
 
     <TextView
         android:id="@+id/tvUnitNumber"
@@ -83,15 +92,26 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
         android:text="@string/empty_string"
         android:textColor="@color/cardview_dark_background"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/tvBuildingName"
         app:layout_constraintTop_toBottomOf="@+id/tvBuildingName" />
+
+    <TextView
+        android:id="@+id/tvAddress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="4dp"
+        android:text="@string/empty_string"
+        android:textColor="@color/cardview_dark_background"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@id/imageView8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tvStreet"
+        app:layout_constraintTop_toBottomOf="@+id/tvStreet" />
 
     <ImageView
         android:id="@+id/imageView8"

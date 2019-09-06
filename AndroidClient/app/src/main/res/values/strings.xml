@@ -41,6 +41,7 @@
     <string name="no_available_residents_in_current_building_and_with_that_name_or_suite_number">No available residents in current building and with that name or suite number</string>
     <string name="address_empty_list_message">No available addresses</string>
     <string name="building_empty_list_message">No available building with that building unique number or building name requested</string>
+    <string name="no_available_residents">No available residents at that unit number or whith name requested</string>
     <string name="close_button_message">X</string>
     <string name="main_message_final_post">Please wait until you get confirmation that notification was sent to resident...</string>
     <string name="back_to_scan_screen_button">Back to Scan Screen</string>
@@ -57,7 +58,7 @@
     <string name="resident_icon">resident icon</string>
     <string name="logo">logo</string>
     <string name="city_name">City Name</string>
-    <string name="suite_number">Suite number:</string>
+    <string name="suite_number">Unit number:</string>
     <string name="email">Email:</string>
     <string name="address_added">Address added</string>
     <string name="address_was_successfully_added">Address was successfully added.</string>
@@ -96,6 +97,6 @@
     <string name="no_user_building_title">No building</string>
     <string name="no_user_building_message">You\'ve not been assigned any building. Please contact your administrator.</string>
     <string name="login_redirected_message"> You\'ll be redirected to the login screen.</string>
-    <string name="choose_building_for_residents"> You have to choose building\n
-        to see its residents</string>
+    <string name="choose_building_for_residents"> You have to choose building\nto see its residents</string>
+    <string name="add_orphan_parcel">If no resident match to parcel\'s label than you can:  ADD TO UNKNOWN PARCELS</string>
 </resources>
