@@ -12,10 +12,12 @@ import android.widget.TextView;
 
 import com.dotcode.duoline.axdlockers.Models.RetroFilteredResident;
 import com.dotcode.duoline.axdlockers.Models.RetroLocker;
-import com.dotcode.duoline.axdlockers.Models.RetroLockerBuildingResident;
-import com.dotcode.duoline.axdlockers.Models.RetroLockerBuildingResidentID;
-import com.dotcode.duoline.axdlockers.Models.RetroLockerBuildingResidentsList;
+import com.dotcode.duoline.axdlockers.Models.RetroParcel;
+import com.dotcode.duoline.axdlockers.Models.RetroParcelID;
+import com.dotcode.duoline.axdlockers.Models.RetroParcelsList;
 import com.dotcode.duoline.axdlockers.Models.RetroLockerHistory;
+import com.dotcode.duoline.axdlockers.Models.RetroVirtualParcel;
+import com.dotcode.duoline.axdlockers.Models.RetroVirtualParcelID;
 import com.dotcode.duoline.axdlockers.Network.SetRequests;
 import com.dotcode.duoline.axdlockers.R;
 import com.dotcode.duoline.axdlockers.Utils.Helper;
@@ -32,6 +34,8 @@ public class FinalPostActivity extends AppCompatActivity implements SetRequests.
     private ProgressBar progressBar;
     private Button backButton;
     private ConstraintLayout popupWindow;
+    private String securityCode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +48,7 @@ public class FinalPostActivity extends AppCompatActivity implements SetRequests.
         json = getIntent().getStringExtra("JSON_RESIDENT");
         gson = new Gson();
         currentResident = gson.fromJson(json, RetroFilteredResident.class);
-
+        securityCode = getIntent().getStringExtra("securityCode");
         infoMessage = (TextView) findViewById(R.id.infoMessage);
         mainMessage = (TextView) findViewById(R.id.mainMessage);
         closeButton = (TextView) findViewById(R.id.closeButton);
@@ -55,21 +59,37 @@ public class FinalPostActivity extends AppCompatActivity implements SetRequests.
         backButton.setVisibility(View.INVISIBLE);
         popupWindow = (ConstraintLayout) findViewById(R.id.view);
 
-        int lastInsertedLockerBuildingResidentID = SaveSharedPreferences.getlastInsertedLBRID(getApplicationContext());
-        int lastInsertedLockerHistoryID = SaveSharedPreferences.getlastInsertedLHID(getApplicationContext());
+        int lastInsertedParcelID = SaveSharedPreferences.getlastInsertedParcelID(getApplicationContext());
+        int lastInsertedLockerHistoryID = SaveSharedPreferences.getlastInsertedHistoryID(getApplicationContext());
+        int lastInsertedVirtualParcelID = SaveSharedPreferences.getlastInsertedVirtualParcelID(getApplicationContext());
 
-        if (lastInsertedLockerBuildingResidentID != 0){
-            deletePreviousFailedLockerBuildingResidentRecord(lastInsertedLockerBuildingResidentID);
-        } else if (lastInsertedLockerHistoryID != 0){
-            deletePreviousFailedLockerHistoryRecord(lastInsertedLockerHistoryID);
+
+        if(currentLocker.getId() != 0) {
+            SaveSharedPreferences.setVirtualParcelNull(getApplicationContext());
+            if (lastInsertedParcelID != 0) {
+                deletePreviousFailedParcelRecord(lastInsertedParcelID, false);
+            } else if (lastInsertedLockerHistoryID != 0) {
+                deletePreviousFailedLockerHistoryRecord(lastInsertedLockerHistoryID);
+            } else {
+                //checkLockerBuildingResident();
+                insertParcel(false);
+            }
         } else {
-            checkLockerBuildingResident();
+            SaveSharedPreferences.setParcelNull(getApplicationContext());
+            if (lastInsertedVirtualParcelID != 0) {
+                deletePreviousFailedParcelRecord(lastInsertedVirtualParcelID, true);
+            } else if (lastInsertedLockerHistoryID != 0) {
+                deletePreviousFailedLockerHistoryRecord(lastInsertedLockerHistoryID);
+            } else {
+                //checkLockerBuildingResident();
+                insertParcel(true);
+            }
         }
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(FinalPostActivity.this, QRScanActivity.class));
+                startActivity(new Intent(FinalPostActivity.this, MainMenuActivity.class));
                 finish();
             }
         });
@@ -81,26 +101,36 @@ public class FinalPostActivity extends AppCompatActivity implements SetRequests.
         });
     }
 
-    private void deletePreviousFailedLockerBuildingResidentRecord(int id){
-        Map<String, String> param = new HashMap<String, String>();
-        param.put("ID", String.valueOf(id));
-        new SetRequests(getApplicationContext(), FinalPostActivity.this, Helper.REQUEST_DELETE_LOCKER_BUILDING_RESIDENT, param, null);
+    private void deletePreviousFailedParcelRecord(int id, boolean isVirtual){
+        if (!isVirtual) {
+            infoMessage.setText("Deleting last failed parcel...");
+            Map<String, String> param = new HashMap<String, String>();
+            param.put("ID", String.valueOf(id));
+            new SetRequests(getApplicationContext(), FinalPostActivity.this, Helper.REQUEST_DELETE_PARCEL, param, null);
+        } else {
+            infoMessage.setText("Deleting last failed virtual parcel...");
+            Map<String, String> param = new HashMap<String, String>();
+            param.put("ID", String.valueOf(id));
+            new SetRequests(getApplicationContext(), FinalPostActivity.this, Helper.REQUEST_DELETE_VIRTUAL_PARCEL, param, null);
+        }
     }
 
     private void deletePreviousFailedLockerHistoryRecord(int id){
+        infoMessage.setText("Deleting last failed locker history...");
         Map<String, String> param = new HashMap<String, String>();
         param.put("ID", String.valueOf(id));
         new SetRequests(getApplicationContext(), FinalPostActivity.this, Helper.REQUEST_DELETE_LOCKER_HISTORY, param, null);
     }
 
-    private void checkLockerBuildingResident(){
-        Map<String, String> param = new HashMap<String, String>();
-        param.put("filter[lockerId]", ""+currentLocker.getId());
-        param.put("filter[buildingResidentId]", ""+currentResident.getId());
-        new SetRequests(getApplicationContext(), FinalPostActivity.this, Helper.REQUEST_LOCKER_BUILDING_RESIDENT, param, null);
-    }
+//    private void checkLockerBuildingResident(){
+//        Map<String, String> param = new HashMap<String, String>();
+//        param.put("filter[lockerId]", ""+currentLocker.getId());
+//        param.put("filter[buildingResidentId]", ""+currentResident.getId());
+//        new SetRequests(getApplicationContext(), FinalPostActivity.this, Helper.REQUEST_LOCKER_BUILDING_RESIDENT, param, null);
+//    }
 
     private void insertLockerHistory(){
+        infoMessage.setText(getText(R.string.creating_locker_history));
         String lockerAddress = currentLocker.getAddress().getStreetName() + ", " + currentLocker.getAddress().getCity().getName() + ", " +
                 currentLocker.getAddress().getCity().getState().getName() + ", " + currentLocker.getAddress().getZipCode();
         String buildingAddress = currentResident.getBuilding().getName() + ", " + currentResident.getBuilding().getAddress().getStreetName() + ", " +
@@ -109,7 +139,7 @@ public class FinalPostActivity extends AppCompatActivity implements SetRequests.
         RetroLockerHistory body = new RetroLockerHistory(0, currentLocker.getQrCode(), currentLocker.getNumber(), currentLocker.getSize(),
                 lockerAddress, currentResident.getResident().getFirstName(), currentResident.getResident().getLastName(), currentResident.getResident().getEmail(),
                 currentResident.getResident().getPhoneNumber(),
-                "SECURITY", currentResident.getSuiteNumber(),
+                securityCode, currentResident.getSuiteNumber(),
                 currentResident.getBuilding().getName(), buildingAddress, buildingAddress, currentResident.getBuilding().getBuildingUniqueNumber(),
                 SaveSharedPreferences.getEmail(getApplicationContext()), "STATUS_NOT_CONFIRMED", SaveSharedPreferences.getFirstName(getApplicationContext()),
                 SaveSharedPreferences.getLasttName(getApplicationContext()));
@@ -117,74 +147,128 @@ public class FinalPostActivity extends AppCompatActivity implements SetRequests.
         new SetRequests(getApplicationContext(), FinalPostActivity.this, Helper.REQUEST_INSERT_LOCKER_HISTORY, null, body);
     }
 
-    private void insertLockerBuildingResident(){
-        RetroLockerBuildingResident body = new RetroLockerBuildingResident(0, currentLocker.getId(), currentResident.getId(), Helper.STATUS_NOT_CONFIRMED);
-        new SetRequests(getApplicationContext(), FinalPostActivity.this, Helper.REQUEST_INSERT_LOCKER_BUILDING_RESIDENT, null, body);
+    private void insertParcel(boolean isVirtual){
+        if(!isVirtual) {
+            infoMessage.setText(getString(R.string.creating_locker_building_resident_association));
+            RetroParcel body = new RetroParcel(0, currentLocker.getId(), currentResident.getId(), securityCode, Helper.STATUS_NOT_CONFIRMED);
+            new SetRequests(getApplicationContext(), FinalPostActivity.this, Helper.REQUEST_INSERT_PARCEL, null, body);
+        } else {
+            infoMessage.setText(getString(R.string.creating_association_with_temporary_locker));
+            RetroVirtualParcel body = new RetroVirtualParcel(0, currentLocker.getAddress().getId(), currentResident.getId(), securityCode,
+                    currentLocker.getNumber(), currentLocker.getSize(), Helper.STATUS_NOT_CONFIRMED);
+            if(currentLocker.getAddressDetail() != null){
+                body.setAddressDetail(currentLocker.getAddressDetail());
+            }
+            new SetRequests(getApplicationContext(), FinalPostActivity.this, Helper.REQUEST_INSERT_VIRTUAL_PARCEL, null, body);
+        }
     }
 
-    private void insertNotification(){
-        RetroLockerBuildingResidentID lbr = new RetroLockerBuildingResidentID(SaveSharedPreferences.getlastInsertedLBRID(getApplicationContext()));
-        new SetRequests(getApplicationContext(), FinalPostActivity.this, Helper.REQUEST_INSERT_NOTIFICATION, null, lbr);
+    private void insertNotification(boolean isVirtual){
+        infoMessage.setText(R.string.sending_notification_to_resident);
+        if(isVirtual){
+            RetroVirtualParcelID lbr = new RetroVirtualParcelID(SaveSharedPreferences.getlastInsertedVirtualParcelID(getApplicationContext()));
+            new SetRequests(getApplicationContext(), FinalPostActivity.this, Helper.REQUEST_INSERT_VIRTUAL_NOTIFICATION, null, lbr);
+        } else {
+            RetroParcelID lbr = new RetroParcelID(SaveSharedPreferences.getlastInsertedParcelID(getApplicationContext()));
+            new SetRequests(getApplicationContext(), FinalPostActivity.this, Helper.REQUEST_INSERT_NOTIFICATION, null, lbr);
+        }
+
     }
 
     @Override
     public void onResponse(int currentRequestId, Object result) {
-        if (currentRequestId == Helper.REQUEST_DELETE_LOCKER_BUILDING_RESIDENT){
-            SaveSharedPreferences.setLBRNull(getApplicationContext());
-            int lastInsertedLockerHistoryId = SaveSharedPreferences.getlastInsertedLHID(getApplicationContext());
+        if (currentRequestId == Helper.REQUEST_DELETE_PARCEL){
+            SaveSharedPreferences.setParcelNull(getApplicationContext());
+            int lastInsertedLockerHistoryId = SaveSharedPreferences.getlastInsertedHistoryID(getApplicationContext());
             if (lastInsertedLockerHistoryId != 0){
                 deletePreviousFailedLockerHistoryRecord(lastInsertedLockerHistoryId);
             } else {
-                checkLockerBuildingResident();
+                insertParcel(false);
+            }
+        }
+
+        if (currentRequestId == Helper.REQUEST_DELETE_VIRTUAL_PARCEL){
+            SaveSharedPreferences.setVirtualParcelNull(getApplicationContext());
+            int lastInsertedLockerHistoryId = SaveSharedPreferences.getlastInsertedHistoryID(getApplicationContext());
+            if (lastInsertedLockerHistoryId != 0){
+                deletePreviousFailedLockerHistoryRecord(lastInsertedLockerHistoryId);
+            } else {
+                insertParcel(true);
             }
         }
 
         if (currentRequestId == Helper.REQUEST_DELETE_LOCKER_HISTORY){
-            SaveSharedPreferences.setLHNull(getApplicationContext());
-            checkLockerBuildingResident();
-        }
-
-        if (currentRequestId == Helper.REQUEST_LOCKER_BUILDING_RESIDENT){
-            if(result != null && result instanceof RetroLockerBuildingResidentsList) {
-                if (((RetroLockerBuildingResidentsList) result).getLBRs().size() > 0) {
-                    int lastInsertedLockerBuildingResidentID = ((RetroLockerBuildingResidentsList) result).getLBRs().get(0).getId();
-                    SaveSharedPreferences.setlastInsertedLBRID(getApplicationContext(), lastInsertedLockerBuildingResidentID);
-                    infoMessage.setText(getString(R.string.creating_locker_history));
-                    insertLockerHistory();
-                } else {
-                    infoMessage.setText(getString(R.string.creating_locker_building_resident_association));
-                    insertLockerBuildingResident();
-                }
+            SaveSharedPreferences.setHistoryNull(getApplicationContext());
+            if(currentLocker.getId() != 0){
+                insertParcel(false);
+            } else {
+                insertParcel(true);
             }
         }
 
-        if (currentRequestId == Helper.REQUEST_INSERT_LOCKER_BUILDING_RESIDENT){
-            if(result != null && result instanceof RetroLockerBuildingResident) {
-                int lastInsertedLockerBuildingResidentID = ((RetroLockerBuildingResident) result).getId();
-                SaveSharedPreferences.setlastInsertedLBRID(getApplicationContext(), lastInsertedLockerBuildingResidentID);
-                infoMessage.setText(getText(R.string.creating_locker_history));
+//        if (currentRequestId == Helper.REQUEST_LOCKER_BUILDING_RESIDENT){
+//            if(result != null && result instanceof RetroParcelsList) {
+//                if (((RetroParcelsList) result).getLBRs().size() > 0) {
+//                    int lastInsertedLockerBuildingResidentID = ((RetroParcelsList) result).getLBRs().get(0).getId();
+//                    SaveSharedPreferences.setlastInsertedParcelID(getApplicationContext(), lastInsertedLockerBuildingResidentID);
+//                    infoMessage.setText(getString(R.string.creating_locker_history));
+//                    insertLockerHistory();
+//                } else {
+//                    infoMessage.setText(getString(R.string.creating_locker_building_resident_association));
+//                    insertParcel();
+//                }
+//            }
+//        }
+
+        if (currentRequestId == Helper.REQUEST_INSERT_PARCEL){
+            if(result != null && result instanceof RetroParcel) {
+                int lastInsertedLockerBuildingResidentID = ((RetroParcel) result).getId();
+                SaveSharedPreferences.setlastInsertedParcelID(getApplicationContext(), lastInsertedLockerBuildingResidentID);
+                //infoMessage.setText(getText(R.string.creating_locker_history));
                 insertLockerHistory();
             }
         }
+        if (currentRequestId == Helper.REQUEST_INSERT_VIRTUAL_PARCEL){
+            if(result != null && result instanceof RetroVirtualParcel) {
+                int lastInsertedVirtualParcelID = ((RetroVirtualParcel) result).getId();
+                SaveSharedPreferences.setlastInsertedVirtualParcelID(getApplicationContext(), lastInsertedVirtualParcelID);
+                //infoMessage.setText(getText(R.string.creating_locker_history));
+                insertLockerHistory();
+            }
+        }
+
         if (currentRequestId == Helper.REQUEST_INSERT_LOCKER_HISTORY){
             if(result != null && result instanceof RetroLockerHistory) {
                 int lastInsertedLockerHistoryID = ((RetroLockerHistory) result).getId();
-                SaveSharedPreferences.setlastInsertedLHID(getApplicationContext(),lastInsertedLockerHistoryID);
-                infoMessage.setText(R.string.sending_notification_to_resident);
-                insertNotification();
+                SaveSharedPreferences.setlastInsertedHistoryID(getApplicationContext(),lastInsertedLockerHistoryID);
+                if(currentLocker.getId() != 0) {
+                    insertNotification(false);
+                } else {
+                    insertNotification(true);
+                }
             }
         }
         if(currentRequestId == Helper.REQUEST_INSERT_NOTIFICATION) {
             //
-            progressBar.setVisibility(View.INVISIBLE);
-            mainMessage.setText(getString(R.string.notification_was_sent));
-            mainMessage.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
-            infoMessage.setText("");
-            backButton.setVisibility(View.VISIBLE);
-            popupWindow.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.green));
-            SaveSharedPreferences.setLBRNull(getApplicationContext());
-            SaveSharedPreferences.setLHNull(getApplicationContext());
+            handleSuccessAction();
         }
+
+        if(currentRequestId == Helper.REQUEST_INSERT_VIRTUAL_NOTIFICATION) {
+            //
+            handleSuccessAction();
+        }
+    }
+
+    private void handleSuccessAction() {
+        progressBar.setVisibility(View.INVISIBLE);
+        mainMessage.setText(getString(R.string.notification_was_sent));
+        mainMessage.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
+        infoMessage.setText("");
+        backButton.setVisibility(View.VISIBLE);
+        popupWindow.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.green));
+        SaveSharedPreferences.setParcelNull(getApplicationContext());
+        SaveSharedPreferences.setHistoryNull(getApplicationContext());
+        SaveSharedPreferences.setVirtualParcelNull(getApplicationContext());
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.dotcode.duoline.axdlockers.Models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class RetroLockerBuildingResident {
+public class RetroParcel {
     @SerializedName("id")
     private int id;
 
@@ -12,14 +12,18 @@ public class RetroLockerBuildingResident {
     @SerializedName("buildingResidentId")
     private int buildingResidentId;
 
+    @SerializedName("securityCode")
+    private String securityCode;
+
     @SerializedName("status")
     private int status;
 
 
-    public RetroLockerBuildingResident(int id, int lockerId, int buildingResidentId, int status) {
+    public RetroParcel(int id, int lockerId, int buildingResidentId, String securityCodee, int status) {
         this.id = id;
         this.buildingResidentId = buildingResidentId;
         this.lockerId = lockerId;
+        this.securityCode = securityCodee;
         this.status = status;
     }
 

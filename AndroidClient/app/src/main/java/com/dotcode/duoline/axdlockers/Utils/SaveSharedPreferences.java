@@ -6,6 +6,8 @@ import android.preference.PreferenceManager;
 
 import com.dotcode.duoline.axdlockers.Models.RetroAddress;
 import com.dotcode.duoline.axdlockers.Models.RetroBuilding;
+import com.dotcode.duoline.axdlockers.Models.RetroFilteredResident;
+import com.dotcode.duoline.axdlockers.Models.RetroLocker;
 import com.dotcode.duoline.axdlockers.Models.RetroResident;
 import com.google.gson.Gson;
 
@@ -124,33 +126,35 @@ public class SaveSharedPreferences {
         editor.commit();
     }
 
-    public static void setBuilding(Context ctx, RetroBuilding building){
+    public static void setLocker(Context ctx, RetroLocker locker){
         SharedPreferences.Editor editor = getSharedPreference(ctx).edit();
         Gson gson = new Gson();
-        String json = gson.toJson(building);
-        editor.putString("BUILDING", json);
+        String json = gson.toJson(locker);
+        editor.putString("LOCKER", json);
         editor.commit();
     }
 
-//    public static RetroResident getResident(Context ctx) {
-//        Gson gson = new Gson();
-//        String json = getSharedPreference(ctx).getString("RESIDENT", "");
-//        return gson.fromJson(json, RetroResident.class);
-//    }
-//
-//    public static void setResident(Context ctx, RetroResident resident){
-//        SharedPreferences.Editor editor = getSharedPreference(ctx).edit();
-//        Gson gson = new Gson();
-//        String json = gson.toJson(resident);
-//        editor.putString("RESIDENT", json);
-//        editor.commit();
-//    }
-
-    public static RetroBuilding getBuilding(Context ctx) {
+    public static RetroLocker getLocker(Context ctx) {
         Gson gson = new Gson();
-        String json = getSharedPreference(ctx).getString("BUILDING", "");
-        return gson.fromJson(json, RetroBuilding.class);
+        String json = getSharedPreference(ctx).getString("LOCKER", "");
+        return gson.fromJson(json, RetroLocker.class);
     }
+
+    public static RetroFilteredResident getResident(Context ctx) {
+        Gson gson = new Gson();
+        String json = getSharedPreference(ctx).getString("RESIDENT", "");
+        return gson.fromJson(json, RetroFilteredResident.class);
+    }
+
+    public static void setResident(Context ctx, RetroFilteredResident resident){
+        SharedPreferences.Editor editor = getSharedPreference(ctx).edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(resident);
+        editor.putString("RESIDENT", json);
+        editor.commit();
+    }
+
+
 
     public static void setBuildingNull(Context ctx) {
         SharedPreferences.Editor editor = getSharedPreference(ctx).edit();
@@ -158,34 +162,59 @@ public class SaveSharedPreferences {
         editor.commit();
     }
 
-    public static int getlastInsertedLBRID(Context ctx) {
-        return getSharedPreference(ctx).getInt("LBR_ID", 0);
+    public static int getlastInsertedParcelID(Context ctx) {
+        return getSharedPreference(ctx).getInt("PARCEL_ID", 0);
     }
 
-    public static void setlastInsertedLBRID(Context ctx, int lastId) {
+    public static void setlastInsertedParcelID(Context ctx, int lastId) {
         SharedPreferences.Editor editor = getSharedPreference(ctx).edit();
-        editor.putInt("LBR_ID", lastId);
+        editor.putInt("PARCEL_ID", lastId);
         editor.commit();
     }
 
-    public static void setLBRNull(Context ctx) {
+    public static void setParcelNull(Context ctx) {
         SharedPreferences.Editor editor = getSharedPreference(ctx).edit();
-        editor.remove("LBR_ID");
+        editor.remove("PARCEL_ID");
         editor.commit();
     }
 
-    public static int getlastInsertedLHID(Context ctx) {
-        return getSharedPreference(ctx).getInt("LH_ID", 0);
+    public static int getlastInsertedVirtualParcelID(Context ctx) {
+        return getSharedPreference(ctx).getInt("VIRTUAL_PARCEL_ID", 0);
     }
 
-    public static void setlastInsertedLHID(Context ctx, int lastId) {
+    public static void setlastInsertedVirtualParcelID(Context ctx, int lastId) {
         SharedPreferences.Editor editor = getSharedPreference(ctx).edit();
-        editor.putInt("LH_ID", lastId);
+        editor.putInt("VIRTUAL_PARCEL_ID", lastId);
         editor.commit();
     }
-    public static void setLHNull(Context ctx) {
+
+    public static void setVirtualParcelNull(Context ctx) {
         SharedPreferences.Editor editor = getSharedPreference(ctx).edit();
-        editor.remove("LH_ID");
+        editor.remove("VIRTUAL_PARCEL_ID");
+        editor.commit();
+    }
+
+    public static int getlastInsertedHistoryID(Context ctx) {
+        return getSharedPreference(ctx).getInt("HISTORY_ID", 0);
+    }
+
+    public static void setlastInsertedHistoryID(Context ctx, int lastId) {
+        SharedPreferences.Editor editor = getSharedPreference(ctx).edit();
+        editor.putInt("HISTORY_ID", lastId);
+        editor.commit();
+    }
+    public static void setHistoryNull(Context ctx) {
+        SharedPreferences.Editor editor = getSharedPreference(ctx).edit();
+        editor.remove("HISTORY_ID");
+        editor.commit();
+    }
+
+    public static boolean getAddLockerOnly(Context ctx){
+        return getSharedPreference(ctx).getBoolean("lockerOnly", false);
+    }
+    public static void setAddLockerOnly(Context ctx, boolean lockerOnly){
+        SharedPreferences.Editor editor = getSharedPreference(ctx).edit();
+        editor.putBoolean("lockerOnly", lockerOnly);
         editor.commit();
     }
 }

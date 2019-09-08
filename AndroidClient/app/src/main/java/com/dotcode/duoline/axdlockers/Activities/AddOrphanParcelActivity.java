@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -84,25 +85,15 @@ public class AddOrphanParcelActivity extends AppCompatActivity implements SetReq
         bAdd.setTextColor(state ? ContextCompat.getColor(getApplicationContext(), R.color.white) : ContextCompat.getColor(getApplicationContext(), R.color.white_overlay));
     }
 
-//    private void addOrphanParcel(){
-//
-//        Map<String, String> param = new HashMap<String, String>();
-//
-//        if (!first4Strings.isEmpty()) {
-//            RetroFullName fullName = new RetroFullName();
-//            fullName.setFullName(first4Strings.get(0));
-//            if(!first4Strings.get(1).equals("")){
-//                fullName.setUnitNumber(first4Strings.get(1));
-//            }
-//
-//            param.put("per-page", ""+PAGE_SIZE);
-//            param.put("page", ""+loadedPages);
-//            param.put("expand", "resident,building.address.city.state.country");
-//
-//            new SetRequests(getApplicationContext(), ResidentsFilteredActivity.this,
-//                    Helper.REQUEST_RESIDENTS_GET_BY_FULL_NAME_OR_UNIT, param, fullName);
-//        }
-//    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     private void alertDialogRights(Context ctx, String title, String msg){
         AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
@@ -124,7 +115,7 @@ public class AddOrphanParcelActivity extends AppCompatActivity implements SetReq
             List<RetroUserXRight> userXRights = ((RetroUser) result).getUserXRights();
             boolean state = Helper.userHaveRight(userXRights, "CREATE_ORPHAN_PARCEL");
             if (!state){
-                alertDialogRights(AddOrphanParcelActivity.this, "No proper right", "You don't have right to add unknown parcels. Contact administrator.");
+                alertDialogRights(AddOrphanParcelActivity.this, getString(R.string.no_proper_rights), getString(R.string.no_create_orphan_parcel));
             }
             setAddButtonState(state);
         }

@@ -2,12 +2,12 @@ package com.dotcode.duoline.axdlockers.Models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class RetroLockerBuildingResidentID {
+public class RetroParcelID {
     @SerializedName("lockerBuildingResidentId")
     private int lockerBuildingResidentId;
 
 
-    public RetroLockerBuildingResidentID(int lockerBuildingResidentId) {
+    public RetroParcelID(int lockerBuildingResidentId) {
         this.lockerBuildingResidentId = lockerBuildingResidentId;
     }
 

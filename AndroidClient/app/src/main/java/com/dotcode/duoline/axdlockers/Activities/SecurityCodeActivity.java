@@ -3,16 +3,21 @@ package com.dotcode.duoline.axdlockers.Activities;
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.dotcode.duoline.axdlockers.Models.RetroFilteredResident;
 import com.dotcode.duoline.axdlockers.Models.RetroLocker;
+import com.dotcode.duoline.axdlockers.Models.RetroSecurityCode;
+import com.dotcode.duoline.axdlockers.Network.SetRequests;
 import com.dotcode.duoline.axdlockers.R;
+import com.dotcode.duoline.axdlockers.Utils.Helper;
+import com.dotcode.duoline.axdlockers.Utils.SaveSharedPreferences;
 import com.google.gson.Gson;
 
-public class SecurityCodeActivity extends AppCompatActivity {
+public class SecurityCodeActivity extends AppCompatActivity implements SetRequests.GetDataResponse {
     RetroLocker currentLocker;
     RetroFilteredResident currentResident;
     private TextView lockerNumber, lockerAddress, lockerSize;
@@ -24,15 +29,14 @@ public class SecurityCodeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_security_code);
         setTitle("");
-        String json = getIntent().getStringExtra("JSON_LOCKER");
-        Gson gson = new Gson();
-        currentLocker = gson.fromJson(json, RetroLocker.class);
-//        json = getIntent().getStringExtra("JSON_BUILDING");
+//        String json = getIntent().getStringExtra("JSON_LOCKER");
+//        Gson gson = new Gson();
+//        currentLocker = gson.fromJson(json, RetroLocker.class);
+//        json = getIntent().getStringExtra("JSON_RESIDENT");
 //        gson = new Gson();
-//        currentBuilding = gson.fromJson(json, RetroBuilding.class);
-        json = getIntent().getStringExtra("JSON_RESIDENT");
-        gson = new Gson();
-        currentResident = gson.fromJson(json, RetroFilteredResident.class);
+//        currentResident = gson.fromJson(json, RetroFilteredResident.class);
+        currentResident = SaveSharedPreferences.getResident(getApplicationContext());
+        currentLocker = SaveSharedPreferences.getLocker(getApplicationContext());
         lockerNumber = (TextView) findViewById(R.id. number);
         lockerAddress = (TextView) findViewById(R.id.address);
         lockerSize = (TextView) findViewById(R.id.size);
@@ -53,6 +57,7 @@ public class SecurityCodeActivity extends AppCompatActivity {
                 gson = new Gson();
                 json = gson.toJson(currentResident);
                 i.putExtra("JSON_RESIDENT", json);
+                i.putExtra("securityCode", securityCode.getText().toString());
                 startActivity(i);
             }
         });
@@ -66,6 +71,37 @@ public class SecurityCodeActivity extends AppCompatActivity {
         suiteNumber.setText(currentResident.getSuiteNumber());
         phone.setText(currentResident.getResident().getPhoneNumber());
         email.setText(currentResident.getResident().getEmail());
-       // securityCode.setText(currentResident.getResident().getSecurityCode());
+
+
+        new SetRequests(getApplicationContext(), SecurityCodeActivity.this, Helper.REQUEST_NEW_SECURITY_CODE, null,null);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onResponse(int currentRequestId, Object result) {
+        if (currentRequestId == Helper.REQUEST_NEW_SECURITY_CODE){
+            String security = ((RetroSecurityCode) result).getSecurityCode();
+            securityCode.setText(security);
+        }
+    }
+
+    @Override
+    public void onFailed(int currentRequestId, boolean mustLogOut) {
+
     }
 }

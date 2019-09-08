@@ -16,6 +16,8 @@ public class RetroLocker {
     @SerializedName("address")
     private RetroAddress address;
 
+    private String addressDetail;
+
     public RetroLocker(int id, String qrCode, String number,  String size, int addressId, RetroAddress address) {
         this.id = id;
         this.number = number;
@@ -23,6 +25,14 @@ public class RetroLocker {
         this.size = size;
         this.qrCode = qrCode;
         this.address = address;
+    }
+
+    public String getAddressDetail() {
+        return addressDetail;
+    }
+
+    public void setAddressDetail(String addressDetail) {
+        this.addressDetail = addressDetail;
     }
 
     public int getId() {

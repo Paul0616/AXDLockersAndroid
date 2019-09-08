@@ -3,6 +3,7 @@ package com.dotcode.duoline.axdlockers.Utils;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.dotcode.duoline.axdlockers.Models.RetroUser;
 import com.dotcode.duoline.axdlockers.Models.RetroUserXRight;
 
 import java.io.File;
@@ -18,18 +19,22 @@ public class Helper {
     public static final int REQUEST_CITIES = 4;
     public static final int REQUEST_INSERT_ADDRESS = 5;
     public static final int REQUEST_INSERT_LOCKER = 6;
-    public static final int REQUEST_LOCKER_HISTORIES = 7;
-    public static final int REQUEST_FILTERED_RESIDENTS = 8;
-    public static final int REQUEST_CHECK_BUILDING = 9;
-    public static final int REQUEST_DELETE_LOCKER_BUILDING_RESIDENT = 10;
+//    public static final int REQUEST_LOCKER_HISTORIES = 7;
+//    public static final int REQUEST_FILTERED_RESIDENTS = 8;
+//    public static final int REQUEST_CHECK_BUILDING = 9;
+    public static final int REQUEST_DELETE_PARCEL = 10;
     public static final int REQUEST_DELETE_LOCKER_HISTORY = 11;
-    public static final int REQUEST_LOCKER_BUILDING_RESIDENT = 12;
-    public static final int REQUEST_INSERT_LOCKER_BUILDING_RESIDENT = 13;
+//    public static final int REQUEST_LOCKER_BUILDING_RESIDENT = 12;
+    public static final int REQUEST_INSERT_PARCEL = 13;
     public static final int REQUEST_INSERT_LOCKER_HISTORY = 14;
     public static final int REQUEST_INSERT_NOTIFICATION = 15;
     public static final int REQUEST_GET_OWNED_BUILDINGS = 16;
     public static final int REQUEST_RESIDENTS_GET_BY_FULL_NAME_OR_UNIT = 17;
     public static final int REQUEST_INSERT_ORPHAN_PARCEL = 18;
+    public static final int REQUEST_NEW_SECURITY_CODE = 19;
+    public static final int REQUEST_INSERT_VIRTUAL_PARCEL = 20;
+    public static final int REQUEST_INSERT_VIRTUAL_NOTIFICATION = 21;
+    public static final int REQUEST_DELETE_VIRTUAL_PARCEL = 22;
 
     public static final int STATUS_NOT_CONFIRMED = 1;
     /**
@@ -100,5 +105,10 @@ public class Helper {
             }
         }
         return false;
+    }
+
+    public static void setFullNameInPreferences(Context ctx, RetroUser userObj){
+        SaveSharedPreferences.setFirstName(ctx, userObj.getFirstName());
+        SaveSharedPreferences.setLastName(ctx, userObj.getLastName());
     }
 }

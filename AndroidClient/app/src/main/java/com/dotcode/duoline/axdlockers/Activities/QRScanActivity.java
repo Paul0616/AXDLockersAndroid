@@ -9,14 +9,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dotcode.duoline.axdlockers.Models.RetroFilteredResident;
 import com.dotcode.duoline.axdlockers.Models.RetroLocker;
+import com.dotcode.duoline.axdlockers.Models.RetroLockerList;
+import com.dotcode.duoline.axdlockers.Models.RetroUser;
+import com.dotcode.duoline.axdlockers.Models.RetroUserXRight;
 import com.dotcode.duoline.axdlockers.Network.SetRequests;
 import com.dotcode.duoline.axdlockers.R;
 import com.dotcode.duoline.axdlockers.Utils.Helper;
+import com.dotcode.duoline.axdlockers.Utils.SaveSharedPreferences;
 import com.google.android.gms.vision.barcode.Barcode;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +40,11 @@ public class QRScanActivity extends AppCompatActivity implements BarcodeReader.B
     private TextView textView;
     private boolean codeWasDetected = false;
     private String detectedqrCode;
-    //private
+    private RetroFilteredResident resident;
+    private RetroLocker locker;
+    private boolean userCanCreateLockers, userCanViewAddresses, userCanCreateParcels, addLockerOnly;
+    private Button backButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,22 +54,68 @@ public class QRScanActivity extends AppCompatActivity implements BarcodeReader.B
         // getting barcode instance
         textView = (TextView) findViewById(R.id.textView);
         barcodeReader = (BarcodeReader) getSupportFragmentManager().findFragmentById(R.id.barcode_fragment);
-
+        addLockerOnly = SaveSharedPreferences.getAddLockerOnly(getApplicationContext());
+        backButton = (Button) findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
     }
 
+    @Override
+    protected void onResume() {
+        codeWasDetected = false;
+        barcodeReader.resumeScanning();
+        resident = SaveSharedPreferences.getResident(getApplicationContext());
+        super.onResume();
+    }
 
     @Override
     public void onResponse(int currentRequestId, Object result) {
+        if (currentRequestId == Helper.REQUEST_CHECK_USER){
+            List<RetroUserXRight> userXRights = ((RetroUser) result).getUserXRights();
+            userCanCreateLockers = Helper.userHaveRight(userXRights, "CREATE_LOCKER");
+            userCanViewAddresses = Helper.userHaveRight(userXRights, "READ_ADDRESS");
+            userCanCreateParcels =Helper.userHaveRight(userXRights, "CREATE_PACKAGES");
+            Map<String, String> param = new HashMap<String, String>();
+            param.put("filter[qrCode]", detectedqrCode);
+            param.put("expand", "address.city.state");
+            new SetRequests(getApplicationContext(), QRScanActivity.this, Helper.REQUEST_LOCKERS, param, null);
+        }
         if (currentRequestId == Helper.REQUEST_LOCKERS){
-            if(result != null && result instanceof RetroLocker) {
-                int id = ((RetroLocker) result).getId();
-                //locker found
-                Intent i = new Intent(QRScanActivity.this, AddResidentActivity.class);
-                i.putExtra("qrCode", detectedqrCode);
-                startActivity(i);
-            } else {
-                showAlert(QRScanActivity.this, getString(R.string.locker_not_found), getString(R.string.locker_not_found_message));
-
+            if(result != null && result instanceof RetroLockerList) {
+                if (userCanCreateParcels){
+                    locker = ((RetroLockerList)result).getLocker();
+                    if(locker != null) {
+                        if (addLockerOnly) {
+                            showAlert1(QRScanActivity.this, getString(R.string.already_exist), getString(R.string.locker_already_added));
+                        } else {
+                            Intent i = new Intent(QRScanActivity.this, SecurityCodeActivity.class);
+//                        Gson gson = new Gson();
+//                        String json = gson.toJson(resident);
+//                        i.putExtra("JSON_RESIDENT", json);
+//                        gson = new Gson();
+//                        json = gson.toJson(locker);
+//                        i.putExtra("JSON_LOCKER", json);
+                            SaveSharedPreferences.setLocker(getApplicationContext(), locker);
+                            startActivity(i);
+                        }
+                    } else {
+                        if (userCanCreateLockers) {
+                            showAlert(QRScanActivity.this, getString(R.string.locker_not_found), getString(R.string.locker_not_found_message), false);
+                        } else {
+                            if (!userCanViewAddresses) {
+                                showAlert1(QRScanActivity.this, getString(R.string.no_proper_rights), getString(R.string.no_create_locker));
+                            } else {
+                                showAlert(QRScanActivity.this, getString(R.string.orphan_parcel), getString(R.string.no_create_locker1), true);
+                            }
+                        }
+                    }
+                } else {
+                    showAlert1(QRScanActivity.this, getString(R.string.no_proper_rights), getString(R.string.no_create_parcel));
+                }
             }
         }
     }
@@ -67,7 +125,27 @@ public class QRScanActivity extends AppCompatActivity implements BarcodeReader.B
 
     }
 
-    private void showAlert(Context ctx, String title, String msg) {
+
+
+    private void showAlert1(Context ctx, String title, String msg){
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+        builder.setTitle(title);
+        builder.setMessage(msg);
+
+        builder.setCancelable(false);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                codeWasDetected = false;
+                barcodeReader.resumeScanning();
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+    }
+
+    private void showAlert(Context ctx, String title, String msg, final boolean virtualLocker) {
         AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
         builder.setTitle(title);
         builder.setMessage(msg);
@@ -88,6 +166,9 @@ public class QRScanActivity extends AppCompatActivity implements BarcodeReader.B
 
                 Intent i = new Intent(QRScanActivity.this, AddLockerActivity.class);
                 i.putExtra("qrCode", detectedqrCode);
+                if(virtualLocker){
+                    i.putExtra("virtualLocker", true);
+                }
                 startActivity(i);
             }
         });
@@ -107,12 +188,11 @@ public class QRScanActivity extends AppCompatActivity implements BarcodeReader.B
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    //showAlert(QRScanActivity.this, "Test", qrCode);
                     if (barcode.format == Barcode.QR_CODE){
                         detectedqrCode = qrCode;
-                        Map<String, String> param = new HashMap<String, String>();
-                        param.put("filter[qrCode]", qrCode);
-                        new SetRequests(getApplicationContext(), QRScanActivity.this, Helper.REQUEST_LOCKERS, param, null);
+                        if (SaveSharedPreferences.getUserId(getApplicationContext()) != 0) {
+                            new SetRequests(getApplicationContext(), QRScanActivity.this, Helper.REQUEST_CHECK_USER, null, null);
+                        }
                     }
                 }
             });

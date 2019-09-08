@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,15 +23,21 @@ import com.dotcode.duoline.axdlockers.Network.SetRequests;
 import com.dotcode.duoline.axdlockers.R;
 import com.dotcode.duoline.axdlockers.Utils.Helper;
 import com.dotcode.duoline.axdlockers.Utils.SaveSharedPreferences;
+import com.google.android.material.textfield.TextInputLayout;
 
 public class AddLockerActivity extends AppCompatActivity implements SetRequests.GetDataResponse {
 
     private Menu menu;
     private AutoCompleteTextView lockerNumber;
     private TextInputEditText lockerSize;
-    private TextView street, zipCode, city;
+    private TextView street, zipCode, city, optionalLabel;
+    private EditText addressDetail;
+    private TextInputLayout optional;
     private ImageView bAddAddress;
     private String qrCode;
+    private boolean virtualLocker = false;
+    private boolean addLockerOnly;
+
 
     private RetroAddress address = null;
 
@@ -45,7 +52,12 @@ public class AddLockerActivity extends AppCompatActivity implements SetRequests.
         zipCode = (TextView) findViewById(R.id.zipCodeTextView);
         city = (TextView) findViewById(R.id.cityTextView);
         bAddAddress = (ImageView) findViewById(R.id.bAddAddress);
-
+        optional = (TextInputLayout) findViewById(R.id.textInputLayoutOptional);
+        addressDetail = (EditText) findViewById(R.id.optionalDetailEditText);
+        optionalLabel = (TextView) findViewById(R.id.optionalLabel);
+        virtualLocker = getIntent().getBooleanExtra("virtualLocker", false);
+        addLockerOnly = SaveSharedPreferences.getAddLockerOnly(getApplicationContext());
+        setTitle(virtualLocker ? "Temporary Locker" : "Add Locker");
         qrCode = getIntent().getStringExtra("qrCode");
         bAddAddress.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +69,7 @@ public class AddLockerActivity extends AppCompatActivity implements SetRequests.
         lockerNumber.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                setupMenu();
+
             }
 
             @Override
@@ -67,7 +79,7 @@ public class AddLockerActivity extends AppCompatActivity implements SetRequests.
 
             @Override
             public void afterTextChanged(Editable editable) {
-
+                setupMenu();
             }
         });
 
@@ -75,7 +87,7 @@ public class AddLockerActivity extends AppCompatActivity implements SetRequests.
         lockerSize.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                setupMenu();
+
             }
 
             @Override
@@ -85,11 +97,12 @@ public class AddLockerActivity extends AppCompatActivity implements SetRequests.
 
             @Override
             public void afterTextChanged(Editable editable) {
-
+                setupMenu();
             }
         });
         SaveSharedPreferences.setAddressNull(getApplicationContext());
-
+        optionalLabel.setVisibility(virtualLocker?View.VISIBLE:View.GONE);
+        optional.setVisibility(virtualLocker?View.VISIBLE:View.GONE);
     }
 
     @Override
@@ -108,8 +121,13 @@ public class AddLockerActivity extends AppCompatActivity implements SetRequests.
     @Override
     public void onResponse(int currentRequestId, Object result) {
         if (currentRequestId == Helper.REQUEST_INSERT_LOCKER){
-            showAlert(AddLockerActivity.this, getString(R.string.locker_added), getString(R.string.locker_number) + lockerNumber.getText().toString()+
-                    getString(R.string.locker_added_message));
+            if (!addLockerOnly) {
+                showAlert(AddLockerActivity.this, getString(R.string.locker_added), getString(R.string.locker_number) + lockerNumber.getText().toString() +
+                        getString(R.string.locker_added_message), addLockerOnly);
+            } else {
+                showAlert(AddLockerActivity.this, getString(R.string.locker_added), getString(R.string.locker_number) + lockerNumber.getText().toString() +
+                        getString(R.string.locker_added_message1), addLockerOnly);
+            }
         }
     }
 
@@ -125,7 +143,7 @@ public class AddLockerActivity extends AppCompatActivity implements SetRequests.
             menu.getItem(0).setEnabled(false);
     }
 
-    private void showAlert(Context ctx, String title, String msg) {
+    private void showAlert(Context ctx, String title, String msg, final boolean addLockerOnly) {
         AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
         builder.setTitle(title);
         builder.setMessage(msg);
@@ -135,17 +153,29 @@ public class AddLockerActivity extends AppCompatActivity implements SetRequests.
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent i = new Intent(AddLockerActivity.this, AddResidentActivity.class);
-                finish();  //Kill the activity from which you will go to next activity
-                startActivity(i);
+                if(!addLockerOnly) {
+                    Intent i = new Intent(AddLockerActivity.this, SecurityCodeActivity.class);
+                    finish();  //Kill the activity from which you will go to next activity
+                    startActivity(i);
+                } else {
+                    Intent i = new Intent(AddLockerActivity.this, QRScanActivity.class);
+                    finish();  //Kill the activity from which you will go to next activity
+                    startActivity(i);
+                }
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent i = new Intent(AddLockerActivity.this, QRScanActivity.class);
-                finish();  //Kill the activity from which you will go to next activity
-                startActivity(i);
+                if(!addLockerOnly) {
+                    Intent i = new Intent(AddLockerActivity.this, QRScanActivity.class);
+                    finish();  //Kill the activity from which you will go to next activity
+                    startActivity(i);
+                } else {
+                    Intent i = new Intent(AddLockerActivity.this, MainMenuActivity.class);
+                    finish();  //Kill the activity from which you will go to next activity
+                    startActivity(i);
+                }
             }
         });
         builder.show();
@@ -169,9 +199,18 @@ public class AddLockerActivity extends AppCompatActivity implements SetRequests.
         if (id == R.id.action_save) {
             RetroLocker locker = new RetroLocker(0, qrCode, lockerNumber.getText().toString(),
                     lockerSize.getText().toString(), address.getId(), address);
-            new SetRequests(getApplicationContext(), AddLockerActivity.this, Helper.REQUEST_INSERT_LOCKER, null, locker);
+            if(!virtualLocker) {
+                new SetRequests(getApplicationContext(), AddLockerActivity.this, Helper.REQUEST_INSERT_LOCKER, null, locker);
 //            startActivity(new Intent(HiringPacksActivity.this, MainMenuActivity.class));
 //            return true;
+            } else {
+                if(!addressDetail.getText().toString().equals(""))
+                    locker.setAddressDetail(addressDetail.getText().toString());
+                SaveSharedPreferences.setLocker(getApplicationContext(), locker);
+                Intent i = new Intent(AddLockerActivity.this, SecurityCodeActivity.class);
+                finish();  //Kill the activity from which you will go to next activity
+                startActivity(i);
+            }
         }
         return super.onOptionsItemSelected(item);
     }

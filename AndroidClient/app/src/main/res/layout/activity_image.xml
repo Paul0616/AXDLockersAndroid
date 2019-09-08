@@ -95,10 +95,25 @@
         android:id="@+id/detectButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:text="DETECT"
-        app:layout_constraintBottom_toBottomOf="@+id/imageViewTaken"
+        app:layout_constraintBottom_toTopOf="@+id/textView23"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView23"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="@color/common_google_signin_btn_text_light_default"
+        android:gravity="center_vertical"
+        android:lines="5"
+        android:text="@string/scan_info"
+        android:textAlignment="center"
+        android:textColor="@color/colorLightOrange"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

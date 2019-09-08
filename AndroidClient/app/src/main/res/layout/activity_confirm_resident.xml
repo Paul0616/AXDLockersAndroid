@@ -91,7 +91,7 @@
         android:layout_marginStart="16dp"
         android:text="@string/phone"
         android:textColor="@color/black_overlay"
-        android:textSize="17sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tvPhone" />
 
@@ -103,7 +103,7 @@
         android:layout_marginEnd="8dp"
         android:text="@string/empty_string"
         android:textColor="@color/common_google_signin_btn_text_light_pressed"
-        android:textSize="17sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toBottomOf="@+id/fullNameTextView" />
@@ -115,7 +115,7 @@
         android:layout_marginStart="16dp"
         android:text="@string/email"
         android:textColor="@color/black_overlay"
-        android:textSize="17sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tvEmail" />
 
@@ -127,7 +127,7 @@
         android:layout_marginEnd="8dp"
         android:text="@string/empty_string"
         android:textColor="@color/common_google_signin_btn_text_light_pressed"
-        android:textSize="17sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toBottomOf="@+id/tvPhone" />
@@ -139,7 +139,7 @@
         android:layout_marginStart="16dp"
         android:text="@string/building"
         android:textColor="@color/black_overlay"
-        android:textSize="17sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tvBuilding" />
 
@@ -151,7 +151,7 @@
         android:layout_marginEnd="8dp"
         android:text="@string/empty_string"
         android:textColor="@color/common_google_signin_btn_text_light_pressed"
-        android:textSize="17sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toBottomOf="@+id/tvEmail" />
@@ -163,7 +163,7 @@
         android:layout_marginStart="16dp"
         android:text="@string/address"
         android:textColor="@color/black_overlay"
-        android:textSize="17sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tvAddress" />
 
@@ -175,7 +175,7 @@
         android:layout_marginEnd="8dp"
         android:text="@string/empty_string"
         android:textColor="@color/common_google_signin_btn_text_light_pressed"
-        android:textSize="17sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toBottomOf="@+id/tvBuilding" />
@@ -185,7 +185,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
         android:fontFamily="sans-serif-light"
         android:text="You must confirm that you want to put the parcel in a locker for this resident."

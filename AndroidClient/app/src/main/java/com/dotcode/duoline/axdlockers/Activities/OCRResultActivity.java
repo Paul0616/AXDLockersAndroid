@@ -36,7 +36,7 @@ public class OCRResultActivity extends AppCompatActivity {
     private ArrayList<String> first4Strings = new ArrayList<String>();
     private AutoCompleteTextView fullName, unitNumber;
     private Menu menu;
-    private boolean menuSearchDisabled = true;
+//    private boolean menuSearchDisabled = true;
 //    File file = null;
 
     @Override

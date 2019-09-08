@@ -65,6 +65,7 @@
     <string name="locker_added">Locker added</string>
     <string name="locker_number">Locker #</string>
     <string name="locker_added_message"> was successfully added. You want to continue with resident assignment for this locker?</string>
+    <string name="locker_added_message1"> was successfully added. You want to continue with adding another new locker?</string>
     <string name="add_address">Add Address</string>
     <string name="add_locker">Add Locker</string>
     <string name="add_resident">Add resident</string>
@@ -100,4 +101,16 @@
     <string name="choose_building_for_residents"> You have to choose building\nto see its residents</string>
     <string name="add_orphan_parcel">If no resident match to parcel\'s label than you can \nADD TO UNKNOWN PARCELS</string>
     <string name="building">Building:</string>
+    <string name="no_proper_rights">No proper rights</string>
+    <string name="no_create_orphan_parcel">You don\'t have right to add unknown parcels. Contact administrator.</string>
+    <string name="no_create_parcel">You don\'t have right to add parcels into lockers. Contact administrator.</string>
+    <string name="no_create_locker">You don\'t have right to add lockers. Contact admistrator or scan another locker.</string>
+    <string name="no_create_locker1"> You don\'t have right to add lockers. You can put the parcel into unregistered locker. Do you want to do that?</string>
+    <string name="orphan_parcel">Temporary locker</string>
+    <string name="already_exist">Already exist</string>
+    <string name="locker_already_added">This locker was already added in database. Try to add another one.</string>
+    <string name="optional_address_detail">optional address detail</string>
+    <string name="creating_association_with_temporary_locker">Creating association with temporary locker...</string>
+    <string name="scan_info">Image cropping so that it takes over only the area of interest, ensures better text detection</string>
+    <string name="tap_anywhere">Tap anywhere to capture image</string>
 </resources>

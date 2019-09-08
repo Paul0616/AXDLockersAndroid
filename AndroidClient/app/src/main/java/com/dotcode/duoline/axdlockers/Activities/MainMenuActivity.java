@@ -62,13 +62,16 @@ public class MainMenuActivity extends AppCompatActivity implements SetRequests.G
         addParcelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SaveSharedPreferences.setAddLockerOnly(getApplicationContext(), false);
                 startActivity(new Intent(MainMenuActivity.this, OCRResultActivity.class));
             }
         });
         addLockerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainMenuActivity.this, QRScanActivity.class));
+                SaveSharedPreferences.setAddLockerOnly(getApplicationContext(), true);
+                Intent i = new Intent(MainMenuActivity.this, QRScanActivity.class);
+                startActivity(i);
             }
         });
     }

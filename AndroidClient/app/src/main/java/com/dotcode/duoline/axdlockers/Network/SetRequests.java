@@ -3,28 +3,33 @@ package com.dotcode.duoline.axdlockers.Network;
 
 import android.content.Context;
 
+import android.util.Log;
 import android.widget.Toast;
 
 import com.dotcode.duoline.axdlockers.Models.RetroAddress;
 import com.dotcode.duoline.axdlockers.Models.RetroAddressList;
-import com.dotcode.duoline.axdlockers.Models.RetroBuildingList;
 import com.dotcode.duoline.axdlockers.Models.RetroCityList;
+import com.dotcode.duoline.axdlockers.Models.RetroError;
 import com.dotcode.duoline.axdlockers.Models.RetroFilteredResidentsList;
 import com.dotcode.duoline.axdlockers.Models.RetroFullName;
 import com.dotcode.duoline.axdlockers.Models.RetroLocker;
-import com.dotcode.duoline.axdlockers.Models.RetroLockerBuildingResident;
-import com.dotcode.duoline.axdlockers.Models.RetroLockerBuildingResidentID;
-import com.dotcode.duoline.axdlockers.Models.RetroLockerBuildingResidentsList;
+import com.dotcode.duoline.axdlockers.Models.RetroParcel;
+import com.dotcode.duoline.axdlockers.Models.RetroParcelID;
 import com.dotcode.duoline.axdlockers.Models.RetroLockerHistory;
-import com.dotcode.duoline.axdlockers.Models.RetroLockerHistoryList;
 import com.dotcode.duoline.axdlockers.Models.RetroLockerList;
 import com.dotcode.duoline.axdlockers.Models.RetroNotification;
 import com.dotcode.duoline.axdlockers.Models.RetroOrphanParcel;
+import com.dotcode.duoline.axdlockers.Models.RetroSecurityCode;
 import com.dotcode.duoline.axdlockers.Models.RetroTokenList;
 import com.dotcode.duoline.axdlockers.Models.RetroUser;
+import com.dotcode.duoline.axdlockers.Models.RetroVirtualParcel;
+import com.dotcode.duoline.axdlockers.Models.RetroVirtualParcelID;
 import com.dotcode.duoline.axdlockers.R;
 import com.dotcode.duoline.axdlockers.Utils.Helper;
 import com.dotcode.duoline.axdlockers.Utils.SaveSharedPreferences;
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -89,55 +94,92 @@ public class SetRequests {
     private void callMethod(int requestId){
         switch (requestId) {
             case Helper.REQUEST_CHECK_USER:
-                checkUser();
+                Call<RetroUser> callCheckuser = service.checkUser(SaveSharedPreferences.getUserId(context),
+                        SaveSharedPreferences.getAccesToken(context),
+                        "userXRights.right.code,role,buildingXUsers.building");
+                callRetrofit(callCheckuser);
                 break;
             case Helper.REQUEST_LOCKERS:
-                getLockers(parameters);
+                Call<RetroLockerList> callLockers = service.getLockers(parameters,
+                        SaveSharedPreferences.getAccesToken(context));
+                callRetrofit(callLockers);
                 break;
             case Helper.REQUEST_ADDRESSES:
-                getAddressers(parameters);
+                Call<RetroAddressList> callAddresses = service.getAddresses(parameters,
+                        SaveSharedPreferences.getAccesToken(context));
+                callRetrofit(callAddresses);
                 break;
             case Helper.REQUEST_CITIES:
-                getCities(parameters);
+                Call<RetroCityList> callCities = service.getCities(parameters,
+                        SaveSharedPreferences.getAccesToken(context));
+                callRetrofit(callCities);
                 break;
             case Helper.REQUEST_INSERT_ADDRESS:
-                setAddress(body);
+                Call<RetroAddress> callInsertAddress = service.createAddress(((RetroAddress)body),
+                        SaveSharedPreferences.getAccesToken(context));
+                callRetrofit(callInsertAddress);
                 break;
             case Helper.REQUEST_INSERT_LOCKER:
-                setLocker(body);
+                Call<RetroLocker> callSetLocker = service.createLocker(((RetroLocker)body),
+                        SaveSharedPreferences.getAccesToken(context));
+                callRetrofit(callSetLocker);
                 break;
-            case Helper.REQUEST_LOCKER_HISTORIES:
-                getLockerHistories(parameters, optionalList);
+            case Helper.REQUEST_DELETE_PARCEL:
+                int id = Integer.valueOf(parameters.get("ID"));
+                Call<Void> callDeleteParcel = service.deleteParcel(id,
+                        SaveSharedPreferences.getAccesToken(context));
+                callRetrofit(callDeleteParcel);
                 break;
-            case Helper.REQUEST_FILTERED_RESIDENTS:
-                getFilteredResidents(parameters);
-                break;
-            case Helper.REQUEST_CHECK_BUILDING:
-                getBuildings(parameters, optionalList);
-                break;
-            case Helper.REQUEST_DELETE_LOCKER_BUILDING_RESIDENT:
-                deleteLBR(parameters);
+            case Helper.REQUEST_DELETE_VIRTUAL_PARCEL:
+                int id1 = Integer.valueOf(parameters.get("ID"));
+                Call<Void> callDeleteVirtualParcel = service.deleteLVirtualParcel(id1,
+                        SaveSharedPreferences.getAccesToken(context));
+                callRetrofit(callDeleteVirtualParcel);
                 break;
             case Helper.REQUEST_DELETE_LOCKER_HISTORY:
-                deleteLH(parameters);
+                int id2 = Integer.valueOf(parameters.get("ID"));
+                Call<Void> callDeleteHistory = service.deleteLockerHistory(id2,
+                        SaveSharedPreferences.getAccesToken(context));
+                callRetrofit(callDeleteHistory);
                 break;
-            case Helper.REQUEST_LOCKER_BUILDING_RESIDENT:
-                getLBRs(parameters);
-                break;
-            case Helper.REQUEST_INSERT_LOCKER_BUILDING_RESIDENT:
-                createLBRs(body);
+            case Helper.REQUEST_INSERT_PARCEL:
+                Call<RetroParcel> callInsertParcel = service.createParcel(((RetroParcel)body),
+                        SaveSharedPreferences.getAccesToken(context));
+                callRetrofit(callInsertParcel);
                 break;
             case Helper.REQUEST_INSERT_LOCKER_HISTORY:
-                createLHs(body);
+                Call<RetroLockerHistory> callInsertHistory = service.createLHs(((RetroLockerHistory)body),
+                        SaveSharedPreferences.getAccesToken(context));
+                callRetrofit(callInsertHistory);
                 break;
             case Helper.REQUEST_INSERT_NOTIFICATION:
-                createNotification(body);
+                Call<RetroNotification> callInsertNotification = service.createNotification(((RetroParcelID)body),
+                        SaveSharedPreferences.getAccesToken(context));
+                callRetrofit(callInsertNotification);
+                break;
+            case Helper.REQUEST_INSERT_VIRTUAL_NOTIFICATION:
+                Call<RetroNotification> callInsertVirtualNotification = service.createVirtualNotification(((RetroVirtualParcelID)body),
+                        SaveSharedPreferences.getAccesToken(context));
+                callRetrofit(callInsertVirtualNotification);
                 break;
             case Helper.REQUEST_RESIDENTS_GET_BY_FULL_NAME_OR_UNIT:
-                getResidentByFullNameOrUnit(body, parameters);
+                Call<RetroFilteredResidentsList> callGetResidentByFullNameOrUnit = service.getResidentByFullNameOrUnit((RetroFullName) body,
+                        SaveSharedPreferences.getAccesToken(context), parameters);
+                callRetrofit(callGetResidentByFullNameOrUnit);
                 break;
             case Helper.REQUEST_INSERT_ORPHAN_PARCEL:
-                createOrphanParcel(body);
+                Call<RetroOrphanParcel> callInsertOrphan = service.createOrphanParcel(((RetroOrphanParcel) body),
+                        SaveSharedPreferences.getAccesToken(context));
+                callRetrofit(callInsertOrphan);
+                break;
+            case Helper.REQUEST_NEW_SECURITY_CODE:
+                Call<RetroSecurityCode> callNewsecurity = service.getSecurityCode(SaveSharedPreferences.getAccesToken(context));
+                callRetrofit(callNewsecurity);
+                break;
+            case Helper.REQUEST_INSERT_VIRTUAL_PARCEL:
+                Call<RetroVirtualParcel> callInsertVirtualParcel = service.createVirtualParcel((RetroVirtualParcel) body,
+                        SaveSharedPreferences.getAccesToken(context));
+                callRetrofit(callInsertVirtualParcel);
                 break;
         }
     }
@@ -158,21 +200,27 @@ public class SetRequests {
                     SaveSharedPreferences.setAccesToken(context, token.getToken().getAccessToken());
                     callMethod(requestId);
                 } else {
-                    try {
-
-                        SaveSharedPreferences.logOutUser(context);
-                        String url = response.raw().request().url().toString();
-
-                        String responseBody = "";
-                        if (response.errorBody() != null) {
-                            responseBody= response.errorBody().string();
+                    SaveSharedPreferences.logOutUser(context);
+                    String msg = "";
+                    if (response.errorBody() != null) {
+                        Gson gson = new Gson();
+                        RetroError error = null;
+                        try {
+                            error = gson.fromJson(response.errorBody().charStream(), RetroError.class);
+                            msg += response.code() + " - " + error.getMessage();
+                        } catch (JsonSyntaxException e) {
+                            msg += response.code();
+                            e.printStackTrace();
+                        } catch (JsonIOException e) {
+                            msg += response.code();
+                            e.printStackTrace();
                         }
-                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
-                        mHandler.onFailed(requestId, true); // should return to login screen
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    } else {
+                        msg += response.code();
                     }
+                    Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+                    mHandler.onFailed(requestId, true);
+
                 }
             }
 
@@ -184,654 +232,45 @@ public class SetRequests {
         });
     }
 
-    private void checkUser() {
-        Call<RetroUser> call = service.checkUser(SaveSharedPreferences.getUserId(context), SaveSharedPreferences.getAccesToken(context), "userXRights.right.code,role,buildingXUsers.building");
-        call.enqueue(new Callback<RetroUser>() {
-            @Override
-            public void onResponse(Call<RetroUser> call, Response<RetroUser> response) {
-                // showProgress(false);
 
+    public <T> void callRetrofit(Call<T> call) {
+        call.enqueue(new Callback<T>() {
+            @Override
+            public void onResponse(Call<T> call, Response<T> response) {
+                String url = response.raw().request().url().toString();
+                Log.v("API_CALL:", url);
+                if(body != null)
+                    Log.v("API CALL BODY:", body.toString());
                 if (response.isSuccessful()) {
-                    RetroUser user = response.body();
-                    if (user != null) {
-                        Object userObj = (Object) user;
-
-                       SaveSharedPreferences.setFirstName(context, ((RetroUser) userObj).getFirstName());
-                        SaveSharedPreferences.setLastName(context, ((RetroUser) userObj).getLastName());
-                        mHandler.onResponse(requestId, userObj);
-//                        startActivity(new Intent(SplashActivity.this, QRScanActivity.class));
-//                        finish();
-                    }
+                    mHandler.onResponse(requestId, response.body());
                 } else {
-                    try {
-                        SaveSharedPreferences.logOutUser(context);
-                        String url = response.raw().request().url().toString();
-
-                        String responseBody = "";
+                        String msg = "";
                         if (response.errorBody() != null) {
-                            responseBody= response.errorBody().string();
-                        }
-                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
-                        mHandler.onFailed(requestId, true); // should return to login screen
-//                        startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-//                        finish();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RetroUser> call, Throwable t) {
-                //     showProgress(false);
-
-                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void getLockers(Map<String, String> parameters) {
-        //if (parameters.containsKey("qrCode")) {
-        //    String qrCode = parameters.get("qrCode").toString();
-            Call<RetroLockerList> call = service.getLockers(parameters, SaveSharedPreferences.getAccesToken(context));
-            call.enqueue(new Callback<RetroLockerList>() {
-                @Override
-                public void onResponse(Call<RetroLockerList> call, Response<RetroLockerList> response) {
-                    if (response.isSuccessful()) {
-                        RetroLockerList locker = response.body();
-                        if (locker.getLocker() != null) {
-                            Object lockerObj = locker.getLocker();
-
-                          //  lockers.add(locker);
-                            mHandler.onResponse(requestId, lockerObj);
+                            Gson gson = new Gson();
+                            RetroError error = null;
+                            try {
+                                error = gson.fromJson(response.errorBody().charStream(), RetroError.class);
+                                msg += response.code() + " - " + error.getMessage();
+                            } catch (JsonSyntaxException e) {
+                                msg += response.code();
+                                e.printStackTrace();
+                            } catch (JsonIOException e) {
+                                msg += response.code();
+                                e.printStackTrace();
+                            }
                         } else {
-                            mHandler.onResponse(requestId, null);
+                            msg += response.code();
                         }
-                    } else {
-                        try {
-                            SaveSharedPreferences.logOutUser(context);
-                            String url = response.raw().request().url().toString();
-
-                            String responseBody = "";
-                            if (response.errorBody() != null) {
-                                responseBody = response.errorBody().string();
-                            }
-                            Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
-                            mHandler.onFailed(requestId, true);
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<RetroLockerList> call, Throwable t) {
-                    Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
-                }
-            });
-       // }
-    }
-
-    private void setLocker(Object locker) {
-
-        Call<RetroLocker> call = service.createLocker(((RetroLocker)locker), SaveSharedPreferences.getAccesToken(context));
-        call.enqueue(new Callback<RetroLocker>() {
-            @Override
-            public void onResponse(Call<RetroLocker> call, Response<RetroLocker> response) {
-                if (response.isSuccessful()) {
-                    RetroLocker locker = response.body();
-                    Object addresObj = locker;
-//                        List<Object> addressesObj = new ArrayList<Object>();
-//                        lockers.add(locker);
-                    mHandler.onResponse(requestId, addresObj);
-
-                } else {
-                    try {
-                        SaveSharedPreferences.logOutUser(context);
-                        String url = response.raw().request().url().toString();
-
-                        String responseBody = "";
-                        if (response.errorBody() != null) {
-                            responseBody = response.errorBody().string();
-                        }
-                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
-                        mHandler.onFailed(requestId, true);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+                        mHandler.onFailed(requestId, false);
                 }
             }
 
             @Override
-            public void onFailure(Call<RetroLocker> call, Throwable t) {
+            public void onFailure(Call<T> call, Throwable t) {
                 Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
             }
         });
 
     }
-
-    private void getAddressers(Map<String, String> parameters) {
-            Call<RetroAddressList> call = service.getAddresses(parameters, SaveSharedPreferences.getAccesToken(context));
-            call.enqueue(new Callback<RetroAddressList>() {
-                @Override
-                public void onResponse(Call<RetroAddressList> call, Response<RetroAddressList> response) {
-                    if (response.isSuccessful()) {
-                        RetroAddressList addresses = response.body();
-                        Object addressesObj = addresses;
-//                        List<Object> addressesObj = new ArrayList<Object>();
-//                        lockers.add(locker);
-                        mHandler.onResponse(requestId, addressesObj);
-
-                    } else {
-                        try {
-                            SaveSharedPreferences.logOutUser(context);
-                            String url = response.raw().request().url().toString();
-
-                            String responseBody = "";
-                            if (response.errorBody() != null) {
-                                responseBody = response.errorBody().string();
-                            }
-                            Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
-                            mHandler.onFailed(requestId, true);
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<RetroAddressList> call, Throwable t) {
-                    Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
-                }
-            });
-
-    }
-
-    private void setAddress(Object address) {
-
-        Call<RetroAddress> call = service.createAddress(((RetroAddress)address), SaveSharedPreferences.getAccesToken(context));
-        call.enqueue(new Callback<RetroAddress>() {
-            @Override
-            public void onResponse(Call<RetroAddress> call, Response<RetroAddress> response) {
-                if (response.isSuccessful()) {
-                    RetroAddress address = response.body();
-                    Object addresObj = address;
-//                        List<Object> addressesObj = new ArrayList<Object>();
-//                        lockers.add(locker);
-                    mHandler.onResponse(requestId, addresObj);
-
-                } else {
-                    try {
-                        SaveSharedPreferences.logOutUser(context);
-                        String url = response.raw().request().url().toString();
-
-                        String responseBody = "";
-                        if (response.errorBody() != null) {
-                            responseBody = response.errorBody().string();
-                        }
-                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
-                        mHandler.onFailed(requestId, true);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RetroAddress> call, Throwable t) {
-                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
-
-    private void getCities(Map<String, String> parameters) {
-        Call<RetroCityList> call = service.getCities(parameters, SaveSharedPreferences.getAccesToken(context));
-        call.enqueue(new Callback<RetroCityList>() {
-            @Override
-            public void onResponse(Call<RetroCityList> call, Response<RetroCityList> response) {
-                if (response.isSuccessful()) {
-                    RetroCityList cities = response.body();
-                    Object citiesObj = cities;
-                    mHandler.onResponse(requestId, cities);
-
-                } else {
-                    try {
-                        SaveSharedPreferences.logOutUser(context);
-                        String url = response.raw().request().url().toString();
-
-                        String responseBody = "";
-                        if (response.errorBody() != null) {
-                            responseBody = response.errorBody().string();
-                        }
-                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
-                        mHandler.onFailed(requestId, true);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RetroCityList> call, Throwable t) {
-                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
-
-    private void getLockerHistories(Map<String, String> parameters, List<String> optionalList) {
-        Call<RetroLockerHistoryList> call = service.getHistories(parameters, SaveSharedPreferences.getAccesToken(context), optionalList);
-        call.enqueue(new Callback<RetroLockerHistoryList>() {
-            @Override
-            public void onResponse(Call<RetroLockerHistoryList> call, Response<RetroLockerHistoryList> response) {
-                String url = response.raw().request().url().toString();
-                if (response.isSuccessful()) {
-                    RetroLockerHistoryList lockerHistories = response.body();
-                    Object lockerHistoriesObj = lockerHistories;
-
-                    mHandler.onResponse(requestId, lockerHistories);
-
-                } else {
-                    try {
-                        SaveSharedPreferences.logOutUser(context);
-
-                        String responseBody = "";
-                        if (response.errorBody() != null) {
-                            responseBody = response.errorBody().string();
-                        }
-                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
-                        mHandler.onFailed(requestId, true);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RetroLockerHistoryList> call, Throwable t) {
-                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
-
-    private void getFilteredResidents(Map<String, String> parameters) {
-        Call<RetroFilteredResidentsList> call = service.getFilteredResidents(parameters, SaveSharedPreferences.getAccesToken(context));
-        call.enqueue(new Callback<RetroFilteredResidentsList>() {
-            @Override
-            public void onResponse(Call<RetroFilteredResidentsList> call, Response<RetroFilteredResidentsList> response) {
-                if (response.isSuccessful()) {
-                    RetroFilteredResidentsList filteredResidents = response.body();
-                    Object filteredResidentsObj = filteredResidents;
-
-                    mHandler.onResponse(requestId, filteredResidentsObj);
-
-                } else {
-                    try {
-                        SaveSharedPreferences.logOutUser(context);
-                        String url = response.raw().request().url().toString();
-
-                        String responseBody = "";
-                        if (response.errorBody() != null) {
-                            responseBody = response.errorBody().string();
-                        }
-                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
-                        mHandler.onFailed(requestId, true);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RetroFilteredResidentsList> call, Throwable t) {
-                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
-
-    private void getBuildings(Map<String, String> parameters, List<String> optionalList) {
-        Call<RetroBuildingList> call = service.getBuildings(parameters, SaveSharedPreferences.getAccesToken(context), optionalList);
-        call.enqueue(new Callback<RetroBuildingList>() {
-            @Override
-            public void onResponse(Call<RetroBuildingList> call, Response<RetroBuildingList> response) {
-                String url = response.raw().request().url().toString();
-                if (response.isSuccessful()) {
-                    RetroBuildingList buildingList = response.body();
-                    Object buildingListObj = buildingList;
-
-                    mHandler.onResponse(requestId, buildingListObj);
-
-                } else {
-                    try {
-                        SaveSharedPreferences.logOutUser(context);
-
-
-                        String responseBody = "";
-                        if (response.errorBody() != null) {
-                            responseBody = response.errorBody().string();
-                        }
-                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
-                        mHandler.onFailed(requestId, true);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RetroBuildingList> call, Throwable t) {
-                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
-
-    private void deleteLBR(Map<String, String> parameters) {
-        int id = Integer.valueOf(parameters.get("ID"));
-        Call<Void> call = service.deleteLBR(id, SaveSharedPreferences.getAccesToken(context));
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-
-                    mHandler.onResponse(requestId, null);
-
-                } else {
-                    try {
-                        SaveSharedPreferences.logOutUser(context);
-                        String url = response.raw().request().url().toString();
-
-                        String responseBody = "";
-                        if (response.errorBody() != null) {
-                            responseBody = response.errorBody().string();
-                        }
-                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
-                        mHandler.onFailed(requestId, true);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
-
-    private void deleteLH(Map<String, String> parameters) {
-        int id = Integer.valueOf(parameters.get("ID"));
-        Call<Void> call = service.deleteLH(id, SaveSharedPreferences.getAccesToken(context));
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-
-                    mHandler.onResponse(requestId, null);
-
-                } else {
-                    try {
-                        SaveSharedPreferences.logOutUser(context);
-                        String url = response.raw().request().url().toString();
-
-                        String responseBody = "";
-                        if (response.errorBody() != null) {
-                            responseBody = response.errorBody().string();
-                        }
-                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
-                        mHandler.onFailed(requestId, true);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
-
-    private void getLBRs(Map<String, String> parameters) {
-        Call<RetroLockerBuildingResidentsList> call = service.getLBRs(parameters, SaveSharedPreferences.getAccesToken(context));
-        call.enqueue(new Callback<RetroLockerBuildingResidentsList>() {
-            @Override
-            public void onResponse(Call<RetroLockerBuildingResidentsList> call, Response<RetroLockerBuildingResidentsList> response) {
-                if (response.isSuccessful()) {
-                    RetroLockerBuildingResidentsList lbrs = response.body();
-                    Object lbrsObj = lbrs;
-
-                    mHandler.onResponse(requestId, lbrsObj);
-
-                } else {
-                    try {
-                        SaveSharedPreferences.logOutUser(context);
-                        String url = response.raw().request().url().toString();
-
-                        String responseBody = "";
-                        if (response.errorBody() != null) {
-                            responseBody = response.errorBody().string();
-                        }
-                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
-                        mHandler.onFailed(requestId, true);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RetroLockerBuildingResidentsList> call, Throwable t) {
-                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
-
-    private void getResidentByFullNameOrUnit(Object body, Map<String, String> parameters) {
-        Call<RetroFilteredResidentsList> call = service.getResidentByFullNameOrUnit((RetroFullName) body, SaveSharedPreferences.getAccesToken(context), parameters);
-        call.enqueue(new Callback<RetroFilteredResidentsList>() {
-            @Override
-            public void onResponse(Call<RetroFilteredResidentsList> call, Response<RetroFilteredResidentsList> response) {
-                String url = response.raw().request().url().toString();
-                if (response.isSuccessful()) {
-                    RetroFilteredResidentsList residentBuilding = response.body();
-                    Object lbrObj = residentBuilding;
-                    mHandler.onResponse(requestId, lbrObj);
-
-                } else {
-                    try {
-                        SaveSharedPreferences.logOutUser(context);
-
-
-                        String responseBody = "";
-                        if (response.errorBody() != null) {
-                            responseBody = response.errorBody().string();
-                        }
-                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
-                        mHandler.onFailed(requestId, true);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RetroFilteredResidentsList> call, Throwable t) {
-                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void createLBRs(Object lbr) {
-
-        Call<RetroLockerBuildingResident> call = service.createLBRs(((RetroLockerBuildingResident)lbr), SaveSharedPreferences.getAccesToken(context));
-        call.enqueue(new Callback<RetroLockerBuildingResident>() {
-            @Override
-            public void onResponse(Call<RetroLockerBuildingResident> call, Response<RetroLockerBuildingResident> response) {
-                String url = response.raw().request().url().toString();
-                if (response.isSuccessful()) {
-                    RetroLockerBuildingResident lbr = response.body();
-                    Object lbrObj = lbr;
-//                        List<Object> addressesObj = new ArrayList<Object>();
-//                        lockers.add(locker);
-                    mHandler.onResponse(requestId, lbrObj);
-
-                } else {
-                    try {
-                        SaveSharedPreferences.logOutUser(context);
-
-
-                        String responseBody = "";
-                        if (response.errorBody() != null) {
-                            responseBody = response.errorBody().string();
-                        }
-                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
-                        mHandler.onFailed(requestId, true);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RetroLockerBuildingResident> call, Throwable t) {
-                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
-
-    private void createOrphanParcel(Object orphanParcel){
-        Call<RetroOrphanParcel> call = service.createOrphanParcel(((RetroOrphanParcel) orphanParcel), SaveSharedPreferences.getAccesToken(context));
-        call.enqueue(new Callback<RetroOrphanParcel>() {
-            @Override
-            public void onResponse(Call<RetroOrphanParcel> call, Response<RetroOrphanParcel> response) {
-                String url = response.raw().request().url().toString();
-                if (response.isSuccessful()) {
-                    RetroOrphanParcel orphanParcel1 = response.body();
-                    Object orphanParcel2 = orphanParcel1;
-
-                    mHandler.onResponse(requestId, orphanParcel2);
-
-                } else {
-                    try {
-                        SaveSharedPreferences.logOutUser(context);
-
-                        String responseBody = "";
-                        if (response.errorBody() != null) {
-                            responseBody = response.errorBody().string();
-                        }
-                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
-                        mHandler.onFailed(requestId, true);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RetroOrphanParcel> call, Throwable t) {
-                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-    private void createLHs(Object lh) {
-
-        Call<RetroLockerHistory> call = service.createLHs(((RetroLockerHistory)lh), SaveSharedPreferences.getAccesToken(context));
-        call.enqueue(new Callback<RetroLockerHistory>() {
-            @Override
-            public void onResponse(Call<RetroLockerHistory> call, Response<RetroLockerHistory> response) {
-                if (response.isSuccessful()) {
-                    RetroLockerHistory lh = response.body();
-                    Object lhObj = lh;
-
-                    mHandler.onResponse(requestId, lhObj);
-
-                } else {
-                    try {
-                        SaveSharedPreferences.logOutUser(context);
-                        String url = response.raw().request().url().toString();
-
-                        String responseBody = "";
-                        if (response.errorBody() != null) {
-                            responseBody = response.errorBody().string();
-                        }
-                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
-                        mHandler.onFailed(requestId, true);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RetroLockerHistory> call, Throwable t) {
-                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
-
-    private void createNotification(Object lh) {
-
-        Call<RetroNotification> call = service.createNotification(((RetroLockerBuildingResidentID)lh), SaveSharedPreferences.getAccesToken(context));
-        call.enqueue(new Callback<RetroNotification>() {
-            @Override
-            public void onResponse(Call<RetroNotification> call, Response<RetroNotification> response) {
-                if (response.isSuccessful()) {
-                    RetroNotification lh = response.body();
-                    Object lhObj = lh;
-
-                    mHandler.onResponse(requestId, lhObj);
-
-                } else {
-                    try {
-                        SaveSharedPreferences.logOutUser(context);
-                        String url = response.raw().request().url().toString();
-
-                        String responseBody = "";
-                        if (response.errorBody() != null) {
-                            responseBody = response.errorBody().string();
-                        }
-                        Toast.makeText(context, response.code() + " " + responseBody, Toast.LENGTH_LONG).show();
-                        mHandler.onFailed(requestId, true);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RetroNotification> call, Throwable t) {
-                Toast.makeText(context, context.getResources().getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
-
-
 }

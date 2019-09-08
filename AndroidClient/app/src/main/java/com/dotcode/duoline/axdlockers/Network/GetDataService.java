@@ -3,25 +3,25 @@ package com.dotcode.duoline.axdlockers.Network;
 
 import com.dotcode.duoline.axdlockers.Models.RetroAddress;
 import com.dotcode.duoline.axdlockers.Models.RetroAddressList;
-import com.dotcode.duoline.axdlockers.Models.RetroBuilding;
 import com.dotcode.duoline.axdlockers.Models.RetroBuildingList;
-import com.dotcode.duoline.axdlockers.Models.RetroCity;
 import com.dotcode.duoline.axdlockers.Models.RetroCityList;
 import com.dotcode.duoline.axdlockers.Models.RetroEmail;
-import com.dotcode.duoline.axdlockers.Models.RetroFilteredResident;
 import com.dotcode.duoline.axdlockers.Models.RetroFilteredResidentsList;
 import com.dotcode.duoline.axdlockers.Models.RetroFullName;
 import com.dotcode.duoline.axdlockers.Models.RetroLocker;
-import com.dotcode.duoline.axdlockers.Models.RetroLockerBuildingResident;
-import com.dotcode.duoline.axdlockers.Models.RetroLockerBuildingResidentID;
-import com.dotcode.duoline.axdlockers.Models.RetroLockerBuildingResidentsList;
+import com.dotcode.duoline.axdlockers.Models.RetroParcel;
+import com.dotcode.duoline.axdlockers.Models.RetroParcelID;
+import com.dotcode.duoline.axdlockers.Models.RetroParcelsList;
 import com.dotcode.duoline.axdlockers.Models.RetroLockerHistory;
 import com.dotcode.duoline.axdlockers.Models.RetroLockerHistoryList;
 import com.dotcode.duoline.axdlockers.Models.RetroLockerList;
 import com.dotcode.duoline.axdlockers.Models.RetroNotification;
 import com.dotcode.duoline.axdlockers.Models.RetroOrphanParcel;
+import com.dotcode.duoline.axdlockers.Models.RetroSecurityCode;
 import com.dotcode.duoline.axdlockers.Models.RetroTokenList;
 import com.dotcode.duoline.axdlockers.Models.RetroUser;
+import com.dotcode.duoline.axdlockers.Models.RetroVirtualParcel;
+import com.dotcode.duoline.axdlockers.Models.RetroVirtualParcelID;
 
 
 import java.util.List;
@@ -61,35 +61,38 @@ public interface GetDataService {
     @POST("lockers")
     Call<RetroLocker> createLocker(@Body RetroLocker locker, @Query("access-token") String token);
 
-    @GET("locker-histories")
-    Call<RetroLockerHistoryList> getHistories(@QueryMap Map<String, String> options, @Query("access-token") String token, @Query("filter[buildingUniqueNumber][in][]") List<String> buildingUniqueNumberList);
+//    @GET("locker-histories")
+//    Call<RetroLockerHistoryList> getHistories(@QueryMap Map<String, String> options, @Query("access-token") String token, @Query("filter[buildingUniqueNumber][in][]") List<String> buildingUniqueNumberList);
 
-    @GET("building-residents/get-filtered-residents")
-    Call<RetroFilteredResidentsList> getFilteredResidents(@QueryMap Map<String, String> options, @Query("access-token") String token);
+//    @GET("building-residents/get-filtered-residents")
+//    Call<RetroFilteredResidentsList> getFilteredResidents(@QueryMap Map<String, String> options, @Query("access-token") String token);
 
     @POST("residents/get-by-full-name-and-unit-number")
     Call<RetroFilteredResidentsList> getResidentByFullNameOrUnit(@Body RetroFullName fullName, @Query("access-token") String token, @QueryMap Map<String, String> options);
 
-    @GET("buildings")
-    Call<RetroBuildingList> getBuildings(@QueryMap Map<String, String> options, @Query("access-token") String token, @Query("filter[buildingUniqueNumber][in][]") List<String> buildingUniqueNumberList);
+//    @GET("buildings")
+//    Call<RetroBuildingList> getBuildings(@QueryMap Map<String, String> options, @Query("access-token") String token, @Query("filter[buildingUniqueNumber][in][]") List<String> buildingUniqueNumberList);
 
     @DELETE("locker-building-residents/{id}")
-    Call<Void> deleteLBR(@Path("id") int id, @Query("access-token") String token);
+    Call<Void> deleteParcel(@Path("id") int id, @Query("access-token") String token);
+
+    @DELETE("virtual-parcels/{id}")
+    Call<Void> deleteLVirtualParcel(@Path("id") int id, @Query("access-token") String token);
 
     @DELETE("locker-histories/{id}")
-    Call<Void> deleteLH(@Path("id") int id, @Query("access-token") String token);
+    Call<Void> deleteLockerHistory(@Path("id") int id, @Query("access-token") String token);
 
-    @GET("locker-building-residents")
-    Call<RetroLockerBuildingResidentsList> getLBRs(@QueryMap Map<String, String> options, @Query("access-token") String token);
+//    @GET("locker-building-residents")
+//    Call<RetroParcelsList> getLBRs(@QueryMap Map<String, String> options, @Query("access-token") String token);
 
     @POST("locker-building-residents")
-    Call<RetroLockerBuildingResident> createLBRs(@Body RetroLockerBuildingResident lbr, @Query("access-token") String token);
+    Call<RetroParcel> createParcel(@Body RetroParcel lbr, @Query("access-token") String token);
 
     @POST("locker-histories")
     Call<RetroLockerHistory> createLHs(@Body RetroLockerHistory lbr, @Query("access-token") String token);
 
     @POST("notifications/send-notification-to-resident")
-    Call<RetroNotification> createNotification(@Body RetroLockerBuildingResidentID lbr, @Query("access-token") String token);
+    Call<RetroNotification> createNotification(@Body RetroParcelID lbr, @Query("access-token") String token);
 
     @PUT("users/reset-password")
     Call<Void> resetPassword(@Body RetroEmail email);
@@ -97,4 +100,12 @@ public interface GetDataService {
     @POST("orphan-parcels")
     Call<RetroOrphanParcel> createOrphanParcel(@Body RetroOrphanParcel orphanParcel, @Query("access-token") String token);
 
+    @GET("residents/get-new-security-code")
+    Call<RetroSecurityCode> getSecurityCode(@Query("access-token") String token);
+
+    @POST("virtual-parcels")
+    Call<RetroVirtualParcel> createVirtualParcel(@Body RetroVirtualParcel parcel, @Query("access-token") String token);
+
+    @POST("notifications/send-notification-to-resident-for-virtual-parcel")
+    Call<RetroNotification> createVirtualNotification(@Body RetroVirtualParcelID parcelID, @Query("access-token") String token);
 }

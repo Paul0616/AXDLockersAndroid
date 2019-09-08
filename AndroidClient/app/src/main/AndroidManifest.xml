@@ -40,11 +40,7 @@
         <activity android:name=".Activities.FinalPostActivity" />
         <activity
             android:name=".Activities.SecurityCodeActivity"
-            android:parentActivityName=".Activities.AddResidentActivity"
-            android:theme="@style/TitleTheme" />
-        <activity
-            android:name=".Activities.ChooseBuildingActivity"
-            android:parentActivityName=".Activities.AddResidentActivity"
+            android:parentActivityName=".Activities.QRScanActivity"
             android:theme="@style/TitleTheme" />
         <activity
             android:name=".Activities.AddAddressActivity"
@@ -60,10 +56,6 @@
             android:parentActivityName=".Activities.QRScanActivity"
             android:theme="@style/TitleTheme"
             android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".Activities.AddResidentActivity"
-            android:parentActivityName=".Activities.QRScanActivity"
-            android:theme="@style/TitleTheme" />
         <activity
             android:name=".Activities.LoginActivity"
             android:windowSoftInputMode="adjustPan" />

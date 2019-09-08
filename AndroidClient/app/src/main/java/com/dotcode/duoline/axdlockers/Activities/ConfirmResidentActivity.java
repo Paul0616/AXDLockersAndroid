@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -11,12 +12,24 @@ import android.widget.TextView;
 import com.dotcode.duoline.axdlockers.Models.RetroFilteredResident;
 import com.dotcode.duoline.axdlockers.Models.RetroLocker;
 import com.dotcode.duoline.axdlockers.R;
+import com.dotcode.duoline.axdlockers.Utils.SaveSharedPreferences;
 import com.google.gson.Gson;
 
 public class ConfirmResidentActivity extends AppCompatActivity {
     private RetroFilteredResident currentResident;
     private TextView fullName, phone, email, building, address;
     private Button confirmButton;
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +63,11 @@ public class ConfirmResidentActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(ConfirmResidentActivity.this, QRScanActivity.class);
+//                    Gson gson = new Gson();
+//                    String json = gson.toJson(currentResident);
+//                    i.putExtra("JSON_RESIDENT", json);
+                    SaveSharedPreferences.setResident(getApplicationContext(), currentResident);
+                    startActivity(i);
                 }
             });
         }

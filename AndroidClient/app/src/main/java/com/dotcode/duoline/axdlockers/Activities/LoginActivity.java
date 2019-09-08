@@ -223,6 +223,7 @@ public class LoginActivity extends AppCompatActivity implements SetRequests.GetD
     @Override
     public void onResponse(int currentRequestId, Object result) {
         if (currentRequestId == Helper.REQUEST_CHECK_USER && result instanceof RetroUser) {
+            Helper.setFullNameInPreferences(getApplicationContext(), ((RetroUser) result));
             RetroRole role = ((RetroUser) result).getRole();
             if(role.getHasRelatedBuildings()){
                 List<RetroBuildingXUser> buildingXUsers = ((RetroUser) result).getBuildingXUsers();

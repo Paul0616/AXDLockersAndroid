@@ -4,23 +4,23 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class RetroLockerBuildingResidentsList {
+public class RetroParcelsList {
     @SerializedName("items")
-    private List<RetroLockerBuildingResident> lbr;
+    private List<RetroParcel> lbr;
     @SerializedName("_links")
     private Links links;
     @SerializedName("_meta")
     private Meta meta;
 
 
-    public RetroLockerBuildingResident getFirstLBR() {
+    public RetroParcel getFirstLBR() {
         if (lbr.size() > 0) {
             return lbr.get(0);
         } else
             return null;
     }
 
-    public List<RetroLockerBuildingResident> getLBRs() {
+    public List<RetroParcel> getLBRs() {
         return lbr;
     }
 

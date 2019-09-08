@@ -126,12 +126,13 @@ public class ResidentsFilteredActivity extends AppCompatActivity implements SetR
 
         adapter = new ItemsAdapter(residents);
         recyclerView.setAdapter(adapter);
+        makeResidentRequest();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        makeResidentRequest();
+
     }
 
     @Override

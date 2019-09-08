@@ -119,8 +119,9 @@ public class ScanLabelActivity extends AppCompatActivity {
         ImageCaptureConfig imageCaptureConfig = new ImageCaptureConfig.Builder().setCaptureMode(ImageCapture.CaptureMode.MIN_LATENCY)
                 .setTargetRotation(getWindowManager().getDefaultDisplay().getRotation()).setLensFacing(CameraX.LensFacing.BACK).setTargetAspectRatio(aspectRatio).setTargetResolution(screen).build();
         final ImageCapture imgCap = new ImageCapture(imageCaptureConfig);
+        // findViewById(R.id.imgCapture)
 
-        findViewById(R.id.imgCapture).setOnClickListener(new View.OnClickListener() {
+       textureView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

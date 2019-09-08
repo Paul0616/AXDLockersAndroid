@@ -219,13 +219,47 @@
                     android:background="@drawable/round_corner_toggle_blue_light"
                     android:imeActionId="6"
                     android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionDone"
+                    android:imeOptions="actionDone|actionNext"
                     android:inputType="textCapCharacters"
                     android:maxLines="1"
-                    android:nextFocusUp="@id/lockerNumber"
+                    android:nextFocusDown="@id/optionalDetailEditText"
                     android:padding="10dp"
                     android:singleLine="true" />
 
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/optionalLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_weight="1"
+                android:text="@string/optional_address_detail"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="12sp"
+                android:textStyle="italic" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutOptional"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView17">
+
+                <EditText
+                    android:id="@+id/optionalDetailEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorBleu"
+                    android:ems="10"
+                    android:gravity="start|top"
+                    android:imeOptions="actionDone|actionGo"
+                    android:inputType="textMultiLine" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
