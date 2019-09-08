@@ -25,9 +25,6 @@
             android:parentActivityName=".Activities.OCRResultActivity"
             android:theme="@style/TitleTheme" />
         <activity
-            android:name=".Activities.ImageWithCropActivity"
-            android:theme="@style/NoTitleAndAnimTheme" />
-        <activity
             android:name=".Activities.ImageActivity"
             android:theme="@style/NoTitleAndAnimTheme" />
         <activity
