@@ -47,7 +47,7 @@ public class ConfirmResidentActivity extends AppCompatActivity {
             Gson gson = new Gson();
             currentResident = gson.fromJson(json, RetroFilteredResident.class);
             fullName.setText(currentResident.getResident().getFirstName() + " " + currentResident.getResident().getLastName());
-            if(!currentResident.getResident().getPhoneNumber().equals(""))
+            if(currentResident.getResident().getPhoneNumber() != null)
                 phone.setText(currentResident.getResident().getPhoneNumber());
             email.setText(currentResident.getResident().getEmail());
             if(currentResident.getBuilding() != null) {
