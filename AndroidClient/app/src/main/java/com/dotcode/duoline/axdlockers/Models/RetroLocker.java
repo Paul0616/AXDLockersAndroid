@@ -20,7 +20,7 @@ public class RetroLocker {
     @SerializedName("lockerXBuildingXResidents")
     private List<RetroParcel> parcels;
 
-    private String addressDetail;
+    private String addressDetails;
 
     public RetroLocker(int id, String qrCode, String number,  String size, int addressId, RetroAddress address) {
         this.id = id;
@@ -32,11 +32,11 @@ public class RetroLocker {
     }
 
     public String getAddressDetail() {
-        return addressDetail;
+        return addressDetails;
     }
 
-    public void setAddressDetail(String addressDetail) {
-        this.addressDetail = addressDetail;
+    public void setAddressDetail(String addressDetails) {
+        this.addressDetails = addressDetails;
     }
 
     public int getId() {
@@ -68,5 +68,10 @@ public class RetroLocker {
             return true;
         else
             return false;
+    }
+
+
+    public String getLockerAddress(){
+        return address.getStreetName() + ", " + address.getCity().getName() + ", " + address.getCity().getState().getName() + ", " + address.getZipCode();
     }
 }

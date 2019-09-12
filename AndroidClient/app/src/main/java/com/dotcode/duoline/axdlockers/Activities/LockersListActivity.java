@@ -1,9 +1,14 @@
 package com.dotcode.duoline.axdlockers.Activities;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -18,6 +23,7 @@ import com.dotcode.duoline.axdlockers.Models.RetroLockerList;
 import com.dotcode.duoline.axdlockers.Network.SetRequests;
 import com.dotcode.duoline.axdlockers.R;
 import com.dotcode.duoline.axdlockers.Utils.Helper;
+import com.dotcode.duoline.axdlockers.Utils.SaveSharedPreferences;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,13 +35,15 @@ public class LockersListActivity extends AppCompatActivity implements SetRequest
     private static final int PAGE_SIZE = 20;
     private boolean isLoading = false;
     private boolean isLastPage = true;
-    private int loadedPages = 1;
+    private int loadedPages = 0;
     private ProgressBar progressBar;
     private TextView emptyArrayMessage;
     private List<RetroLocker> lockersList = new ArrayList<RetroLocker>();
     private LockersListActivity.ItemsAdapter adapter;
     private RecyclerView recyclerView;
     private String lockerNumber, lockerZip, lockerStreet;
+    private RetroLocker currentLocker;
+    private CardView bAddTemporary;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +55,7 @@ public class LockersListActivity extends AppCompatActivity implements SetRequest
         recyclerView = (RecyclerView) findViewById(R.id.rvLockers);
         progressBar = (ProgressBar) findViewById(R.id.progressBarLockers);
         emptyArrayMessage = (TextView) findViewById(R.id.emptyMessage);
+        bAddTemporary = (CardView) findViewById(R.id.bCArdView);
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false);
@@ -76,6 +85,14 @@ public class LockersListActivity extends AppCompatActivity implements SetRequest
                 }
             }
         });
+        bAddTemporary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(LockersListActivity.this, AddLockerActivity.class);
+                i.putExtra("virtualLocker", true);
+                startActivity(i);
+            }
+        });
 
 
         adapter = new ItemsAdapter(lockersList);
@@ -85,7 +102,7 @@ public class LockersListActivity extends AppCompatActivity implements SetRequest
     @Override
     protected void onResume() {
         super.onResume();
-        isLoading = true;
+
         makeLockersRequest();
     }
 
@@ -102,6 +119,7 @@ public class LockersListActivity extends AppCompatActivity implements SetRequest
     private void makeLockersRequest(){
         progressBar.setVisibility(View.VISIBLE);
         emptyArrayMessage.setVisibility(View.INVISIBLE);
+        loadedPages += 1;
         Map<String, String> param = new HashMap<String, String>();
         if(lockerNumber != null)
             param.put("number", lockerNumber);
@@ -120,7 +138,7 @@ public class LockersListActivity extends AppCompatActivity implements SetRequest
         if(result instanceof RetroLockerList){
             lockersList = ((RetroLockerList) result).getLockers();
             isLastPage = ((RetroLockerList) result).isPastPage();
-            loadedPages = ((RetroLockerList) result).getCurrentPage() + 1;
+            loadedPages = ((RetroLockerList) result).getCurrentPage();
             if (loadedPages == 1) adapter.setList(lockersList);
             else adapter.addToList(lockersList);
         }
@@ -129,6 +147,20 @@ public class LockersListActivity extends AppCompatActivity implements SetRequest
     @Override
     public void onFailed(int currentRequestId, boolean mustLogOut) {
 
+    }
+
+    private void showAlert(Context ctx, String title, String msg) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+        builder.setTitle(title);
+        builder.setMessage(msg);
+        builder.setCancelable(false);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
     }
 
     class ItemsAdapter extends RecyclerView.Adapter<LockersListActivity.ItemsAdapter.ItemViewHolder>{
@@ -187,8 +219,14 @@ public class LockersListActivity extends AppCompatActivity implements SetRequest
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-//                        currentAddress = list.get(getAdapterPosition());
-//                        showAlert(LockersListActivity.this, getString(R.string.address_tapped), getString(R.string.address_tapped_question), CHOOSE_ADDRESS);
+                        currentLocker = list.get(getAdapterPosition());
+                        if(!currentLocker.isLockerFree())
+                            showAlert(LockersListActivity.this, "Locker occupied", "This locker appears in the system as not being free. So you can't choose this locker. Please choose another one.");
+                        else {
+                            Intent i = new Intent(LockersListActivity.this, SecurityCodeActivity.class);
+                            SaveSharedPreferences.setLocker(getApplicationContext(), currentLocker);
+                            startActivity(i);
+                        }
                     }
                 });
 

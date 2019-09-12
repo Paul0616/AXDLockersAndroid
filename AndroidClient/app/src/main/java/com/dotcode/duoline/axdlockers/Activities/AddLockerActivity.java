@@ -31,7 +31,7 @@ public class AddLockerActivity extends AppCompatActivity implements SetRequests.
     private AutoCompleteTextView lockerNumber;
     private TextInputEditText lockerSize;
     private TextView street, zipCode, city, optionalLabel;
-    private EditText addressDetail;
+    private EditText addressDetails;
     private TextInputLayout optional;
     private ImageView bAddAddress;
     private String qrCode;
@@ -53,7 +53,7 @@ public class AddLockerActivity extends AppCompatActivity implements SetRequests.
         city = (TextView) findViewById(R.id.cityTextView);
         bAddAddress = (ImageView) findViewById(R.id.bAddAddress);
         optional = (TextInputLayout) findViewById(R.id.textInputLayoutOptional);
-        addressDetail = (EditText) findViewById(R.id.optionalDetailEditText);
+        addressDetails = (EditText) findViewById(R.id.optionalDetailEditText);
         optionalLabel = (TextView) findViewById(R.id.optionalLabel);
         virtualLocker = getIntent().getBooleanExtra("virtualLocker", false);
         addLockerOnly = SaveSharedPreferences.getAddLockerOnly(getApplicationContext());
@@ -204,8 +204,8 @@ public class AddLockerActivity extends AppCompatActivity implements SetRequests.
 //            startActivity(new Intent(HiringPacksActivity.this, MainMenuActivity.class));
 //            return true;
             } else {
-                if(!addressDetail.getText().toString().equals(""))
-                    locker.setAddressDetail(addressDetail.getText().toString());
+                if(!addressDetails.getText().toString().equals(""))
+                    locker.setAddressDetail(addressDetails.getText().toString());
                 SaveSharedPreferences.setLocker(getApplicationContext(), locker);
                 Intent i = new Intent(AddLockerActivity.this, SecurityCodeActivity.class);
                 finish();  //Kill the activity from which you will go to next activity

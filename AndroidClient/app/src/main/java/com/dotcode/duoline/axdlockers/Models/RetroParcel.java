@@ -18,6 +18,10 @@ public class RetroParcel {
     @SerializedName("status")
     private int status;
 
+    @SerializedName("buildingResident")
+    private RetroBuildingResident buildingResident;
+
+
 
     public RetroParcel(int id, int lockerId, int buildingResidentId, String securityCodee, int status) {
         this.id = id;
@@ -37,5 +41,13 @@ public class RetroParcel {
 
     public int getLockerId() {
         return lockerId;
+    }
+
+    public RetroBuildingResident getBuildingResident() {
+        return buildingResident;
+    }
+
+    public String getSecurityCode() {
+        return securityCode;
     }
 }

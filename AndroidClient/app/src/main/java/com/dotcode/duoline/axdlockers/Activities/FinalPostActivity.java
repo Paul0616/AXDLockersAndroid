@@ -122,26 +122,26 @@ public class FinalPostActivity extends AppCompatActivity implements SetRequests.
         new SetRequests(getApplicationContext(), FinalPostActivity.this, Helper.REQUEST_DELETE_LOCKER_HISTORY, param, null);
     }
 
-//    private void checkLockerBuildingResident(){
-//        Map<String, String> param = new HashMap<String, String>();
-//        param.put("filter[lockerId]", ""+currentLocker.getId());
-//        param.put("filter[buildingResidentId]", ""+currentResident.getId());
-//        new SetRequests(getApplicationContext(), FinalPostActivity.this, Helper.REQUEST_LOCKER_BUILDING_RESIDENT, param, null);
-//    }
 
     private void insertLockerHistory(){
         infoMessage.setText(getText(R.string.creating_locker_history));
-        String lockerAddress = currentLocker.getAddress().getStreetName() + ", " + currentLocker.getAddress().getCity().getName() + ", " +
-                currentLocker.getAddress().getCity().getState().getName() + ", " + currentLocker.getAddress().getZipCode();
-        String buildingAddress = currentResident.getBuilding().getName() + ", " + currentResident.getBuilding().getAddress().getStreetName() + ", " +
-                currentResident.getBuilding().getAddress().getCity().getName() + ", " + currentResident.getBuilding().getAddress().getCity().getState().getName() +", " +
-                currentResident.getBuilding().getAddress().getZipCode();
-        RetroLockerHistory body = new RetroLockerHistory(0, currentLocker.getQrCode(), currentLocker.getNumber(), currentLocker.getSize(),
-                lockerAddress, currentResident.getResident().getFirstName(), currentResident.getResident().getLastName(), currentResident.getResident().getEmail(),
+        RetroLockerHistory body = new RetroLockerHistory(0,
+                currentLocker.getQrCode(),
+                currentLocker.getNumber(),
+                currentLocker.getSize(),
+                currentLocker.getLockerAddress(),
+                currentResident.getResident().getFirstName(),
+                currentResident.getResident().getLastName(),
+                currentResident.getResident().getEmail(),
                 currentResident.getResident().getPhoneNumber(),
                 securityCode, currentResident.getSuiteNumber(),
-                currentResident.getBuilding().getName(), buildingAddress, buildingAddress, currentResident.getBuilding().getBuildingUniqueNumber(),
-                SaveSharedPreferences.getEmail(getApplicationContext()), "STATUS_NOT_CONFIRMED", SaveSharedPreferences.getFirstName(getApplicationContext()),
+                currentResident.getBuilding().getName(),
+                currentResident.getBuilding().getBuildingAddress(),
+                currentResident.getBuilding().getBuildingAddress(),
+                currentResident.getBuilding().getBuildingUniqueNumber(),
+                SaveSharedPreferences.getEmail(getApplicationContext()),
+                "STATUS_NOT_CONFIRMED",
+                SaveSharedPreferences.getFirstName(getApplicationContext()),
                 SaveSharedPreferences.getLasttName(getApplicationContext()));
 
         new SetRequests(getApplicationContext(), FinalPostActivity.this, Helper.REQUEST_INSERT_LOCKER_HISTORY, null, body);
@@ -206,19 +206,6 @@ public class FinalPostActivity extends AppCompatActivity implements SetRequests.
             }
         }
 
-//        if (currentRequestId == Helper.REQUEST_LOCKER_BUILDING_RESIDENT){
-//            if(result != null && result instanceof RetroParcelsList) {
-//                if (((RetroParcelsList) result).getLBRs().size() > 0) {
-//                    int lastInsertedLockerBuildingResidentID = ((RetroParcelsList) result).getLBRs().get(0).getId();
-//                    SaveSharedPreferences.setlastInsertedParcelID(getApplicationContext(), lastInsertedLockerBuildingResidentID);
-//                    infoMessage.setText(getString(R.string.creating_locker_history));
-//                    insertLockerHistory();
-//                } else {
-//                    infoMessage.setText(getString(R.string.creating_locker_building_resident_association));
-//                    insertParcel();
-//                }
-//            }
-//        }
 
         if (currentRequestId == Helper.REQUEST_INSERT_PARCEL){
             if(result != null && result instanceof RetroParcel) {
@@ -249,12 +236,10 @@ public class FinalPostActivity extends AppCompatActivity implements SetRequests.
             }
         }
         if(currentRequestId == Helper.REQUEST_INSERT_NOTIFICATION) {
-            //
             handleSuccessAction();
         }
 
         if(currentRequestId == Helper.REQUEST_INSERT_VIRTUAL_NOTIFICATION) {
-            //
             handleSuccessAction();
         }
     }

@@ -10,26 +10,26 @@ import android.view.View;
 
 import com.dotcode.duoline.axdlockers.R;
 
-public class ChooseLockerActivity extends AppCompatActivity {
+public class ChooseLockerMenuActivity extends AppCompatActivity {
 
     private ConstraintLayout scanQRButton, searchLockerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_choose_locker);
+        setContentView(R.layout.activity_choose_locker_menu);
         scanQRButton = (ConstraintLayout) findViewById(R.id.scanQRButton);
         searchLockerButton = (ConstraintLayout) findViewById(R.id.manualButton);
         scanQRButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(ChooseLockerActivity.this, QRScanActivity.class));
+                startActivity(new Intent(ChooseLockerMenuActivity.this, QRScanActivity.class));
             }
         });
         searchLockerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(ChooseLockerActivity.this, LockerFilterActivity.class));
+                startActivity(new Intent(ChooseLockerMenuActivity.this, LockerFilterActivity.class));
             }
         });
     }

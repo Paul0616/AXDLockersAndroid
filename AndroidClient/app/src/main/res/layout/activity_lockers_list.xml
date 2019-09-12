@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activities.LockersListActivity">
+
     <ProgressBar
         android:id="@+id/progressBarLockers"
         style="?android:attr/progressBarStyle"
@@ -25,10 +26,10 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@android:color/background_light"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bCArdView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent">
 
     </androidx.recyclerview.widget.RecyclerView>
 
@@ -39,7 +40,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:gravity="center"
-        android:text="@string/address_empty_list_message"
+        android:text="@string/locker_empty_list_message"
         android:textColor="@android:color/darker_gray"
         android:textSize="12sp"
         android:visibility="invisible"
@@ -47,4 +48,30 @@
         app:layout_constraintEnd_toEndOf="@+id/rvLockers"
         app:layout_constraintStart_toStartOf="@+id/rvLockers"
         app:layout_constraintTop_toTopOf="@+id/rvLockers" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/bCArdView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        app:cardBackgroundColor="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/bAddTemporaryTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:gravity="center"
+            android:lines="2"
+            android:padding="10dp"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:text="@string/add_temporary_locker"
+            android:textColor="@color/cardview_light_background"
+            android:textSize="12sp" />
+    </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

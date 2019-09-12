@@ -36,4 +36,9 @@ public class RetroBuilding {
         return address;
     }
 
+
+    public String getBuildingAddress() {
+        return name + ", " + address.getStreetName() + ", " + address.getCity().getName() + ", " + address.getCity().getState().getName() + ", " + address.getZipCode();
+    }
+
 }

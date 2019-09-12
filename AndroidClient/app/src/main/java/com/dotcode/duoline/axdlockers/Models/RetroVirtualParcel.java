@@ -21,8 +21,8 @@ public class RetroVirtualParcel {
     @SerializedName("lockerSize")
     private String lockerSize;
 
-    @SerializedName("addressDetail")
-    private String addressDetail;
+    @SerializedName("addressDetails")
+    private String addressDetails;
 
     @SerializedName("status")
     private int status;
@@ -42,7 +42,7 @@ public class RetroVirtualParcel {
         return id;
     }
 
-    public void setAddressDetail(String addressDetail) {
-        this.addressDetail = addressDetail;
+    public void setAddressDetail(String addressDetails) {
+        this.addressDetails = addressDetails;
     }
 }

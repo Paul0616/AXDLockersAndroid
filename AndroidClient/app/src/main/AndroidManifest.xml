@@ -15,10 +15,10 @@
             android:theme="@style/TitleTheme"/>
         <activity
             android:name=".Activities.LockerFilterActivity"
-            android:parentActivityName=".Activities.ChooseLockerActivity"
+            android:parentActivityName=".Activities.ChooseLockerMenuActivity"
             android:theme="@style/TitleTheme" />
         <activity
-            android:name=".Activities.ChooseLockerActivity"
+            android:name=".Activities.ChooseLockerMenuActivity"
             android:parentActivityName=".Activities.ConfirmResidentActivity"
             android:theme="@style/TitleTheme" />
         <activity

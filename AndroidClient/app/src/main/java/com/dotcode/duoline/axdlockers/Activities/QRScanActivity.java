@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.dotcode.duoline.axdlockers.Models.RetroFilteredResident;
 import com.dotcode.duoline.axdlockers.Models.RetroLocker;
+import com.dotcode.duoline.axdlockers.Models.RetroLockerHistory;
 import com.dotcode.duoline.axdlockers.Models.RetroLockerList;
 import com.dotcode.duoline.axdlockers.Models.RetroUser;
 import com.dotcode.duoline.axdlockers.Models.RetroUserXRight;
@@ -81,26 +82,25 @@ public class QRScanActivity extends AppCompatActivity implements BarcodeReader.B
             userCanCreateParcels =Helper.userHaveRight(userXRights, "CREATE_PACKAGES");
             Map<String, String> param = new HashMap<String, String>();
             param.put("filter[qrCode]", detectedqrCode);
-            param.put("expand", "address.city.state");
+            param.put("expand", "address.city.state,lockerXBuildingXResidents.buildingResident.resident,lockerXBuildingXResidents.buildingResident.building.address.city.state");
             new SetRequests(getApplicationContext(), QRScanActivity.this, Helper.REQUEST_LOCKERS, param, null);
         }
         if (currentRequestId == Helper.REQUEST_LOCKERS){
             if(result != null && result instanceof RetroLockerList) {
+
                 if (userCanCreateParcels){
                     locker = ((RetroLockerList)result).getLocker();
                     if(locker != null) {
                         if (addLockerOnly) {
                             showAlert1(QRScanActivity.this, getString(R.string.already_exist), getString(R.string.locker_already_added));
                         } else {
-                            Intent i = new Intent(QRScanActivity.this, SecurityCodeActivity.class);
-//                        Gson gson = new Gson();
-//                        String json = gson.toJson(resident);
-//                        i.putExtra("JSON_RESIDENT", json);
-//                        gson = new Gson();
-//                        json = gson.toJson(locker);
-//                        i.putExtra("JSON_LOCKER", json);
-                            SaveSharedPreferences.setLocker(getApplicationContext(), locker);
-                            startActivity(i);
+                            if(locker.isLockerFree()) {
+                                Intent i = new Intent(QRScanActivity.this, SecurityCodeActivity.class);
+                                SaveSharedPreferences.setLocker(getApplicationContext(), locker);
+                                startActivity(i);
+                            } else {
+                                showAlertLockerOccupied(QRScanActivity.this, "Locker occupied", "This locker appears in the system as not being free. Are you sure you want to use it?\n(This action will force release the locker in the system)");
+                            }
                         }
                     } else {
                         if (userCanCreateLockers) {
@@ -118,6 +118,34 @@ public class QRScanActivity extends AppCompatActivity implements BarcodeReader.B
                 }
             }
         }
+
+        if(currentRequestId == Helper.REQUEST_DELETE_PARCEL){
+            RetroLockerHistory body = new RetroLockerHistory(0,
+                    locker.getQrCode(),
+                    locker.getNumber(),
+                    locker.getSize(),
+                    locker.getLockerAddress(),
+                    locker.getParcels().get(0).getBuildingResident().getResident().getFirstName(),
+                    locker.getParcels().get(0).getBuildingResident().getResident().getLastName(),
+                    locker.getParcels().get(0).getBuildingResident().getResident().getEmail(),
+                    locker.getParcels().get(0).getBuildingResident().getResident().getPhoneNumber(),
+                    locker.getParcels().get(0).getSecurityCode(),
+                    locker.getParcels().get(0).getBuildingResident().getUnitNumber(),
+                    locker.getParcels().get(0).getBuildingResident().getBuilding().getName(),
+                    locker.getParcels().get(0).getBuildingResident().getBuilding().getBuildingAddress(),
+                    locker.getParcels().get(0).getBuildingResident().getBuilding().getBuildingAddress(),
+                    locker.getParcels().get(0).getBuildingResident().getBuilding().getBuildingUniqueNumber(),
+                    SaveSharedPreferences.getEmail(getApplicationContext()),
+                    "FORCED FREE",
+                    SaveSharedPreferences.getFirstName(getApplicationContext()),
+                    SaveSharedPreferences.getLasttName(getApplicationContext()));
+
+            new SetRequests(getApplicationContext(), QRScanActivity.this, Helper.REQUEST_INSERT_LOCKER_HISTORY, null, body);
+        }
+
+        if(currentRequestId == Helper.REQUEST_INSERT_LOCKER_HISTORY){
+            showAlert1(QRScanActivity.this, "LOCKER FREE", "The locker was set to FREE. Scan the QRCode again to use it.");
+        }
     }
 
     @Override
@@ -125,7 +153,32 @@ public class QRScanActivity extends AppCompatActivity implements BarcodeReader.B
 
     }
 
+    private void showAlertLockerOccupied(Context ctx, String title, String msg){
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+        builder.setTitle(title);
+        builder.setMessage(msg);
 
+        builder.setCancelable(false);
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                codeWasDetected = false;
+                barcodeReader.resumeScanning();
+                dialog.dismiss();
+            }
+        });
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                int parcelId = locker.getParcels().get(0).getId();
+                Map<String, String> param = new HashMap<String, String>();
+                param.put("ID", String.valueOf(parcelId));
+                new SetRequests(getApplicationContext(), QRScanActivity.this, Helper.REQUEST_DELETE_PARCEL, param, null);
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+    }
 
     private void showAlert1(Context ctx, String title, String msg){
         AlertDialog.Builder builder = new AlertDialog.Builder(ctx);

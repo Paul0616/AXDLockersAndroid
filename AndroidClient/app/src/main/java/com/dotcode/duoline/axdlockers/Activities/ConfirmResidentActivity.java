@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.dotcode.duoline.axdlockers.Models.RetroFilteredResident;
-import com.dotcode.duoline.axdlockers.Models.RetroLocker;
 import com.dotcode.duoline.axdlockers.R;
 import com.dotcode.duoline.axdlockers.Utils.SaveSharedPreferences;
 import com.google.gson.Gson;
@@ -62,7 +61,7 @@ public class ConfirmResidentActivity extends AppCompatActivity {
             confirmButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(ConfirmResidentActivity.this, ChooseLockerActivity.class);
+                    Intent i = new Intent(ConfirmResidentActivity.this, ChooseLockerMenuActivity.class);
 //                    Gson gson = new Gson();
 //                    String json = gson.toJson(currentResident);
 //                    i.putExtra("JSON_RESIDENT", json);

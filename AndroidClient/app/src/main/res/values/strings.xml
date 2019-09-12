@@ -38,10 +38,12 @@
     <string name="number">number:</string>
     <string name="size">size:</string>
     <string name="address">address:</string>
+    <string name="add_temporary_locker">If no locker match to your criteria than you can\nADD THIS LOCKER AS TEMPORARY</string>
     <string name="building_unique_number">Building unique number:</string>
     <string name="building_name">Building name:</string>
     <string name="building_address">Building address:</string>
     <string name="no_available_residents_in_current_building_and_with_that_name_or_suite_number">No available residents in current building and with that name or suite number</string>
+    <string name="locker_empty_list_message">No available lockers according your criteria</string>
     <string name="address_empty_list_message">No available addresses</string>
     <string name="building_empty_list_message">No available building with that building unique number or building name requested</string>
     <string name="no_available_residents">No available residents at that unit number or whith name requested</string>
