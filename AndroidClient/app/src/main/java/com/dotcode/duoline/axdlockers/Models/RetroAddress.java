@@ -26,6 +26,10 @@ public class RetroAddress {
         this.cityId = cityId;
     }
 
+    public String getFormatedAddress(){
+        return zipCode + ", " + streetName + ", " + city.getName() + ", " + city.getState().getName() + ", " + city.getState().getCountry().getName();
+    }
+
     public int getId() {
         return id;
     }

@@ -108,4 +108,7 @@ public interface GetDataService {
 
     @POST("notifications/send-notification-to-resident-for-virtual-parcel")
     Call<RetroNotification> createVirtualNotification(@Body RetroVirtualParcelID parcelID, @Query("access-token") String token);
+
+    @GET("lockers/search-by-number-and-address")
+    Call<RetroLockerList> getLockerByNumberAndAddress(@QueryMap Map<String, String> options, @Query("access-token") String token);
 }

@@ -104,6 +104,11 @@ public class SetRequests {
                         SaveSharedPreferences.getAccesToken(context));
                 callRetrofit(callLockers);
                 break;
+            case Helper.REQUEST_MANUAL_LOCKERS:
+                Call<RetroLockerList> callLockers1 = service.getLockerByNumberAndAddress(parameters,
+                        SaveSharedPreferences.getAccesToken(context));
+                callRetrofit(callLockers1);
+                break;
             case Helper.REQUEST_ADDRESSES:
                 Call<RetroAddressList> callAddresses = service.getAddresses(parameters,
                         SaveSharedPreferences.getAccesToken(context));

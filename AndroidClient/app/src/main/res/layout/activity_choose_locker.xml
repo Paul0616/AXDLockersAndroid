@@ -6,20 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".Activities.MainMenuActivity">
 
-    <ImageView
-        android:id="@+id/logOutImageView"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:contentDescription="@string/log_out_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/log_out_icon" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/addParcelButton"
+        android:id="@+id/scanQRButton"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
@@ -33,7 +21,7 @@
         app:layout_constraintVertical_bias="0.0">
 
         <ImageView
-            android:id="@+id/imageViewParcel"
+            android:id="@+id/imageViewScan"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
@@ -43,18 +31,16 @@
             app:layout_constraintEnd_toEndOf="@+id/textViewParcel"
             app:layout_constraintStart_toStartOf="@+id/textViewParcel"
             app:layout_constraintTop_toTopOf="@+id/guideline15parcel"
-            app:srcCompat="@drawable/ic_parcel" />
+            app:srcCompat="@drawable/ic_qr_scan" />
 
         <TextView
             android:id="@+id/textViewParcel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
-            android:text="ADD PARCEL"
+            android:text="SCAN QR CODE"
             android:textColor="#F8F7F7"
             android:textSize="24sp"
             app:layout_constraintBottom_toTopOf="@+id/guideline80parcel"
@@ -78,19 +64,19 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/addLockerButton"
+        android:id="@+id/manualButton"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="32dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/round_corner_background_darkblue"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/guideline8"
         app:layout_constraintEnd_toStartOf="@+id/guideline7"
         app:layout_constraintStart_toStartOf="@+id/guideline6"
         app:layout_constraintTop_toBottomOf="@id/guideline50">
 
         <ImageView
-            android:id="@+id/imageViewLocker"
+            android:id="@+id/imageViewSearch"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
@@ -100,18 +86,16 @@
             app:layout_constraintEnd_toEndOf="@+id/textViewLocker"
             app:layout_constraintStart_toStartOf="@+id/textViewLocker"
             app:layout_constraintTop_toTopOf="@+id/guideline15locker"
-            app:srcCompat="@drawable/ic_locker" />
+            app:srcCompat="@drawable/ic_search_white_24dp" />
 
         <TextView
             android:id="@+id/textViewLocker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
-            android:text="ADD LOCKER"
+            android:text="SEARCH FOR LOCKER"
             android:textColor="#F8F7F7"
             android:textSize="24sp"
             app:layout_constraintBottom_toTopOf="@+id/guideline80locker"
@@ -139,14 +123,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent=".55" />
+        app:layout_constraintGuide_percent=".5" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent=".1" />
+        app:layout_constraintGuide_percent=".05" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline6"
@@ -161,5 +145,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.9" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.95" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

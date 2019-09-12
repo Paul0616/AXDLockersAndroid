@@ -2,6 +2,8 @@ package com.dotcode.duoline.axdlockers.Models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class RetroLocker {
     @SerializedName("id")
     private int id;
@@ -15,6 +17,8 @@ public class RetroLocker {
     private int addressId;
     @SerializedName("address")
     private RetroAddress address;
+    @SerializedName("lockerXBuildingXResidents")
+    private List<RetroParcel> parcels;
 
     private String addressDetail;
 
@@ -53,5 +57,16 @@ public class RetroLocker {
 
     public String getQrCode() {
         return qrCode;
+    }
+
+    public List<RetroParcel> getParcels() {
+        return parcels;
+    }
+
+    public boolean isLockerFree(){
+        if(parcels.size() == 0)
+            return true;
+        else
+            return false;
     }
 }

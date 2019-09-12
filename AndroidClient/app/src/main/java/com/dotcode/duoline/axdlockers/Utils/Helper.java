@@ -28,13 +28,14 @@ public class Helper {
     public static final int REQUEST_INSERT_PARCEL = 13;
     public static final int REQUEST_INSERT_LOCKER_HISTORY = 14;
     public static final int REQUEST_INSERT_NOTIFICATION = 15;
-    public static final int REQUEST_GET_OWNED_BUILDINGS = 16;
+//    public static final int REQUEST_GET_OWNED_BUILDINGS = 16;
     public static final int REQUEST_RESIDENTS_GET_BY_FULL_NAME_OR_UNIT = 17;
     public static final int REQUEST_INSERT_ORPHAN_PARCEL = 18;
     public static final int REQUEST_NEW_SECURITY_CODE = 19;
     public static final int REQUEST_INSERT_VIRTUAL_PARCEL = 20;
     public static final int REQUEST_INSERT_VIRTUAL_NOTIFICATION = 21;
     public static final int REQUEST_DELETE_VIRTUAL_PARCEL = 22;
+    public static final int REQUEST_MANUAL_LOCKERS = 23;
 
     public static final int STATUS_NOT_CONFIRMED = 1;
     /**

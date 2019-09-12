@@ -62,7 +62,7 @@ public class ConfirmResidentActivity extends AppCompatActivity {
             confirmButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(ConfirmResidentActivity.this, QRScanActivity.class);
+                    Intent i = new Intent(ConfirmResidentActivity.this, ChooseLockerActivity.class);
 //                    Gson gson = new Gson();
 //                    String json = gson.toJson(currentResident);
 //                    i.putExtra("JSON_RESIDENT", json);
